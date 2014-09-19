@@ -1,0 +1,4 @@
+secret_key
+*.pyc
+.idea/
+flask_test.sqlite3
