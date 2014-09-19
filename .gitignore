@@ -1,4 +1,4 @@
 secret_key
 *.pyc
 .idea/
-flask_test.sqlite3
+ahps_web.sqlite3
