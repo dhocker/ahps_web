@@ -7,10 +7,12 @@ from ahps_web.models.room import get_rooms
 from ahps_web.models.module import get_modules_for_room
 
 
-class room:
-    def __init__(self, name, hdc):
-        self.name = name
-        self.hdc = hdc
+def is_logged_in():
+    '''
+    Session helper
+    :return: True if admin user is logged
+    '''
+    return session.has_key('logged_in') and session['logged_in']
 
 
 @app.route("/")
@@ -20,17 +22,13 @@ def root():
 
 @app.route("/home")
 def home():
-    items = ["one", "two", "three", "four", "five"]
-    kvlist = {"a": "a-value", "b": "b-value"}
+    # login is required
+    if is_logged_in():
+        rooms = get_rooms()
+        return render_template('home.html', rooms=rooms)
 
-    obj_list = []
-    obj_list.append(room("Office", "a1"))
-    obj_list.append(room("Living Room", "a2"))
-    obj_list.append(room("Studio", "l1"))
-
-    rooms = get_rooms()
-
-    return render_template('home.html', rooms=rooms)
+    # Force login
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -52,9 +50,10 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
-    flash('You were logged out')
-    return redirect(url_for('home'))
+    if is_logged_in():
+        session.pop('logged_in', None)
+        flash('You were logged out')
+    return redirect(url_for('login'))
 
 
 @app.route('/edit_modules', methods=['POST'])
@@ -64,14 +63,19 @@ def edit_modules():
     :return: html page
     '''
 
-    if request.form.has_key("roomid"):
-        # The key is the name of the input or button element
-        modules = get_modules_for_room(request.form["roomid"])
-        return "roomid {0} has {1} modules".format(request.form["roomid"], len(modules))
-    elif request.form.has_key("remove"):
-        return "Remove roomid: {0}".format(request.form["remove"])
-    elif request.form.has_key("add"):
-        return "Add another room"
+    if is_logged_in():
+        if request.form.has_key("roomid"):
+            # The key is the name of the input or button element
+            modules = get_modules_for_room(request.form["roomid"])
+            return "roomid {0} has {1} modules".format(request.form["roomid"], len(modules))
+        elif request.form.has_key("remove"):
+            return "Remove roomid: {0}".format(request.form["remove"])
+        elif request.form.has_key("add"):
+            return "Add another room"
+    else:
+        return redirect(url_for('login'))
+
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":

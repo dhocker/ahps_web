@@ -3,7 +3,7 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 <div class="page">
-	<h1>Flask Test</h1>
+	<h1>AHPS Web</h1>
 	<div class="metanav">
 		{% if not session.logged_in %}
 			<a href="{{ url_for('login') }}">log in</a>
@@ -11,10 +11,13 @@
 			<a href="{{ url_for('logout') }}">log out</a>
 		{% endif %}
 	</div>
-	{% for message in get_flashed_messages() %}
-		<div class="flash">{{ message }}</div>
-	{% endfor %}
-	{% block body %}{% endblock %}
+
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    {% block body %}{% endblock %}
+
     <div class="clear"></div>
     <div class="footer">
         AtHomePowerlineServer Web -- Copyright 2014 by Dave Hocker

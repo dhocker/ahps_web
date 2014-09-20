@@ -1,21 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
     <h2>Home</h2>
-    <p>This is the home page for the Flask Test.</p>
+    <p>This is the home page for the AHPS Web server.</p>
 
-    <p>List of Rooms</p>
-    <form action="edit_modules" method="post">
-        {% for room in rooms %}
-            <div class="room">
-                <div class="name">{{ room.name }}</div>
-                <div class="description">{{ room.description }}</div>
-                <button class="edit-button" name=roomid type="submit" value="{{ room.roomid }}">Modules</button>
-                <button class="edit-button" name=remove type="submit" value="{{ room.roomid }}">Remove</button>
-            </div>
-        {% endfor %}
+    {% if session.logged_in %}
+        <h2>Rooms</h2>
+        <form action="edit_modules" method="post">
+            {% for room in rooms %}
+                <div class="room">
+                    <div class="name">{{ room.name }}</div>
+                    <div class="description">{{ room.description }}</div>
+                    <button class="edit-button" name=roomid type="submit" value="{{ room.roomid }}">Modules</button>
+                    <button class="edit-button" name=remove type="submit" value="{{ room.roomid }}">Remove</button>
+                </div>
+            {% endfor %}
 
-        <div class="clear"></div>
-        <button class="edit-button" name=add type="submit" value="add">Add a Room</button>
-    </form>
-
+            <div class="clear"></div>
+            <button class="edit-button" name=add type="submit" value="add">Add a Room</button>
+        </form>
+    {% else %}
+        <p><b>Login to view the list of rooms.</b></p>
+    {% endif %}
 {% endblock %}
