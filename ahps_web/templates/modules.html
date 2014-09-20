@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Modules for room: {{ room.name }}</h2>
+    <form action="edit_programs" method="post">
+        {% for module in modules %}
+            <div class="{{ module.module_type }}-module">
+                <div class="name">{{ module.module_type }}: {{ module.name }}</div>
+                <div class="hdc">
+                    {{ module.house_code }}{{ module.device_code }}
+
+                    <select name="house_code">
+                    {% for hc in house_codes %}
+                        <option value="{{ hc }}"
+                        {% if hc == module.house_code.upper() %}
+                            selected="true"
+                        {% endif %}
+                        >{{ hc }}
+                        </option>
+                    {% endfor %}
+                    </select>
+
+                    <select name="device_code">
+                    {% for dc in device_codes %}
+                        <option value="{{ dc }}"
+                        {% if dc == module.device_code %}
+                            selected="true"
+                        {% endif %}
+                        >{{ dc }}
+                        </option>
+                    {% endfor %}
+                    </select>
+
+                </div>
+                <button class="edit-button" name=save type="submit" value="{{ module.moduleid }}">Save Module</button>
+                <button class="edit-button" name=edit type="submit" value="{{ module.moduleid }}">Edit Programs</button>
+                <button class="edit-button" name=remove type="submit" value="{{ module.moduleid }}">Remove</button>
+                <br/>
+                <button class="edit-button" name=on type="submit" value="{{ module.moduleid }}">On</button>
+                <button class="edit-button" name=off type="submit" value="{{ module.moduleid }}">Off</button>
+            </div>
+        {% endfor %}
+
+        <div class="clear"></div>
+        <button class="edit-button" name=add-appliance type="submit" value="add">Add Appliance</button>
+        <button class="edit-button" name=add-lamp type="submit" value="add">Add Lamp</button>
+    </form>
+{% endblock %}

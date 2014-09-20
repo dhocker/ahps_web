@@ -9,3 +9,14 @@ def get_rooms():
     cur = db.execute('select roomid,name,description from rooms order by name asc')
     rooms = cur.fetchall()
     return rooms
+
+
+def get_room(roomid):
+    '''
+    Get a room record given its id
+    :return: A list of all rooms
+    '''
+    db =    get_db()
+    cur = db.execute('select roomid,name,description from rooms where roomid=?', roomid)
+    room = cur.fetchall()[0]
+    return room

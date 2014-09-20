@@ -15,9 +15,20 @@ h2              { font-size: 1.2em; }
 .flash          { background: #CEE5F5; padding: 0.5em; margin-bottom: 0.5em;
                     border: 1px solid #AACBE2; }
 .error          { background: #F0D6D6; padding: 0.5em; }
+.logo           { vertical-align: text-top }
 .room           { background: #CEE5F5; width: 15em; padding: 0.5em;
+                    color: #778E9E;
+                    border: 3px solid #778E9E;
+                    float: left; margin: 0.3em auto; }
+.module         { background: #CEE5F5; width: 15em; padding: 0.5em;
                     border: 3px solid #AACBE2; float: left; margin: 0.3em auto; }
-.name           { color: #377BA8; }
+.lamp-module    { background: #CEE5F5; width: 15em; padding: 0.5em;
+                    color: #667A88;
+                    border: 3px solid #667A88; float: left; margin: 0.3em auto; }
+.appliance-module { background: #97C897; width: 15em; padding: 0.5em;
+                    color: #316F31;
+                    border: 3px solid #316F31; float: left; margin: 0.3em auto; }
+.name           { /* color: #377BA8; */ }
 .description    { text-indent: 2em }
 .edit-button    { left: 2em; margin-top: 0.5em; padding: 0.2em; }
 .footer         { clear: both; margin-top: 2em; padding: 0.5em;

@@ -3,7 +3,7 @@ import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
-from ahps_web.models.room import get_rooms
+from ahps_web.models.room import get_rooms, get_room
 from ahps_web.models.module import get_modules_for_room
 
 
@@ -67,7 +67,10 @@ def edit_modules():
         if request.form.has_key("roomid"):
             # The key is the name of the input or button element
             modules = get_modules_for_room(request.form["roomid"])
-            return "roomid {0} has {1} modules".format(request.form["roomid"], len(modules))
+            room = get_room(request.form["roomid"])
+            # return "roomid {0} has {1} modules".format(request.form["roomid"], len(modules))
+            return render_template('modules.html', room=room, modules=modules,
+                                   house_codes=house_codes(), device_codes=device_codes())
         elif request.form.has_key("remove"):
             return "Remove roomid: {0}".format(request.form["remove"])
         elif request.form.has_key("add"):
@@ -76,6 +79,19 @@ def edit_modules():
         return redirect(url_for('login'))
 
     return redirect(url_for('login'))
+
+def house_codes():
+    codes = []
+    for hcx in range(0, 16):
+        codes.append(chr(ord('A') + hcx))
+    return codes
+
+
+def device_codes():
+    codes = []
+    for dcx in range(1, 17):
+        codes.append(str(dcx))
+    return codes
 
 
 if __name__ == "__main__":
