@@ -3,7 +3,7 @@ import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
-from ahps_web.models.room import get_rooms, get_room
+from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room
 
 
@@ -71,14 +71,43 @@ def edit_modules():
             # return "roomid {0} has {1} modules".format(request.form["roomid"], len(modules))
             return render_template('modules.html', room=room, modules=modules,
                                    house_codes=house_codes(), device_codes=device_codes())
+
         elif request.form.has_key("remove"):
-            return "Remove roomid: {0}".format(request.form["remove"])
+            # TODO Consider adding "are you sure?" test here
+            # The roomid to be deleted is the value of the remove key
+            delete_room(request.form["remove"])
+            return redirect(url_for('home'))
+
         elif request.form.has_key("add"):
-            return "Add another room"
+            return redirect(url_for('add_room'))
     else:
         return redirect(url_for('login'))
 
     return redirect(url_for('login'))
+
+
+@app.route('/add_room', methods=['GET', 'POST'])
+def add_room():
+    # login is required
+    if is_logged_in():
+        if request.method == 'GET':
+            # For a GET request, return the add room page
+            return render_template('add_room.html')
+        elif request.method == 'POST':
+            # The POST request sends the add room form contents
+            if request.form["save"] == "save":
+                # Save new room
+                if request.form["name"] == '':
+                    error = 'Room name is a required field'
+                    return render_template('add_room.html', error=error)
+                else:
+                    insert_room(request.form["name"], request.form["description"])
+
+            # Return to the home page (list of rooms)
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
 
 def house_codes():
     codes = []

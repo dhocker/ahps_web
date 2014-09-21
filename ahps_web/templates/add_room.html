@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Add a New Room</h2>
+
+    <div class="input-form">
+    <form action="add_room" method="post">
+        <label for="name" class="input-label">*Room name:</label>
+        <input id="name" type="text" name="name" class="input-text" autofocus="True">
+        <br/>
+        <label for="description" class="input-label">Description:</label>
+        <input id="description" type="text" name="description" class="input-text">
+        <br/>
+        <button class="edit-button" name=save type="submit" value="cancel">Cancel</button>
+        <button class="edit-button" name=save type="submit" value="save">Save</button>
+    </form>
+    </div>
+
+{% endblock %}

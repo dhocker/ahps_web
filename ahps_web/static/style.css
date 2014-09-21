@@ -35,3 +35,6 @@ h2              { font-size: 1.2em; }
                     background: #f0f0f0;
                     color: #377BA8; font-size: 0.7em }
 .clear          { clear: both }
+.input-form     { margin: 1em auto; }
+.input-text     { margin: 0.3em auto; }
+.input-label    { margin: 0.3em auto; display: block }
