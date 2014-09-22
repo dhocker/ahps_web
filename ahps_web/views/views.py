@@ -20,7 +20,8 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
-from ahps_web.models.module import get_modules_for_room, insert_module, update_module_hdc
+from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
+    update_module_dim_amount, delete_module
 
 
 def is_logged_in():
@@ -99,25 +100,37 @@ def modules(roomid):
     Show the modules for a given room
     :return:
     '''
-    error = None
 
     if request.method == 'GET':
         # Show modules for the roomid
         pass
     elif request.method == 'POST':
-        # TODO Save changes to module (house and device code)
         # Possible actions: Save, edit programs, remove, on, off
         moduleid = request.form["moduleid"]
         button = request.form["button"]
 
         if button == 'save':
             update_module_hdc(moduleid, request.form["house_code"], request.form["device_code"])
+            if request.form['module_type'] == 'lamp':
+                update_module_dim_amount(moduleid, request.form['dim_amount'])
             flash('Module record saved')
+        elif button == 'editprograms':
+            pass
+        elif button == 'remove':
+            # TODO Add "are you sure" check
+            module = get_module(moduleid)
+            delete_module(moduleid)
+            flash("The \"{0}\" module was removed".format(module['name']))
+        elif button == 'on':
+            pass
+        elif button == 'off':
+            pass
+        else:
+            return "Unrecognized button action"
 
     modules = get_modules_for_room(roomid)
     room = get_room(roomid)
     return render_template('modules.html', room=room, modules=modules)
-
 
 
 @app.route('/home/add_room', methods=['GET', 'POST'])
@@ -176,10 +189,20 @@ def new_appliance_module():
     return redirect(url_for('modules', roomid=roomid))
 
 
-@app.route('/new_lamp_module', methods=['GET', 'POST'])
+@app.route('/modules/new_lamp_module', methods=['POST'])
 def new_lamp_module():
     # Save or cancel
-    pass
+    if request.form.has_key('save'):
+        # Save (insert) new module record
+        roomid = request.form['save']
+        insert_module(roomid, 'lamp', request.form['name'],
+                      request.form['house_code'], request.form['device_code'],
+                      request.form['dim_amount'])
+    else:
+        roomid = request.form['cancel']
+
+    # After save or cancel return to modules for room
+    return redirect(url_for('modules', roomid=roomid))
 
 
 def house_codes():

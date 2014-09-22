@@ -31,7 +31,8 @@ create table modules (
   module_type text not null,
   name text not null,
   house_code text not null,
-  device_code text not null
+  device_code text not null,
+  dim_amount integer default 0
 );
 
 create table programs (

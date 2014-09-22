@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Add a Lamp Appliance Module to {{ room_name }}</h2>
+
+    <div class="input-form">
+    <form action="new_lamp_module" method="post">
+        <label for="name" class="input-label">*Module name:</label>
+        <input id="name" type="text" name="name" class="input-text" autofocus="True">
+
+        <label for="house_code" class="input-label">House code:</label>
+        {% include 'house_codes.html' %}
+
+        <label for="device_code" class="input-label">Device code:</label>
+        {% include 'device_codes.html' %}
+
+        <label for="dimamount" class="input-label">Dim amount:</label>
+        <input id="dimamount" type="text" name="dim_amount" class="input-text" value="0" autofocus="True"/>
+
+        <br/>
+        <button class="edit-button" name=cancel type="submit" value="{{ roomid }}">Cancel</button>
+        <button class="edit-button" name=save type="submit" value="{{ roomid }}">Save</button>
+    </form>
+    </div>
+
+{% endblock %}

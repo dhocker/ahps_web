@@ -5,11 +5,18 @@
             <form action="{{ room.roomid }}" method="post">
                 <div class="{{ module.module_type }}-module">
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
+                    <input type="hidden" name="module_type" value="{{ module.module_type }}">
                     <div class="name">{{ module.module_type }}: {{ module.name }}</div>
                     <div class="hdc">
                         {{ module.house_code }}{{ module.device_code }}
                         {% include 'house_codes.html' %}
                         {% include 'device_codes.html' %}
+                        {% if module.module_type == 'lamp' %}
+                            Dim: <input type="text" id="dim_amount" name="dim_amount" class="input-number"
+                                        value="{{ module.dim_amount }}"/>
+                        {% else %}
+                            <br/>
+                        {% endif %}
                     </div>
                     <button class="edit-button" name="button" type="submit" value="save">Save Module</button>
                     <button class="edit-button" name="button" type="submit" value="editprograms">Edit Programs</button>
