@@ -34,6 +34,7 @@ h2              { font-size: 1.2em; }
 .footer         { clear: both; margin-top: 2em; padding: 0.5em;
                     background: #f0f0f0;
                     color: #377BA8; font-size: 0.7em }
+.copyright      { float: right; }
 .clear          { clear: both }
 .input-form     { margin: 1em auto; }
 .input-text     { margin: 0.3em auto; }

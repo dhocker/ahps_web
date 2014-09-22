@@ -17,7 +17,7 @@ def get_room(roomid):
     :return: A list of all rooms
     '''
     db = get_db()
-    cur = db.execute('select roomid,name,description from rooms where roomid=?', roomid)
+    cur = db.execute('select roomid,name,description from rooms where roomid=?', [roomid])
     room = cur.fetchall()[0]
     return room
 
