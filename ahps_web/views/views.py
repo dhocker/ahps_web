@@ -115,7 +115,7 @@ def modules(roomid):
                 update_module_dim_amount(moduleid, request.form['dim_amount'])
             flash('Module record saved')
         elif button == 'editprograms':
-            pass
+            return "Edit programs was called"
         elif button == 'remove':
             # TODO Add "are you sure" check
             module = get_module(moduleid)

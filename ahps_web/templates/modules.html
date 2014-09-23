@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <div id="dialog" title="Confirmation Dialog">
-        <p>Remove the selected module?</p>
+    {# The jQuery UI dialog for confirming module removal #}
+    <div id="dialog" title="Confirmation">
+        <p id="dialog-text">Remove the selected module?</p>
     </div>
     <script type="text/javascript">
+        /* Initialize the confirmation dialog */
         $(document).ready(function() {
             $("#dialog").dialog(
             {
@@ -12,15 +14,34 @@
                 modal: true,
                 closeOnEscape: false,
                 buttons: {
-                    "Remove": function(event) { $("#dialog").dialog( "close" ); $("#remove").submit(); },
-                    "Cancel": function(event) { $("#dialog").dialog( "close" ); }
+                    "Remove": function(event) {
+                        $("#dialog").dialog( "close" );
+                        $("#module-form-" + $(this).data("moduleid")).submit();
+                        },
+                    "Cancel": function(event) {
+                        $("#dialog").dialog( "close" );
+                        }
                 }
             });
 
         });
 
-        function showDialog(){
-            $("#dialog").dialog("open");
+        /* Show confirmation dialog for removing a module */
+        function showDialog(moduleid){
+            /* Set the value of the hidden button tag to reflect this is a remove */
+            $("#submit-button-" + moduleid).val("remove");
+            /* Set the dialog text with the room name */
+            $("#dialog-text").text("Remove " + $("#module-name-" + moduleid).text() + "?");
+            /* Spring the dialog for the given room */
+            $("#dialog")
+                .data("moduleid", moduleid)
+                .dialog("open");
+        };
+
+        /* Submit the form */
+        function submitForm(form_action, moduleid){
+            $("#submit-button-" + moduleid).val(form_action);
+            $("#module-form-" + moduleid).submit();
         };
 
     </script>
@@ -29,11 +50,13 @@
 {% block body %}
     <h2>Modules for room: {{ room.name }}</h2>
         {% for module in modules %}
-            <form action="{{ room.roomid }}" method="post">
+            <form id="module-form-{{ module.moduleid }}" action="{{ room.roomid }}" method="post">
                 <div class="{{ module.module_type }}-module">
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
                     <input type="hidden" name="module_type" value="{{ module.module_type }}">
-                    <div class="name">{{ module.module_type | capitalize() }}: {{ module.name }}</div>
+                    <div id="module-name-{{ module.moduleid }}" class="name">
+                        {{ module.module_type | capitalize() }}: {{ module.name }}
+                    </div>
                     <div class="hdc">
                         {{ module.house_code }}{{ module.device_code }}
                         {% include 'house_codes.html' %}
@@ -45,13 +68,18 @@
                             <br/>
                         {% endif %}
                     </div>
-                    <button class="edit-button" name="button" type="submit" value="save">Save Module</button>
-                    <button class="edit-button" name="button" type="submit" value="editprograms">Edit Programs</button>
+                    {# This is used to send the button that was clicked #}
+                    <input id="submit-button-{{ module.moduleid }}" type="hidden" name="button" value=""/>
+                    {# These buttons are used to capture user clicks. The underlying Javascript
+                    will set the id=submit-button value to indicate the button that was clicked. #}
+                    <button onclick="submitForm('save', {{ module.moduleid }})" class="edit-button" name="save-button"
+                        type="button" value="save">Save Module</button>
+                    <button onclick="submitForm('editprograms', {{ module.moduleid }})" class="edit-button" name="edit-button" type="button" value="editprograms">Edit Programs</button>
                     <br/>
-                    <button class="edit-button" name="button" type="submit" value="on">On</button>
-                    <button class="edit-button" name="button" type="submit" value="off">Off</button>
+                    <button onclick="submitForm('on', {{ module.moduleid }})" class="edit-button" name="on-button" type="button" value="on">On</button>
+                    <button onclick="submitForm('off', {{ module.moduleid }})" class="edit-button" name="off-button" type="button" value="off">Off</button>
                     <br/>
-                    <button class="edit-button" name="button" type="submit" value="remove">Remove Module</button>
+                    <button onclick="showDialog({{ module.moduleid }})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
                 </div>
             </form>
         {% endfor %}

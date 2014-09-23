@@ -3,7 +3,7 @@
 {% block head %}
     {# The jQuery UI dialog for confirming room removal #}
     <div id="dialog" title="Confirmation">
-        <p>Remove the selected room?</p>
+        <p id="dialog-text">Remove the selected room?</p>
     </div>
     <script type="text/javascript">
         /* Initialize the confirmation dialog */
@@ -28,7 +28,11 @@
 
         /* Show confirmation dialog for removing a room */
         function showDialog(roomid){
+            /* Set the value of the hidden button tag to reflect this is a remove */
             $("#submit-button-" + roomid).val("remove");
+            /* Set the dialog text with the room name */
+            $("#dialog-text").text("Remove room: " + $("#room-name-" + roomid).text() + "?");
+            /* Spring the dialog for the given room */
             $("#dialog")
                 .data("roomid", roomid)
                 .dialog("open");
@@ -53,7 +57,7 @@
                 <div class="room">
                     <form id="room-form-{{ room.roomid }}" action="" method="post">
                         <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
-                        <div class="name">{{ room.name }}</div>
+                        <div id="room-name-{{ room.roomid }}"  class="name">{{ room.name }}</div>
                         <div class="description">{{ room.description }}</div>
                         {# This is used to send the button that was clicked #}
                         <input id="submit-button-{{ room.roomid }}" type="hidden" name="button" value=""/>
@@ -62,14 +66,14 @@
                         <button onclick="showModules({{ room.roomid }})"  class="edit-button" name="show-button" type="button"
                                 value="showmodules">Modules</button>
                         <button onclick="showDialog({{ room.roomid }})" class="edit-button" name="remove-button" type="button"
-                                value="remove">Remove</button>
+                                value="remove">Remove Room</button>
                     </form>
 {#
                     <form id="remove" action="" method="post">
                         <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
                         <input id="submit-button" type="hidden" name="button" value="remove"/>
                         <button onclick="showDialog()" class="edit-button" name="remove-button" type="button"
-                                value="remove">Remove</button>
+                                value="remove">Remove Room</button>
                     </form>
 #}
                 </div>
