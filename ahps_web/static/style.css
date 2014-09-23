@@ -25,11 +25,11 @@ h2              { font-size: 1.2em; }
 .lamp-module    { background: #CEE5F5; width: 15em; padding: 0.5em;
                     color: #667A88;
                     border: 3px solid #667A88; float: left; margin: 0.3em auto;
-                    height: 8em; }
+                    height: 10em; }
 .appliance-module { background: #97C897; width: 15em; padding: 0.5em;
                     color: #316F31;
                     border: 3px solid #316F31; float: left; margin: 0.3em auto;
-                    height: 8em; }
+                    height: 10em; }
 .name           { padding: 0.2em; color: #377BA8; background: #EBF5FB}
 .description    { text-indent: 2em }
 .hdc            { margin: 0.2em; }
@@ -43,3 +43,7 @@ h2              { font-size: 1.2em; }
 .input-text     { margin: 0.3em auto; }
 .input-number   { margin: 0.3em auto; width: 2em; }
 .input-label    { margin: 0.3em auto; display: block }
+
+/* This removes the closer X from jQuery UI dialog boxes */
+.ui-dialog-titlebar-close
+                { visibility: hidden; }

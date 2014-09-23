@@ -31,7 +31,7 @@
             /* Set the value of the hidden button tag to reflect this is a remove */
             $("#submit-button-" + moduleid).val("remove");
             /* Set the dialog text with the room name */
-            $("#dialog-text").text("Remove " + $("#module-name-" + moduleid).text() + "?");
+            $("#dialog-text").text("Remove " + $("#module-name-text" + moduleid).val() + "?");
             /* Spring the dialog for the given room */
             $("#dialog")
                 .data("moduleid", moduleid)
@@ -55,7 +55,8 @@
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
                     <input type="hidden" name="module_type" value="{{ module.module_type }}">
                     <div id="module-name-{{ module.moduleid }}" class="name">
-                        {{ module.module_type | capitalize() }}: {{ module.name }}
+                        <label for="module-name" class="input-label">{{ module.module_type | capitalize() }}</label>
+                        <input type="text" id="module-name-text{{ module.moduleid }}" name="module-name" value="{{ module.name }}"/>
                     </div>
                     <div class="hdc">
                         {{ module.house_code }}{{ module.device_code }}
