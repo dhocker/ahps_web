@@ -22,15 +22,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module
-
-
-def is_logged_in():
-    '''
-    Session helper
-    :return: True if admin user is logged
-    '''
-    return session.has_key('logged_in') and session['logged_in']
-
+from ahps_web.views.login_views import is_logged_in
 
 @app.route("/")
 def root():
@@ -69,29 +61,27 @@ def home():
             return redirect(url_for('add_room'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    g.user = None
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
-            session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('home'))
-
-    return render_template('login.html', error=error)
-
-
-@app.route('/logout')
-def logout():
+@app.route('/home/add_room', methods=['GET', 'POST'])
+def add_room():
+    # login is required
     if is_logged_in():
-        session.pop('logged_in', None)
-        flash('You were logged out')
-    return redirect(url_for('login'))
+        if request.method == 'GET':
+            # For a GET request, return the add room page
+            return render_template('add_room.html')
+        elif request.method == 'POST':
+            # The POST request sends the add room form contents
+            if request.form["save"] == "save":
+                # Save new room
+                if request.form["name"]:
+                    insert_room(request.form["name"], request.form["description"])
+                else:
+                    error = 'Room name is a required field'
+                    return render_template('add_room.html', error=error)
+
+            # Return to the home page (list of rooms)
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/modules/<roomid>', methods=['GET', 'POST'])
@@ -132,29 +122,6 @@ def modules(roomid):
     modules = get_modules_for_room(roomid)
     room = get_room(roomid)
     return render_template('modules.html', room=room, modules=modules)
-
-
-@app.route('/home/add_room', methods=['GET', 'POST'])
-def add_room():
-    # login is required
-    if is_logged_in():
-        if request.method == 'GET':
-            # For a GET request, return the add room page
-            return render_template('add_room.html')
-        elif request.method == 'POST':
-            # The POST request sends the add room form contents
-            if request.form["save"] == "save":
-                # Save new room
-                if request.form["name"]:
-                    insert_room(request.form["name"], request.form["description"])
-                else:
-                    error = 'Room name is a required field'
-                    return render_template('add_room.html', error=error)
-
-            # Return to the home page (list of rooms)
-            return redirect(url_for('home'))
-    else:
-        return redirect(url_for('login'))
 
 
 @app.route('/modules/edit_module', methods=['POST'])
@@ -206,19 +173,8 @@ def new_lamp_module():
     return redirect(url_for('modules', roomid=roomid))
 
 
-def house_codes():
-    codes = []
-    for hcx in range(0, 16):
-        codes.append(chr(ord('A') + hcx))
-    return codes
-
-
-def device_codes():
-    codes = []
-    for dcx in range(1, 17):
-        codes.append(str(dcx))
-    return codes
-
-
+#
+# Main app
+#
 if __name__ == "__main__":
     app.run('0.0.0.0')
