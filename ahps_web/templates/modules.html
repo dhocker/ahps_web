@@ -1,4 +1,31 @@
 {% extends "layout.html" %}
+
+{% block head %}
+    <div id="dialog" title="Confirmation Dialog">
+        <p>Remove the selected module?</p>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "Remove": function(event) { $("#dialog").dialog( "close" ); $("#remove").submit(); },
+                    "Cancel": function(event) { $("#dialog").dialog( "close" ); }
+                }
+            });
+
+        });
+
+        function showDialog(){
+            $("#dialog").dialog("open");
+        };
+
+    </script>
+{% endblock %}
+
 {% block body %}
     <h2>Modules for room: {{ room.name }}</h2>
         {% for module in modules %}
@@ -6,7 +33,7 @@
                 <div class="{{ module.module_type }}-module">
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
                     <input type="hidden" name="module_type" value="{{ module.module_type }}">
-                    <div class="name">{{ module.module_type }}: {{ module.name }}</div>
+                    <div class="name">{{ module.module_type | capitalize() }}: {{ module.name }}</div>
                     <div class="hdc">
                         {{ module.house_code }}{{ module.device_code }}
                         {% include 'house_codes.html' %}
@@ -20,10 +47,11 @@
                     </div>
                     <button class="edit-button" name="button" type="submit" value="save">Save Module</button>
                     <button class="edit-button" name="button" type="submit" value="editprograms">Edit Programs</button>
-                    <button class="edit-button" name="button" type="submit" value="remove">Remove Module</button>
                     <br/>
                     <button class="edit-button" name="button" type="submit" value="on">On</button>
                     <button class="edit-button" name="button" type="submit" value="off">Off</button>
+                    <br/>
+                    <button class="edit-button" name="button" type="submit" value="remove">Remove Module</button>
                 </div>
             </form>
         {% endfor %}

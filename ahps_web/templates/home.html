@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <div id="dialog" title="Confirmation Dialog">
+    {# The jQuery UI dialog for confirming room removal #}
+    <div id="dialog" title="Confirmation">
         <p>Remove the selected room?</p>
     </div>
     <script type="text/javascript">
+        /* Initialize the confirmation dialog */
         $(document).ready(function() {
             $("#dialog").dialog(
             {
@@ -12,15 +14,30 @@
                 modal: true,
                 closeOnEscape: false,
                 buttons: {
-                    "Remove": function(event) { $("#dialog").dialog( "close" ); $("#remove").submit(); },
-                    "Cancel": function(event) { $("#dialog").dialog( "close" ); }
+                    "Remove": function(event) {
+                        $("#dialog").dialog( "close" );
+                        $("#room-form-" + $(this).data("roomid")).submit();
+                        },
+                    "Cancel": function(event) {
+                        $("#dialog").dialog( "close" );
+                        }
                 }
             });
 
         });
 
-        function showDialog(){
-            $("#dialog").dialog("open");
+        /* Show confirmation dialog for removing a room */
+        function showDialog(roomid){
+            $("#submit-button-" + roomid).val("remove");
+            $("#dialog")
+                .data("roomid", roomid)
+                .dialog("open");
+        };
+
+        /* Show modules for a room */
+        function showModules(roomid){
+            $("#submit-button-" + roomid).val("showmodules");
+            $("#room-form-" + roomid).submit();
         };
 
     </script>
@@ -34,17 +51,27 @@
         <h2>Rooms</h2>
             {% for room in rooms %}
                 <div class="room">
-                    <form action="" method="post" >
+                    <form id="room-form-{{ room.roomid }}" action="" method="post">
                         <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
                         <div class="name">{{ room.name }}</div>
                         <div class="description">{{ room.description }}</div>
-                        <button class="edit-button" name="button" type="submit" value="showmodules">Modules</button>
+                        {# This is used to send the button that was clicked #}
+                        <input id="submit-button-{{ room.roomid }}" type="hidden" name="button" value=""/>
+                        {# These buttons are used to capture user clicks. The underlying Javascript
+                        will set the id=submit-button value to indicate the button that was clicked. #}
+                        <button onclick="showModules({{ room.roomid }})"  class="edit-button" name="show-button" type="button"
+                                value="showmodules">Modules</button>
+                        <button onclick="showDialog({{ room.roomid }})" class="edit-button" name="remove-button" type="button"
+                                value="remove">Remove</button>
                     </form>
-                    <form id="remove" action="" method="post" >
+{#
+                    <form id="remove" action="" method="post">
                         <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
-                        <input type="hidden" name="button" value="remove"/>
-                        <button onclick="showDialog()" class="edit-button" name="remove-button" type="button" value="remove">Remove</button>
+                        <input id="submit-button" type="hidden" name="button" value="remove"/>
+                        <button onclick="showDialog()" class="edit-button" name="remove-button" type="button"
+                                value="remove">Remove</button>
                     </form>
+#}
                 </div>
             {% endfor %}
 
