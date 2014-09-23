@@ -1,4 +1,31 @@
 {% extends "layout.html" %}
+
+{% block head %}
+    <div id="dialog" title="Confirmation Dialog">
+        <p>Remove the selected room?</p>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "Remove": function(event) { $("#dialog").dialog( "close" ); $("#remove").submit(); },
+                    "Cancel": function(event) { $("#dialog").dialog( "close" ); }
+                }
+            });
+
+        });
+
+        function showDialog(){
+            $("#dialog").dialog("open");
+        };
+
+    </script>
+{% endblock %}
+
 {% block body %}
     <h2>Home</h2>
     <p>This is the home page for the AHPS Web server.</p>
@@ -6,15 +33,19 @@
     {% if session.logged_in %}
         <h2>Rooms</h2>
             {% for room in rooms %}
-                <form action="" method="post">
-                    <div class="room">
+                <div class="room">
+                    <form action="" method="post" >
                         <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
                         <div class="name">{{ room.name }}</div>
                         <div class="description">{{ room.description }}</div>
-                        <button class="edit-button" name=button type="submit" value="showmodules">Modules</button>
-                        <button class="edit-button" name=button type="submit" value="remove">Remove</button>
-                    </div>
-                </form>
+                        <button class="edit-button" name="button" type="submit" value="showmodules">Modules</button>
+                    </form>
+                    <form id="remove" action="" method="post" >
+                        <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
+                        <input type="hidden" name="button" value="remove"/>
+                        <button onclick="showDialog()" class="edit-button" name="remove-button" type="button" value="remove">Remove</button>
+                    </form>
+                </div>
             {% endfor %}
 
             <div class="clear"></div>
