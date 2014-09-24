@@ -38,6 +38,7 @@ create table modules (
 create table programs (
   programid integer primary key autoincrement,
   moduleid integer not null,
+  name text default '',
   days text default '',
   start_trigger_method text default 'none',
   start_time text default '',

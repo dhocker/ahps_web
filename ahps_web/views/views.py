@@ -22,6 +22,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module
+from ahps_web.models.program import get_programs_for_module, insert_program, delete_program
 from ahps_web.views.login_views import is_logged_in
 
 @app.route("/")
@@ -105,17 +106,22 @@ def modules(roomid):
             if request.form['module_type'] == 'lamp':
                 update_module_dim_amount(moduleid, request.form['dim_amount'])
             flash('Module record saved')
+
         elif button == 'editprograms':
-            return "Edit programs was called"
+            return redirect(url_for("module_programs", moduleid=moduleid))
+
         elif button == 'remove':
             # TODO Add "are you sure" check
             module = get_module(moduleid)
             delete_module(moduleid)
             flash("The \"{0}\" module was removed".format(module['name']))
+
         elif button == 'on':
             pass
+
         elif button == 'off':
             pass
+
         else:
             return "Unrecognized button action"
 
@@ -172,6 +178,38 @@ def new_lamp_module():
     # After save or cancel return to modules for room
     return redirect(url_for('modules', roomid=roomid))
 
+
+@app.route('/modules/programs/<moduleid>', methods=['GET', 'POST'])
+def module_programs(moduleid):
+    '''
+    Show list of programs for the given module ID
+    :param moduleid:
+    :return:
+    '''
+    if request.method == 'GET':
+        module = get_module(moduleid)
+        programs = get_programs_for_module(moduleid)
+        return render_template("module_programs.html", module=module, programs=programs)
+    elif request.method == 'POST':
+        if request.form.has_key('add-program'):
+            moduleid = request.form["add-program"]
+            insert_program(moduleid, "New Program")
+            return redirect(url_for("module_programs", moduleid=moduleid))
+    else:
+        pass
+
+
+@app.route('/modules/programs/edit_program/<programid>', methods=['GET'])
+def edit_program(programid):
+    return "Edit program called"
+
+
+@app.route('/modules/programs/remove_program/<moduleid>', methods=['GET'])
+def remove_program(moduleid):
+    programid = request.args["programid"]
+    delete_program(programid)
+    # return "Remove program called for moduleid/programid" + moduleid + "/" + programid;
+    return redirect(url_for("module_programs", moduleid=moduleid))
 
 #
 # Main app

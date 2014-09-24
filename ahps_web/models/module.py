@@ -17,7 +17,7 @@ def get_module(moduleid):
     Get a module record for a given moduleid
     :return: A list of modules
     '''
-    db =    get_db()
+    db = get_db()
     cur = db.execute('select * from modules where moduleid=?', [moduleid])
     module = cur.fetchone()
     return module

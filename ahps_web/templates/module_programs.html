@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {# The jQuery UI dialog for confirming module removal #}
+    <div id="dialog" title="Confirmation">
+        <p id="dialog-text">Remove the selected program?</p>
+    </div>
+    <script type="text/javascript">
+        /* Initialize the confirmation dialog */
+        $(document).ready(function() {
+            $("#dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "Remove": function(event) {
+                        $("#dialog").dialog( "close" );
+                        /* Effectively a redirect to the remove page */
+                        moduleid = $(this).data("moduleid");
+                        programid = $(this).data("programid");
+                        window.location.replace('/modules/programs/remove_program/' + moduleid + '?programid=' + programid);
+                        },
+                    "Cancel": function(event) {
+                        $("#dialog").dialog( "close" );
+                        }
+                }
+            });
+
+        });
+
+        /* Show confirmation dialog for removing a program */
+        function confirmRemove(moduleid, programid, name){
+            /* Set the dialog text with the room name */
+            $("#dialog-text").text("Remove program " + name + "?");
+            /* Pop the confirmation dialog */
+            $("#dialog")
+                .data("moduleid", moduleid)
+                .data("programid", programid)
+                .data("name", name)
+                .dialog("open");
+        };
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <h2>Programs for module: {{ module.name }}</h2>
+        <table id="programs">
+            <tr>
+                <th>Program Name</th>
+                <th>Actions</th>
+            </tr>
+            {% for program in programs %}
+                {% if loop.index is not divisibleby 2 %}
+                <tr>
+                {% else %}
+                <tr class="alt">
+                {% endif %}
+                    <td>{{ program.name }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_program', programid=program.programid) }}">Edit</a>
+                        <a href="javascript:confirmRemove({{ module.moduleid }}, {{ program.programid }}, '{{ program.name }}')">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    <div class="clear"></div>
+
+    {# Button for adding a program #}
+    <form action="" method="post">
+        <button class="edit-button" name=add-program type="submit" value="{{ module.moduleid }}">Add Program</button>
+    </form>
+{% endblock %}
+
+{% block footer_links %}
+    <a href="{{ url_for('modules', roomid=module.roomid) }}">Back</a>
+{% endblock %}
