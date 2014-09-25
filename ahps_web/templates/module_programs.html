@@ -59,8 +59,9 @@
                 {% endif %}
                     <td>{{ program.name }}</td>
                     <td>
-                        <a href="{{ url_for('edit_program', programid=program.programid) }}">Edit</a>
-                        <a href="javascript:confirmRemove({{ module.moduleid }}, {{ program.programid }}, '{{ program.name }}')">Remove</a>
+                        <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) }}">Edit</a>
+                        <a class="a-button"
+                           href="javascript:confirmRemove({{ module.moduleid }}, {{ program.programid }}, '{{ program.name }}')">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
