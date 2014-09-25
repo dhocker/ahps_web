@@ -17,6 +17,18 @@
 from ahps_web.database.connection import get_db
 
 
+def get_program(programid):
+    '''
+    Get a program given its program ID
+    :return: The program record as a dict. This is done to provide a
+        mutable object that will support updates.
+    '''
+    db = get_db()
+    cur = db.execute('select * from programs where programid=?', [programid])
+    program = cur.fetchone()
+    return program_to_dict(program)
+
+
 def get_programs_for_module(moduleid):
     '''
     Get all programs for a given module
@@ -49,3 +61,44 @@ def delete_program(programid):
     db.execute('delete from programs where programid=?', (programid,))
     db.commit()
     return True
+
+
+def update_program(program):
+    '''
+    Update an entire program record from a key/value dict DHO
+    :param program:
+    :return:
+    '''
+
+    colnames = ""
+    values = []
+    for k, v in program.iteritems():
+        if k != "programid":
+            if len(colnames) > 0:
+                colnames += ","
+            colnames += "{0}=?".format(k)
+            values.append(v)
+    values.append(program["programid"])
+
+    stmt = 'update programs set {0} where programid=?'.format(colnames)
+
+    db = get_db()
+    db.execute(stmt, values)
+    db.commit()
+    return True
+
+
+def program_to_dict(row):
+    '''
+    Convert a row object to an equivalent dict where the column names are keys.
+    The dict acts as a DHO.
+    :param row:
+    :return:
+    '''
+
+    d = {}
+    # The row keys are the table column names
+    for c in row.keys():
+        d[c] = row[c]
+
+    return d

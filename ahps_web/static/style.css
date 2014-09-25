@@ -79,6 +79,21 @@ h2              { font-size: 1.2em; }
                     color: #000000;
                     background-color: #EBF5FB; }
 
+/* Styling for the program editing page */
+.days-of-week       {
+                    margin: 0.5em 1em 0.5em 0;
+                    width: 200px;
+                    }
+.start-action-group {
+                    margin: 0.5em 1em 1em 0;
+                    width: 90px;
+                    float: left
+                    }
+.stop-action-group  {
+                    margin: 0.5em 1em 1em 0;
+                    width: 90px;
+                    float:left
+                    }
 
 /* This removes the closer X from jQuery UI dialog boxes */
 .ui-dialog-titlebar-close

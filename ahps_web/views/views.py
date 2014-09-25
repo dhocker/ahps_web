@@ -22,7 +22,8 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module
-from ahps_web.models.program import get_programs_for_module, insert_program, delete_program
+from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
+    update_program, program_to_dict
 from ahps_web.views.login_views import is_logged_in
 
 @app.route("/")
@@ -199,9 +200,37 @@ def module_programs(moduleid):
         pass
 
 
-@app.route('/modules/programs/edit_program/<programid>', methods=['GET'])
+@app.route('/modules/programs/edit_program/<programid>', methods=['GET', 'POST'])
 def edit_program(programid):
-    return "Edit program called"
+    if request.method == 'GET':
+        program = get_program(programid)
+        module = get_module(program["moduleid"])
+        return render_template("program.html", module=module, program=program)
+    elif request.method == 'POST':
+        program = get_program(programid)
+        moduleid = program["moduleid"]
+
+        # TODO Implement save
+
+        program["name"] = request.form["program-name"]
+
+        # Build program days string from from inputs
+        wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+        days = ""
+        for d in range(0, 7):
+            key = "dow" + str(d)
+            if request.form.has_key(key):
+                days += wd[d]
+            else:
+                days += '.'
+        program["days"] = days
+
+        program["start_action"] = request.form["start-action"]
+        program["stop_action"] = request.form["stop-action"]
+
+        update_program(program)
+
+        return redirect(url_for("module_programs", moduleid=moduleid))
 
 
 @app.route('/modules/programs/remove_program/<moduleid>', methods=['GET'])

@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <script type="text/javascript">
+        /* Initialize the confirmation dialog */
+        $(document).ready(function() {
+            /*
+            Set checkboxes for days of week based on contents of program.days string.
+            The string looks like this: "MTWTFSS" (Monday through Sunday). Absent days
+            are represented by a period. This is weekdays: "MTWTF.."
+            */
+            for (i = 0; i < 7; i++)
+            {
+                d = "{{ program.days }}".substr(i, 1);
+                if (d != '.')
+                {
+                    dow = "dow" + String(i);
+                    $("#" + dow).attr("checked","checked");
+                }
+            }
+        });
+
+        function setWeekdays(){
+            $('.weekday').each(function(){ this.checked = !this.checked; });
+        }
+
+        function setWeekenddays(){
+            $('.weekendday').each(function(){ this.checked = !this.checked; });
+        }
+
+        function showHideFieldset(name){
+            fs_name = "#" + name;
+            $(fs_name).is(":visible") ? $(fs_name).hide() : $(fs_name).show();
+        }
+
+    </script>
+{% endblock %}
+
+{# Macros for the programs actions that can be assigned to a start or stop event #}
+
+{% macro action_option(value, selected_value) -%}
+    <p>{{ selected_value }}</p>
+    {% if value == selected_value %}
+        <option value="{{ value }}" selected="true">{{ value | capitalize() }}</option>
+    {% else %}
+        <option value="{{ value }}">{{ value | capitalize() }}</option>
+    {% endif %}
+{%- endmacro %}
+
+{% macro program_actions(id, class, name, selected_value) %}
+    <select id="{{ id }}" class="{{ class }}" name="{{ name }}">
+        {{ action_option("none", selected_value) }}
+        {{ action_option("on", selected_value) }}
+        {{ action_option("off", selected_value) }}
+    </select>
+{% endmacro %}
+
+{% block body %}
+    <form action="" method="post">
+        <h2>Module: {{ module.name }} - Program:
+            <input type="text" name="program-name" value="{{ program.name }}" >
+        </h2>
+        <fieldset id="days-of-week" class="days-of-week">
+            <legend>Days</legend>
+            {# The initial state of the checkboxes is set by Javascript above #}
+            <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" >Monday<br/>
+            <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" >Tuesday<br/>
+            <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" >Wednesday<br/>
+            <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" >Thursday<br/>
+            <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" >Friday<br/>
+            <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" >Saturday<br/>
+            <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" >Sunday<br/>
+
+            <button type="button" onclick="setWeekdays()">Week Days</button>
+            <button type="button" onclick="setWeekenddays()">Week End</button>
+        </fieldset>
+
+        <fieldset class="start-action-group">
+            <legend>Start Action</legend>
+            {{ program_actions("start-action", "start-action", "start-action", program.start_action) }}
+        </fieldset>
+
+        <fieldset class="stop-action-group">
+            <legend>Stop Action</legend>
+            {{ program_actions("stop-action", "stop-action", "stop-action", program.stop_action) }}
+        </fieldset>
+
+        <div class="clear"></div>
+        <button class="edit-button" name="save" type="submit" value="save">Save</button>
+        <button class="edit-button" name="cancel" type="submit" value="cancel">Cancel</button>
+    </form>
+
+    <div class="clear"></div>
+
+{% endblock %}
+
+{% block footer_links %}
+    <a href="{{ url_for('module_programs', moduleid=program.moduleid) }}">Back</a>
+{% endblock %}
