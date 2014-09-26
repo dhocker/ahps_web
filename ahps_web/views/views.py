@@ -240,6 +240,12 @@ def edit_program(programid):
         else:
             program["start_randomize"] = 0
 
+        if request.form.has_key("stop-randomize"):
+            v = request.form["stop-randomize"]
+            program["stop_randomize"] = 1
+        else:
+            program["stop_randomize"] = 0
+
         program["start_sunset_offset"] = int(request.form["start-sunset-offset"])
         program["stop_sunset_offset"] = int(request.form["stop-sunset-offset"])
 
