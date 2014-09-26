@@ -44,6 +44,9 @@ h2              { font-size: 1.2em; }
 .input-text     { margin: 0.3em auto; }
 .input-number   { margin: 0.3em auto; width: 2em; }
 .input-label    { margin: 0.3em auto; display: block }
+.input-program-name {
+                    width: 200px;
+                }
 
 /* Styling for anchor to make it look like a button */
 .a-button       { text-decoration: none; border: 1px solid #A0A0A0;
@@ -83,16 +86,33 @@ h2              { font-size: 1.2em; }
 .days-of-week       {
                     margin: 0.5em 1em 0.5em 0;
                     width: 200px;
+                    float: left;
                     }
 .start-action-group {
                     margin: 0.5em 1em 1em 0;
                     width: 90px;
-                    float: left
+                    float: left;
                     }
 .stop-action-group  {
                     margin: 0.5em 1em 1em 0;
                     width: 90px;
-                    float:left
+                    float:left;
+                    }
+.start-trigger-group {
+                    margin: 0.5em 1em 1em 0;
+                    width: 230px;
+                    float:left;
+                    }
+.stop-trigger-group {
+                    margin: 0.5em 1em 1em 0;
+                    width: 230px;
+                    float:left;
+                    }
+.start-trigger-method {
+                    margin: 0.3em auto;
+                    }
+.stop-trigger-method {
+                    margin: 0.3em auto;
                     }
 
 /* This removes the closer X from jQuery UI dialog boxes */

@@ -228,6 +228,20 @@ def edit_program(programid):
         program["start_action"] = request.form["start-action"]
         program["stop_action"] = request.form["stop-action"]
 
+        program["start_trigger_method"] = request.form["start-trigger-method"]
+        program["stop_trigger_method"] = request.form["stop-trigger-method"]
+
+        if request.form.has_key("start-randomize"):
+            v = request.form["start-randomize"]
+            program["start_randomize"] = 1
+        else:
+            program["start_randomize"] = 0
+
+        if request.form.has_key("start-randomize-amount"):
+            program["start_randomize_amount"] = int(request.form["start-randomize-amount"])
+        if request.form.has_key("stop-randomize-amount"):
+            program["stop_randomize_amount"] = int(request.form["stop-randomize-amount"])
+
         update_program(program)
 
         return redirect(url_for("module_programs", moduleid=moduleid))

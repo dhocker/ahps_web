@@ -2,13 +2,13 @@
 
 {% block head %}
     <script type="text/javascript">
-        /* Initialize the confirmation dialog */
+        {# Page initialization #}
         $(document).ready(function() {
-            /*
+            {#
             Set checkboxes for days of week based on contents of program.days string.
             The string looks like this: "MTWTFSS" (Monday through Sunday). Absent days
             are represented by a period. This is weekdays: "MTWTF.."
-            */
+            #}
             for (i = 0; i < 7; i++)
             {
                 d = "{{ program.days }}".substr(i, 1);
@@ -18,6 +18,17 @@
                     $("#" + dow).attr("checked","checked");
                 }
             }
+
+            {#  Initialize randomize checkboxes #}
+            if ({{ program.start_randomize }} != 0)
+            {
+                $("#start-randomize").attr("checked","checked");
+            }
+            if ({{ program.stop_randomize }} != 0)
+            {
+                $("#stop-randomize").attr("checked","checked");
+            }
+
         });
 
         function setWeekdays(){
@@ -33,12 +44,22 @@
             $(fs_name).is(":visible") ? $(fs_name).hide() : $(fs_name).show();
         }
 
+        function startTriggerChanged(){
+            // alert("start trigger was changed");
+            // TODO Cases for each trigger method. Show/hide group boxes.
+        }
+
+        function stopTriggerChanged(){
+            // alert("stop trigger was changed");
+            // TODO Cases for each trigger method. Show/hide group boxes.
+        }
+
     </script>
 {% endblock %}
 
-{# Macros for the programs actions that can be assigned to a start or stop event #}
+{# Macros for the program actions that can be assigned to a start or stop event #}
 
-{% macro action_option(value, selected_value) -%}
+{% macro select_option(value, selected_value) -%}
     <p>{{ selected_value }}</p>
     {% if value == selected_value %}
         <option value="{{ value }}" selected="true">{{ value | capitalize() }}</option>
@@ -49,17 +70,33 @@
 
 {% macro program_actions(id, class, name, selected_value) %}
     <select id="{{ id }}" class="{{ class }}" name="{{ name }}">
-        {{ action_option("none", selected_value) }}
-        {{ action_option("on", selected_value) }}
-        {{ action_option("off", selected_value) }}
+        {{ select_option("none", selected_value) }}
+        {{ select_option("on", selected_value) }}
+        {{ select_option("off", selected_value) }}
+    </select>
+{% endmacro %}
+
+{# Macros for generating the start/stop trigger method #}
+
+{% macro trigger_methods(id, class, name, selected_value, onchange) %}
+    <select id="{{ id }}" class="{{ class }}" name="{{ name }}" onchange="javascript:{{ onchange }}">
+        {{ select_option("none", selected_value) }}
+        {{ select_option("clock-time", selected_value) }}
+        {{ select_option("sunset", selected_value) }}
+        {{ select_option("sunrise", selected_value) }}
     </select>
 {% endmacro %}
 
 {% block body %}
     <form action="" method="post">
         <h2>Module: {{ module.name }} - Program:
-            <input type="text" name="program-name" value="{{ program.name }}" >
+            <input type="text" class="input-program-name" name="program-name" value="{{ program.name }}" >
         </h2>
+
+        {#
+        Days of week group box
+        #}
+
         <fieldset id="days-of-week" class="days-of-week">
             <legend>Days</legend>
             {# The initial state of the checkboxes is set by Javascript above #}
@@ -74,6 +111,72 @@
             <button type="button" onclick="setWeekdays()">Week Days</button>
             <button type="button" onclick="setWeekenddays()">Week End</button>
         </fieldset>
+
+        {#
+        Start trigger group box
+        #}
+
+        <fieldset class="start-trigger-group">
+            <legend>Start/On Trigger</legend>
+            {# Start trigger macro #}
+            {{ trigger_methods("start-trigger-method", "start-trigger-method", "start-trigger-method",
+                program.start_trigger_method, "startTriggerChanged()") }}
+
+            <fieldset id="start-time" class="start-time">
+                <legend>Start time</legend>
+            </fieldset>
+
+            <fieldset id="start-sunset-offset" class="sunset-offset">
+                <legend>Sunset Offset</legend>
+            </fieldset>
+
+            <fieldset id="start-sunrise-offset" class="sunrise-offset">
+                <legend>Sunrise Offset</legend>
+            </fieldset>
+
+            <fieldset id="start-randomize-group" class="start-randomize-group">
+                <legend>Randomize</legend>
+                <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1" >Randomize +/-
+                <input type="text" class="input-number" name="start-randomize-amount" value="{{ program.start_randomize_amount }}">
+                <br/>
+            </fieldset>
+        </fieldset>
+
+        {#
+        Stop trigger group box
+        #}
+
+        <fieldset class="stop-trigger-group">
+            <legend>Stop/Off Trigger</legend>
+            {# Stop trigger macro #}
+            {{ trigger_methods("stop-trigger-method", "stop-trigger-method", "stop-trigger-method",
+                program.stop_trigger_method, "stopTriggerChanged()") }}
+
+            <fieldset id="stop-time" class="stop-time">
+                <legend>Stop time</legend>
+            </fieldset>
+
+            <fieldset id="stop-sunset-offset" class="sunset-offset">
+                <legend>Sunset Offset</legend>
+            </fieldset>
+
+            <fieldset id="stop-sunrise-offset" class="sunrise-offset">
+                <legend>Sunrise Offset</legend>
+            </fieldset>
+
+            <fieldset id="stop-randomize-group" class="stop-randomize-group">
+                <legend>Randomize</legend>
+                <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1" >Randomize +/-
+                <input type="text" class="input-number" name="stop-randomize-amount" value="{{ program.stop_randomize_amount }}">
+                <br/>
+            </fieldset>
+        </fieldset>
+
+        <div class="clear"></div>
+
+        {#
+        Start and Stop action group boxes
+        #}
 
         <fieldset class="start-action-group">
             <legend>Start Action</legend>
