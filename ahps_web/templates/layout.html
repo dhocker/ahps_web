@@ -8,6 +8,11 @@
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+    {# Timeentry jQuery plugin #}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='timeentry/jquery.timeentry.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='timeentry/jquery.plugin.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='timeentry/jquery.timeentry.min.js') }}"></script>
     {% block head %}{% endblock %}
 </head>
 

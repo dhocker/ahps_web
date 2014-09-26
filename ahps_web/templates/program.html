@@ -29,6 +29,20 @@
                 $("#stop-randomize").attr("checked","checked");
             }
 
+            {# Initialize start and stop triggers. #}
+            startTriggerChanged();
+            stopTriggerChanged();
+
+            {# Initialize time controls #}
+            {# We have to explicitly supply the spinnerImage because the widget looks for the
+               default in a fixed location (starting from the root of the page). #}
+            $.timeEntry.setDefaults({
+                spinnerImage: "{{ url_for('static', filename='timeentry/spinnerBlue.png') }}",
+                spinnerBigImage: "{{ url_for('static', filename='timeentry/spinnerBlueBig.png') }}"
+                });
+            $("#start-time").timeEntry();
+            $("#stop-time").timeEntry();
+
         });
 
         function setWeekdays(){
@@ -45,13 +59,67 @@
         }
 
         function startTriggerChanged(){
-            // alert("start trigger was changed");
-            // TODO Cases for each trigger method. Show/hide group boxes.
+            // Cases for each trigger method. Show/hide group boxes.
+            triggerMethod = $("#start-trigger-method").val();
+            switch (triggerMethod.toLowerCase())
+            {
+                case "none":
+                    $("#start-time-group").hide();
+                    $("#start-sunset-offset").hide();
+                    $("#start-sunrise-offset").hide();
+                    $("#start-randomize-group").hide();
+                    break;
+                case "clock-time":
+                    $("#start-time-group").show();
+                    $("#start-sunset-offset").hide();
+                    $("#start-sunrise-offset").hide();
+                    $("#start-randomize-group").show();
+                    break;
+                case "sunset":
+                    $("#start-time-group").hide();
+                    $("#start-sunset-offset").show();
+                    $("#start-sunrise-offset").hide();
+                    $("#start-randomize-group").show();
+                    break;
+                case "sunrise":
+                    $("#start-time-group").hide();
+                    $("#start-sunset-offset").hide();
+                    $("#start-sunrise-offset").show();
+                    $("#start-randomize-group").show();
+                    break;
+            }
         }
 
         function stopTriggerChanged(){
-            // alert("stop trigger was changed");
-            // TODO Cases for each trigger method. Show/hide group boxes.
+            // Cases for each trigger method. Show/hide group boxes.
+            triggerMethod = $("#stop-trigger-method").val();
+            switch (triggerMethod.toLowerCase())
+            {
+                case "none":
+                    $("#stop-time-group").hide();
+                    $("#stop-sunset-offset").hide();
+                    $("#stop-sunrise-offset").hide();
+                    $("#stop-randomize-group").hide();
+                    break;
+                case "clock-time":
+                    $("#stop-time-group").show();
+                    $("#stop-sunset-offset").hide();
+                    $("#stop-sunrise-offset").hide();
+                    $("#stop-randomize-group").show();
+                    break;
+                case "sunset":
+                    $("#stop-time-group").hide();
+                    $("#stop-sunset-offset").show();
+                    $("#stop-sunrise-offset").hide();
+                    $("#stop-randomize-group").show();
+                    break;
+                case "sunrise":
+                    $("#stop-time-group").hide();
+                    $("#stop-sunset-offset").hide();
+                    $("#stop-sunrise-offset").show();
+                    $("#stop-randomize-group").show();
+                    break;
+            }
         }
 
     </script>
@@ -108,8 +176,8 @@
             <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" >Saturday<br/>
             <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" >Sunday<br/>
 
-            <button type="button" onclick="setWeekdays()">Week Days</button>
-            <button type="button" onclick="setWeekenddays()">Week End</button>
+            <button type="button" class="edit-button" onclick="setWeekdays()">Week Days</button>
+            <button type="button" class="edit-button" onclick="setWeekenddays()">Week End</button>
         </fieldset>
 
         {#
@@ -122,19 +190,22 @@
             {{ trigger_methods("start-trigger-method", "start-trigger-method", "start-trigger-method",
                 program.start_trigger_method, "startTriggerChanged()") }}
 
-            <fieldset id="start-time" class="start-time">
+            <fieldset id="start-time-group" class="program-trigger-group">
                 <legend>Start time</legend>
+                <input id="start-time" type="text" class="input-time" name="start-time" value="{{ program.start_time }}">
             </fieldset>
 
-            <fieldset id="start-sunset-offset" class="sunset-offset">
+            <fieldset id="start-sunset-offset" class="program-trigger-group">
                 <legend>Sunset Offset</legend>
+                <input type="text" class="input-number" name="start-sunset-offset" value="{{ program.start_sunset_offset }}">
             </fieldset>
 
-            <fieldset id="start-sunrise-offset" class="sunrise-offset">
+            <fieldset id="start-sunrise-offset" class="program-trigger-group">
                 <legend>Sunrise Offset</legend>
+                <input type="text" class="input-number" name="start-sunrise-offset" value="{{ program.start_sunrise_offset }}">
             </fieldset>
 
-            <fieldset id="start-randomize-group" class="start-randomize-group">
+            <fieldset id="start-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
                 <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1" >Randomize +/-
                 <input type="text" class="input-number" name="start-randomize-amount" value="{{ program.start_randomize_amount }}">
@@ -152,19 +223,22 @@
             {{ trigger_methods("stop-trigger-method", "stop-trigger-method", "stop-trigger-method",
                 program.stop_trigger_method, "stopTriggerChanged()") }}
 
-            <fieldset id="stop-time" class="stop-time">
+            <fieldset id="stop-time-group" class="program-trigger-group">
                 <legend>Stop time</legend>
+                <input id="stop-time" type="text" class="input-time" name="stop-time" value="{{ program.stop_time }}">
             </fieldset>
 
-            <fieldset id="stop-sunset-offset" class="sunset-offset">
+            <fieldset id="stop-sunset-offset" class="program-trigger-group">
                 <legend>Sunset Offset</legend>
+                <input type="text" class="input-number" name="stop-sunset-offset" value="{{ program.stop_sunset_offset }}">
             </fieldset>
 
-            <fieldset id="stop-sunrise-offset" class="sunrise-offset">
+            <fieldset id="stop-sunrise-offset" class="program-trigger-group">
                 <legend>Sunrise Offset</legend>
+                <input type="text" class="input-number" name="stop-sunrise-offset" value="{{ program.stop_sunrise_offset }}">
             </fieldset>
 
-            <fieldset id="stop-randomize-group" class="stop-randomize-group">
+            <fieldset id="stop-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
                 <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1" >Randomize +/-
                 <input type="text" class="input-number" name="stop-randomize-amount" value="{{ program.stop_randomize_amount }}">

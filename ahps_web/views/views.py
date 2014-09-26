@@ -231,11 +231,20 @@ def edit_program(programid):
         program["start_trigger_method"] = request.form["start-trigger-method"]
         program["stop_trigger_method"] = request.form["stop-trigger-method"]
 
+        program["start_time"] = request.form["start-time"]
+        program["stop_time"] = request.form["stop-time"]
+
         if request.form.has_key("start-randomize"):
             v = request.form["start-randomize"]
             program["start_randomize"] = 1
         else:
             program["start_randomize"] = 0
+
+        program["start_sunset_offset"] = int(request.form["start-sunset-offset"])
+        program["stop_sunset_offset"] = int(request.form["stop-sunset-offset"])
+
+        program["start_sunrise_offset"] = int(request.form["start-sunrise-offset"])
+        program["stop_sunrise_offset"] = int(request.form["stop-sunrise-offset"])
 
         if request.form.has_key("start-randomize-amount"):
             program["start_randomize_amount"] = int(request.form["start-randomize-amount"])

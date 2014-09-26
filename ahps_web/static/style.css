@@ -43,6 +43,7 @@ h2              { font-size: 1.2em; }
 .input-form     { margin: 1em auto; }
 .input-text     { margin: 0.3em auto; }
 .input-number   { margin: 0.3em auto; width: 2em; }
+.input-time     { margin: 0.3em auto; width: 5em; height: 1em; }
 .input-label    { margin: 0.3em auto; display: block }
 .input-program-name {
                     width: 200px;
@@ -84,7 +85,7 @@ h2              { font-size: 1.2em; }
 
 /* Styling for the program editing page */
 .days-of-week       {
-                    margin: 0.5em 1em 0.5em 0;
+                    margin: 1em 1em 0.5em 0;
                     width: 200px;
                     float: left;
                     }
@@ -99,20 +100,23 @@ h2              { font-size: 1.2em; }
                     float:left;
                     }
 .start-trigger-group {
-                    margin: 0.5em 1em 1em 0;
+                    margin: 1em 1em 1em 0;
                     width: 230px;
                     float:left;
                     }
 .stop-trigger-group {
-                    margin: 0.5em 1em 1em 0;
+                    margin: 1em 1em 1em 0;
                     width: 230px;
                     float:left;
                     }
 .start-trigger-method {
-                    margin: 0.3em auto;
+                    margin: 0.5em auto;
                     }
 .stop-trigger-method {
-                    margin: 0.3em auto;
+                    margin: 0.5em auto;
+                    }
+.program-trigger-group {
+                    margin: 0.5em auto;
                     }
 
 /* This removes the closer X from jQuery UI dialog boxes */
