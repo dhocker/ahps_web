@@ -26,6 +26,7 @@ from ahps_web.models.module import get_modules_for_room, get_module, insert_modu
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, program_to_dict
 from ahps_web.views.login_views import is_logged_in
+from ahps_web.ahps_api.ahps_api import AHPSRequest
 
 @app.route("/")
 def root():
@@ -279,6 +280,13 @@ def download_programs():
     '''
 
     # TODO Implement download
+
+    ahps_request = AHPSRequest("localhost")
+    ahps_request.create_timers_request()
+    ahps_request.create_actions_request()
+    resp_a = ahps_request.send_actions_request()
+    resp_t = ahps_request.send_timers_request()
+
     # For now, we'll just wait a bit...
     time.sleep(5)
     return "Actions and programs were successfully downloaded"
