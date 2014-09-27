@@ -16,6 +16,7 @@
 #
 from ahps_web import app
 import os
+import time
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
@@ -50,7 +51,6 @@ def home():
             return redirect(url_for('modules', roomid=roomid))
 
         elif button == 'remove':
-            # TODO Consider adding "are you sure?" test here
             # The roomid to be deleted is the value of the remove key
             roomid = request.form['roomid']
             room = get_room(roomid)
@@ -268,6 +268,21 @@ def remove_program(moduleid):
     delete_program(programid)
     # return "Remove program called for moduleid/programid" + moduleid + "/" + programid;
     return redirect(url_for("module_programs", moduleid=moduleid))
+
+
+@app.route('/download_programs', methods=["POST"])
+def download_programs():
+    '''
+    This is the target of an AJAX call mainly from the home page.
+    All of the actions and programs are downloaded to the AtHomePowerLine server.
+    :return:
+    '''
+
+    # TODO Implement download
+    # For now, we'll just wait a bit...
+    time.sleep(5)
+    return "Actions and programs were successfully downloaded"
+
 
 #
 # Main app

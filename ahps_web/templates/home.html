@@ -1,10 +1,27 @@
 {% extends "layout.html" %}
 
 {% block head %}
+    {#
+        jQuery UI Dialogs
+    #}
     {# The jQuery UI dialog for confirming room removal #}
     <div id="dialog" title="Confirmation">
         <p id="dialog-text">Remove the selected room?</p>
     </div>
+
+    {# The jQuery UI dialog for displaying download #}
+    <div id="download-progress-dialog" title="Download in Progress">
+        <br/>
+        {# TODO Probably need some styling on the spinner image #}
+        <img id="img-spinner" class="img-spinner" src="{{ url_for('static', filename='ajax-loader.gif') }}"
+             alt="Loading" style="display:block; margin-left:auto; margin-right:auto;"/>
+    </div>
+
+    {# The jQuery UI dialog for displaying download results #}
+    <div id="download-results-dialog" title="Download Results">
+        <p id="download-results">Results</p>
+    </div>
+
     <script type="text/javascript">
         /* Initialize the confirmation dialog */
         $(document).ready(function() {
@@ -21,6 +38,25 @@
                     "Cancel": function(event) {
                         $("#dialog").dialog( "close" );
                         }
+                }
+            });
+
+            {# Initialize the download dialog boxes #}
+            $("#download-progress-dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+            });
+            $("#download-results-dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: true,
+                buttons: {
+                    "Close": function(event) {
+                        $("#download-results-dialog").dialog( "close" );
+                        },
                 }
             });
 
@@ -44,7 +80,22 @@
             $("#room-form-" + roomid).submit();
         };
 
+        {# Download actions and programs. Makes an AJAX call to url /download_programs #}
+        function downloadPrograms(){
+            $("#download-progress-dialog").dialog("open")
+            $.post("{{ url_for('download_programs') }}",
+            {
+                {# Data intentionally empty #}
+            },
+            function(result, status){
+                $("#download-progress-dialog").dialog("close")
+                $("#download-results").text(result)
+                $("#download-results-dialog").dialog("open")
+            });
+        }
+
     </script>
+
 {% endblock %}
 
 {% block body %}
@@ -82,6 +133,7 @@
             <div class="clear"></div>
             <form action="" method="post">
                 <button class="edit-button" name=button type="submit" value="addroom">Add a Room</button>
+                <button class="edit-button" name="download" type="button" onclick="downloadPrograms();">Download</button>
             </form>
     {% else %}
         <p><b>Login to view the list of rooms.</b></p>
