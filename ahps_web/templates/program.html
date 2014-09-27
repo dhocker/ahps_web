@@ -38,7 +38,8 @@
                default in a fixed location (starting from the root of the page). #}
             $.timeEntry.setDefaults({
                 spinnerImage: "{{ url_for('static', filename='timeentry/spinnerBlue.png') }}",
-                spinnerBigImage: "{{ url_for('static', filename='timeentry/spinnerBlueBig.png') }}"
+                spinnerBigImage: "{{ url_for('static', filename='timeentry/spinnerBlueBig.png') }}",
+                ampmPrefix: " "
                 });
             $("#start-time").timeEntry();
             $("#stop-time").timeEntry();
