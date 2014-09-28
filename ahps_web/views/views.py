@@ -22,9 +22,9 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
-    update_module_dim_amount, update_module_name, delete_module
+    update_module_dim_amount, update_module_name, delete_module, delete_room_modules
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
-    update_program, program_to_dict
+    update_program, program_to_dict, delete_module_programs
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.ahps_api.ahps_api import AHPSRequest
 
@@ -55,6 +55,7 @@ def home():
             # The roomid to be deleted is the value of the remove key
             roomid = request.form['roomid']
             room = get_room(roomid)
+            # This is a cascading delete
             delete_room(roomid)
             flash("The \"{0}\" room was removed".format(room['name']))
             #flash("The room was removed")
@@ -113,8 +114,8 @@ def modules(roomid):
             return redirect(url_for("module_programs", moduleid=moduleid))
 
         elif button == 'remove':
-            # TODO Add "are you sure" check
             module = get_module(moduleid)
+            # This is a cascading delete
             delete_module(moduleid)
             flash("The \"{0}\" module was removed".format(module['name']))
 

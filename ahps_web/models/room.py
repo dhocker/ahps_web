@@ -1,4 +1,6 @@
 from ahps_web.database.connection import get_db
+from ahps_web.models.module import delete_room_modules
+
 
 def get_rooms():
     '''
@@ -38,6 +40,11 @@ def delete_room(roomid):
     Delete a room record given its roomid
     :return: True if record was deleted
     '''
+
+    # Cascading delete.
+    # Then delete all modules in the room.
+    delete_room_modules(roomid)
+
     db = get_db()
     db.execute('delete from rooms where roomid=?', (roomid,))
     db.commit()

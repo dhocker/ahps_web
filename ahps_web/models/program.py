@@ -63,6 +63,18 @@ def delete_program(programid):
     return True
 
 
+def delete_module_programs(moduleid):
+    '''
+    Delete all programs for a given moduleid
+    :param moduleid:
+    :return:
+    '''
+    db = get_db()
+    db.execute('delete from programs where moduleid=?', (moduleid,))
+    db.commit()
+    return True
+
+
 def update_program(program):
     '''
     Update an entire program record from a key/value dict DHO

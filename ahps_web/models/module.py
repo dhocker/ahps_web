@@ -1,4 +1,5 @@
 from ahps_web.database.connection import get_db
+from ahps_web.models.program import get_programs_for_module, delete_module_programs
 
 
 def get_modules_for_room(roomid):
@@ -83,7 +84,25 @@ def delete_module(moduleid):
     Delete a module record given its moduleid
     :return: True if record was deleted
     '''
+
+    # Cascading delete. Delete all programs for the module
+    delete_module_programs(moduleid)
+
     db = get_db()
     db.execute('delete from modules where moduleid=?', (moduleid,))
     db.commit()
+    return True
+
+
+def delete_room_modules(roomid):
+    '''
+    Delete all module records given a roomid
+    :return: True if record was deleted
+    '''
+
+    # Cascading delete. Delete all programs for each module
+    modules = get_modules_for_room(roomid)
+    for module in modules:
+        delete_module(module["moduleid"])
+
     return True
