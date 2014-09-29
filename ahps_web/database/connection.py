@@ -1,11 +1,31 @@
+# coding=utf-8
+#
+# AHPS Web - web server for managing an AtHomePowerlineServer instance
+# Copyright (C) 2014  Dave Hocker (email: AtHomeX10@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the LICENSE file for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
+#
+
 from sqlite3 import dbapi2 as sqlite3
 from flask import g
 from ahps_web import app
+import configuration
 
 
 def connect_db():
     """Connects to the specific database."""
-    rv = sqlite3.connect(app.config['DATABASE'])
+    dbpath = configuration.Configuration.get_database_file_path(app.config['DATABASE'])
+    rv = sqlite3.connect(dbpath)
     rv.row_factory = sqlite3.Row
     return rv
 

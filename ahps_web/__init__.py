@@ -1,18 +1,25 @@
-from flask import Flask
 import os
+
+from flask import Flask
+
+import configuration
 
 
 app = Flask(__name__)
 
 
 # Load default config and override config from an environment variable
+# This is really the Flask configuration
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'database/ahps_web.sqlite3'),
+    DATABASE='ahps_web.sqlite3',
     DEBUG=True,
     SECRET_KEY='development key',
     USERNAME='admin',
     PASSWORD='default'
 ))
+
+# This is the app-specific configuration
+cfg = configuration.Configuration.load_configuration(app.root_path)
 
 # Load randomly generated secret key from file
 # Reference: http://flask.pocoo.org/snippets/104/

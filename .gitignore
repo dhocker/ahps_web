@@ -2,3 +2,4 @@ secret_key
 *.pyc
 .idea/
 ahps_web.sqlite3
+ahps_web.conf
