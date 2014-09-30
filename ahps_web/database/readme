@@ -1,0 +1,7 @@
+How to initialize a new database
+
+1. python init_db.py
+2. python init_seed.py (if test seeding is desired)
+
+Be sure to delete any existing ahps_web.sqlite3 database.
+Otherwise, init_db will yield an error message.

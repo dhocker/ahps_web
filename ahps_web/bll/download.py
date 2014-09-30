@@ -78,14 +78,7 @@ class Downloader():
         timer["start-time"] = program["start_time"]
         timer["stop-time"] = program["stop_time"]
 
-        if program["start_trigger_method"] == "sunset":
-            timer["start-time-offset"] = program["start_sunset_offset"]
-        elif program["start_trigger_method"] == "sunrise":
-            timer["start-time-offset"] = program["start_sunrise_offset"]
-
-        if program["stop_trigger_method"] == "sunset":
-            timer["stop-time-offset"] = program["stop_sunset_offset"]
-        elif program["stop_trigger_method"] == "sunrise":
-            timer["stop-time-offset"] = program["stop_sunrise_offset"]
+        timer["start-time-offset"] = program["start_offset"]
+        timer["stop-time-offset"] = program["stop_offset"]
 
         pass

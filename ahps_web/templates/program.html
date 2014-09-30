@@ -66,26 +66,22 @@
             {
                 case "none":
                     $("#start-time-group").hide();
-                    $("#start-sunset-offset").hide();
-                    $("#start-sunrise-offset").hide();
+                    $("#start-offset-group").hide();
                     $("#start-randomize-group").hide();
                     break;
                 case "clock-time":
                     $("#start-time-group").show();
-                    $("#start-sunset-offset").hide();
-                    $("#start-sunrise-offset").hide();
+                    $("#start-offset-group").show();
                     $("#start-randomize-group").show();
                     break;
                 case "sunset":
                     $("#start-time-group").hide();
-                    $("#start-sunset-offset").show();
-                    $("#start-sunrise-offset").hide();
+                    $("#start-offset-group").show();
                     $("#start-randomize-group").show();
                     break;
                 case "sunrise":
                     $("#start-time-group").hide();
-                    $("#start-sunset-offset").hide();
-                    $("#start-sunrise-offset").show();
+                    $("#start-offset-group").show();
                     $("#start-randomize-group").show();
                     break;
             }
@@ -98,26 +94,22 @@
             {
                 case "none":
                     $("#stop-time-group").hide();
-                    $("#stop-sunset-offset").hide();
-                    $("#stop-sunrise-offset").hide();
+                    $("#stop-offset-group").hide();
                     $("#stop-randomize-group").hide();
                     break;
                 case "clock-time":
                     $("#stop-time-group").show();
-                    $("#stop-sunset-offset").hide();
-                    $("#stop-sunrise-offset").hide();
+                    $("#stop-stop-offset").show();
                     $("#stop-randomize-group").show();
                     break;
                 case "sunset":
                     $("#stop-time-group").hide();
-                    $("#stop-sunset-offset").show();
-                    $("#stop-sunrise-offset").hide();
+                    $("#stop-offset-group").show();
                     $("#stop-randomize-group").show();
                     break;
                 case "sunrise":
                     $("#stop-time-group").hide();
-                    $("#stop-sunset-offset").hide();
-                    $("#stop-sunrise-offset").show();
+                    $("#stop-offset-group").show();
                     $("#stop-randomize-group").show();
                     break;
             }
@@ -196,14 +188,9 @@
                 <input id="start-time" type="text" class="input-time" name="start-time" value="{{ program.start_time }}">
             </fieldset>
 
-            <fieldset id="start-sunset-offset" class="program-trigger-group">
-                <legend>Sunset Offset</legend>
-                <input type="text" class="input-number" name="start-sunset-offset" value="{{ program.start_sunset_offset }}">
-            </fieldset>
-
-            <fieldset id="start-sunrise-offset" class="program-trigger-group">
-                <legend>Sunrise Offset</legend>
-                <input type="text" class="input-number" name="start-sunrise-offset" value="{{ program.start_sunrise_offset }}">
+            <fieldset id="start-offset-group" class="program-trigger-group">
+                <legend>Start Offset</legend>
+                <input type="text" class="input-number" name="start-offset" value="{{ program.start_offset }}">
             </fieldset>
 
             <fieldset id="start-randomize-group" class="program-trigger-group">
@@ -229,14 +216,9 @@
                 <input id="stop-time" type="text" class="input-time" name="stop-time" value="{{ program.stop_time }}">
             </fieldset>
 
-            <fieldset id="stop-sunset-offset" class="program-trigger-group">
-                <legend>Sunset Offset</legend>
-                <input type="text" class="input-number" name="stop-sunset-offset" value="{{ program.stop_sunset_offset }}">
-            </fieldset>
-
-            <fieldset id="stop-sunrise-offset" class="program-trigger-group">
-                <legend>Sunrise Offset</legend>
-                <input type="text" class="input-number" name="stop-sunrise-offset" value="{{ program.stop_sunrise_offset }}">
+            <fieldset id="stop-offset-group" class="program-trigger-group">
+                <legend>Stop Offset</legend>
+                <input type="text" class="input-number" name="stop-offset" value="{{ program.stop_offset }}">
             </fieldset>
 
             <fieldset id="stop-randomize-group" class="program-trigger-group">
