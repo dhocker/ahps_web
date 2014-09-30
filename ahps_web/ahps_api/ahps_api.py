@@ -252,19 +252,19 @@ class AHPSRequest:
     #######################################################################
     # TODO We'll need to define the interface to this function
     def create_actions_request(self):
-        self.timers = AHPSRequest.create_request("LoadActions")
+        self.actions = AHPSRequest.create_request("LoadActions")
 
         # For the LoadTimers command, the args dictionary contains a single
         # "programs" key/value pair. The value is a simple sequence/list of dict's where each dict
         # defines a timer initiator program.
-        self.timers["args"]["actions"] = []
+        self.actions["args"]["actions"] = []
 
 
     #######################################################################
     # TODO We'll need to define the interface to this function
     # See documentation at bottom on file
     def add_action(self, action):
-        self.actions["args"]["programs"].append(action)
+        self.actions["args"]["actions"].append(action)
 
 
     #######################################################################

@@ -111,7 +111,7 @@ class Configuration():
     ######################################################################
     @classmethod
     def Port(cls):
-        return cls.ActiveConfig["Port"]
+        return int(cls.ActiveConfig["Port"])
 
     ######################################################################
     @classmethod

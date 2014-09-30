@@ -283,6 +283,7 @@ def download_programs():
     downloader = Downloader()
     downloader.download_programs()
 
-    # For now, we'll just wait a bit...
-    # time.sleep(5)
-    return "Actions and programs were successfully downloaded"
+    result = "<p>Result code: {0}</p><p>Message: {1}</p>".format(downloader.summary_response["result-code"],
+                                                    downloader.summary_response["message"])
+
+    return result

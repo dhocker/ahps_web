@@ -89,7 +89,7 @@
             },
             function(result, status){
                 $("#download-progress-dialog").dialog("close")
-                $("#download-results").text(result)
+                $("#download-results").html(result)
                 $("#download-results-dialog").dialog("open")
             });
         }
