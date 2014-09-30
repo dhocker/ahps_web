@@ -17,9 +17,9 @@
 #
 
 #
-# Utility for creating the database. This is the simplest way to deal with
+# Utility for seeding the database. This is the simplest way to deal with
 # migrations and DB changes. Simply delete the existing DB file and
-# rerun this script.
+# rerun the init+db.py and init_seed.py scripts.
 #
 # If something more sophisticated is required we'll solve the problem when needed!
 #
@@ -37,11 +37,11 @@ def connect_db():
     return rv
 
 
-def init_db():
-    """Initializes the database."""
+def seed_db():
+    """Seeds the database."""
     db = connect_db()
-    with open('schema.sql' , mode='r') as f:
-        print 'Executing initialization script'
+    with open('seed.sql' , mode='r') as f:
+        print 'Executing seed script...'
         db.cursor().executescript(f.read())
     db.commit()
     db.close()
@@ -53,12 +53,10 @@ if __name__ == "__main__":
     # To update the schema, first delete the existing database.
     if os.path.isfile(dbname):
         print ''
-        print 'Database already exists.'
-        print 'If you want to update the schema, delete {0} first.'.format(dbname)
+        seed_db()
+        print 'Seeding complete'
         print ''
     else:
         print ''
-        print('Initializing the database')
-        init_db()
-        print('Database initialized')
+        print('Database does not exist. Use init_db.py to create it.')
         print ''
