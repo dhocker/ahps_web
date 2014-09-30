@@ -15,6 +15,7 @@
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
 #
 from ahps_web.database.connection import get_db
+from ahps_web.models.model_helpers import row_to_dict
 
 
 def get_program(programid):
@@ -26,7 +27,7 @@ def get_program(programid):
     db = get_db()
     cur = db.execute('select * from programs where programid=?', [programid])
     program = cur.fetchone()
-    return program_to_dict(program)
+    return row_to_dict(program)
 
 
 def get_programs_for_module(moduleid):
@@ -99,18 +100,3 @@ def update_program(program):
     db.commit()
     return True
 
-
-def program_to_dict(row):
-    '''
-    Convert a row object to an equivalent dict where the column names are keys.
-    The dict acts as a DHO.
-    :param row:
-    :return:
-    '''
-
-    d = {}
-    # The row keys are the table column names
-    for c in row.keys():
-        d[c] = row[c]
-
-    return d
