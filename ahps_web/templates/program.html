@@ -98,7 +98,7 @@
                     break;
                 case "clock-time":
                     $("#stop-time-group").show();
-                    $("#stop-stop-offset").show();
+                    $("#stop-offset-group").show();
                     $("#stop-randomize-group").show();
                     break;
                 case "sunset":
@@ -116,20 +116,28 @@
 
         {# Valid all inputs on submit #}
         function validate_inputs(){
-            if (validate_offset("start-offset") && validate_offset("stop-offset")){
-                return true;
-            }
-            else{
+            if (!validate_numeric_control("start-offset", "Start offset")){
                 return false;
             }
+            if (!validate_numeric_control("stop-offset", "Stop offset")){
+                return false;
+            }
+            if (!validate_numeric_control("start-randomize-amount", "Start randomize")){
+                return false;
+            }
+            if (!validate_numeric_control("stop-randomize-amount", "Stop randomize")){
+                return false;
+            }
+
+            return true;
         }
 
         {# Validate a numeric control #}
-        function validate_offset(control_id){
+        function validate_numeric_control(control_id, name){
             target_id = "#" + control_id
             value = $(target_id).val()
             if (!$.isNumeric(value)){
-                alert("Offset must be a number. Try again!");
+                alert(name + " must be a number. Try again!");
                 $(target_id).focus();
                 return false;
             }
@@ -224,7 +232,7 @@
             <fieldset id="start-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
                 <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1" >Randomize +/-
-                <input type="text" class="input-number" name="start-randomize-amount" value="{{ program.start_randomize_amount }}">
+                <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount" value="{{ program.start_randomize_amount }}">
                 <br/>
             </fieldset>
         </fieldset>
@@ -253,7 +261,7 @@
             <fieldset id="stop-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
                 <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1" >Randomize +/-
-                <input type="text" class="input-number" name="stop-randomize-amount" value="{{ program.stop_randomize_amount }}">
+                <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount" value="{{ program.stop_randomize_amount }}">
                 <br/>
             </fieldset>
         </fieldset>
