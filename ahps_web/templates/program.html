@@ -43,7 +43,6 @@
                 });
             $("#start-time").timeEntry();
             $("#stop-time").timeEntry();
-
         });
 
         function setWeekdays(){
@@ -115,6 +114,34 @@
             }
         }
 
+        {# Valid all inputs on submit #}
+        function validate_inputs(){
+            if (validate_offset("start-offset") && validate_offset("stop-offset")){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+        {# Validate a numeric control #}
+        function validate_offset(control_id){
+            target_id = "#" + control_id
+            value = $(target_id).val()
+            if (!$.isNumeric(value)){
+                alert("Offset must be a number. Try again!");
+                $(target_id).focus();
+                return false;
+            }
+            return true;
+        }
+
+        function submit_form(){
+            if (validate_inputs()){
+                $("#program-form").submit();
+            }
+        }
+
     </script>
 {% endblock %}
 
@@ -149,7 +176,7 @@
 {% endmacro %}
 
 {% block body %}
-    <form action="" method="post">
+    <form id="program-form" action="" method="post" onsubmit="return validate_inputs()">
         <h2>Module: {{ module.name }} - Program:
             <input type="text" class="input-program-name" name="program-name" value="{{ program.name }}" >
         </h2>
@@ -190,7 +217,8 @@
 
             <fieldset id="start-offset-group" class="program-trigger-group">
                 <legend>Start Offset</legend>
-                <input type="text" class="input-number" name="start-offset" value="{{ program.start_offset }}">
+                <input type="text" id="start-offset" class="input-number" name="start-offset"
+                       value="{{ program.start_offset }}">
             </fieldset>
 
             <fieldset id="start-randomize-group" class="program-trigger-group">
@@ -218,7 +246,8 @@
 
             <fieldset id="stop-offset-group" class="program-trigger-group">
                 <legend>Stop Offset</legend>
-                <input type="text" class="input-number" name="stop-offset" value="{{ program.stop_offset }}">
+                <input type="text" id="stop-offset" class="input-number" name="stop-offset"
+                       value="{{ program.stop_offset }}">
             </fieldset>
 
             <fieldset id="stop-randomize-group" class="program-trigger-group">
@@ -247,7 +276,11 @@
 
         <div class="clear"></div>
         <button class="edit-button" name="save" type="submit" value="save">Save</button>
+        {#
         <button class="edit-button" name="cancel" type="submit" value="cancel">Cancel</button>
+        #}
+        <button class="edit-button" name="cancel" type="button" value="cancel"
+                onclick="window.location.replace('{{ url_for('module_programs', moduleid=program.moduleid) }}')">Cancel</button>
     </form>
 
     <div class="clear"></div>

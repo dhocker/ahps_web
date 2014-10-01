@@ -209,7 +209,7 @@ def edit_program(programid):
         program = get_program(programid)
         module = get_module(program["moduleid"])
         return render_template("program.html", module=module, program=program)
-    elif request.method == 'POST':
+    elif request.method == 'POST' and request.form.has_key("save"):
         program = get_program(programid)
         moduleid = program["moduleid"]
 
@@ -260,6 +260,10 @@ def edit_program(programid):
 
         update_program(program)
 
+        return redirect(url_for("module_programs", moduleid=moduleid))
+    else:
+        program = get_program(programid)
+        moduleid = program["moduleid"]
         return redirect(url_for("module_programs", moduleid=moduleid))
 
 
