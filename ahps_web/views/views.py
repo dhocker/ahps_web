@@ -17,6 +17,7 @@
 from ahps_web import app
 import os
 import time
+from datetime import datetime
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
@@ -27,6 +28,7 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
     update_program, delete_module_programs
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
+from ahps_web.bll.sun_data import get_sun_data
 
 
 @app.route("/")
@@ -208,7 +210,11 @@ def edit_program(programid):
     if request.method == 'GET':
         program = get_program(programid)
         module = get_module(program["moduleid"])
-        return render_template("program.html", module=module, program=program)
+
+        sun_data = get_sun_data(datetime.now())
+
+        return render_template("program.html", module=module, program=program, sun_data=sun_data)
+
     elif request.method == 'POST' and request.form.has_key("save"):
         program = get_program(programid)
         moduleid = program["moduleid"]

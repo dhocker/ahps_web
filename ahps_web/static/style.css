@@ -118,6 +118,9 @@ h2              { font-size: 1.2em; }
 .program-trigger-group {
                     margin: 0.5em auto;
                     }
+.offset-time        {
+                    font-size: 0.8em;
+                    }
 
 /* This removes the closer X from jQuery UI dialog boxes */
 .ui-dialog-titlebar-close

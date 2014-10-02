@@ -43,6 +43,10 @@
                 });
             $("#start-time").timeEntry();
             $("#stop-time").timeEntry();
+
+            {# Initialize sunset/sunrise times #}
+            show_offset_time("start-trigger-method", "start-offset", "start-offset-time");
+            show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time");
         });
 
         function setWeekdays(){
@@ -150,6 +154,44 @@
             }
         }
 
+        {# Retrieve the sunset time as a Date object #}
+        function get_sunset(){
+            var s = $("#sunset").val();
+            return new Date(Date.parse(s));
+        }
+
+        {# Retrieve the sunrise time as a Date object #}
+        function get_sunrise(){
+            var s = $("#sunrise").val();
+            return new Date(Date.parse(s));
+        }
+
+        {#
+        For sunset and sunrise base triggers, show the effective time.
+        the sunset/sunrise times are in hidden elements. The start/stop
+        offset is added to the sunrise/sunset time to obtain the
+        effective time. Does not apply to clock-time trigger.
+        #}
+        function show_offset_time(method_id, offset_id, time_id){
+            var $method = $("#" + method_id);
+            var $offset = $("#" + offset_id);
+            var $time = $("#" + time_id);
+
+            var offset = parseInt($offset.val());
+
+            if ($method.val() == "sunset"){
+                var sunset = get_sunset();
+                sunset.setMinutes(sunset.getMinutes() + offset);
+                $time.text(sunset.toLocaleTimeString());
+            }
+            else if ($method.val() == "sunrise"){
+                var sunrise = get_sunrise();
+                sunrise.setMinutes(sunrise.getMinutes() + offset);
+                $time.text(sunrise.toLocaleTimeString());
+            }
+
+        }
+
     </script>
 {% endblock %}
 
@@ -190,6 +232,12 @@
         </h2>
 
         {#
+        Hidden fields for sunrise/sunset
+        #}
+        <input type="hidden" id="sunset" value="{{ sun_data['sunset'] }}">
+        <input type="hidden" id="sunrise" value="{{ sun_data['sunrise'] }}">
+
+        {#
         Days of week group box
         #}
 
@@ -226,7 +274,9 @@
             <fieldset id="start-offset-group" class="program-trigger-group">
                 <legend>Start Offset</legend>
                 <input type="text" id="start-offset" class="input-number" name="start-offset"
-                       value="{{ program.start_offset }}">
+                       value="{{ program.start_offset }}"
+                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time")'>
+                <span id="start-offset-time" class="offset-time">TIME</span>
             </fieldset>
 
             <fieldset id="start-randomize-group" class="program-trigger-group">
@@ -255,7 +305,9 @@
             <fieldset id="stop-offset-group" class="program-trigger-group">
                 <legend>Stop Offset</legend>
                 <input type="text" id="stop-offset" class="input-number" name="stop-offset"
-                       value="{{ program.stop_offset }}">
+                       value="{{ program.stop_offset }}"
+                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time")'>
+                <span id="stop-offset-time" class="offset-time">TIME</span>
             </fieldset>
 
             <fieldset id="stop-randomize-group" class="program-trigger-group">

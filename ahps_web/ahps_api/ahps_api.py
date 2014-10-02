@@ -227,6 +227,17 @@ class AHPSRequest:
 
 
     #######################################################################
+    # Get sunset and sunrise time for a given date
+    def get_sun_data(self, for_isodate):
+        data = AHPSRequest.create_request("GetSunData")
+        data["args"]["date"] = for_isodate
+
+        result = self.send_command(data)
+
+        return result
+
+
+    #######################################################################
     # TODO We'll need to define the interface to this function
     def create_timers_request(self):
         self.timers = AHPSRequest.create_request("LoadTimers")
