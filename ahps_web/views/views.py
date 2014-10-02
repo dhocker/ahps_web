@@ -29,6 +29,7 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
+from ahps_web.bll.x10_control import device_on, device_off
 
 
 @app.route("/")
@@ -123,10 +124,12 @@ def modules(roomid):
             flash("The \"{0}\" module was removed".format(module['name']))
 
         elif button == 'on':
-            pass
+            if device_on(moduleid):
+                flash("Module turned on")
 
         elif button == 'off':
-            pass
+            if device_off(moduleid):
+                flash("Module turned off")
 
         else:
             return "Unrecognized button action"
@@ -264,7 +267,10 @@ def edit_program(programid):
         if request.form.has_key("stop-randomize-amount"):
             program["stop_randomize_amount"] = int(request.form["stop-randomize-amount"])
 
+        # Finally! Update the program record with all of the changes
         update_program(program)
+
+        flash(program["name"] + " saved")
 
         return redirect(url_for("module_programs", moduleid=moduleid))
     else:
