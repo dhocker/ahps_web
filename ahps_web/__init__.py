@@ -1,4 +1,7 @@
 import os
+import Logging
+import logging
+from Version import GetVersion
 
 from flask import Flask
 
@@ -24,8 +27,17 @@ cfg = configuration.Configuration.load_configuration(app.root_path)
 # Load randomly generated secret key from file
 # Reference: http://flask.pocoo.org/snippets/104/
 # Run make_secret_key to create a new key and save it in secret_key
-app.config['SECRET_KEY'] = open('secret_key', 'r').read()
+key_file = configuration.Configuration.SecretKey()
+app.config['SECRET_KEY'] = open(key_file, 'r').read()
+
+# Start logging
+Logging.EnableServerLogging()
 
 # All views must be imported after the app is defined
 from views import views
 from views import login_views
+
+logger = logging.getLogger("app")
+
+logger.info("################################################################################")
+logger.info("Starting AHPS_Web version " + GetVersion())

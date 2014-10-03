@@ -30,11 +30,17 @@ from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
 from ahps_web.bll.x10_control import device_on, device_off
+from Version import GetVersion
 
 
 @app.route("/")
 def root():
     return redirect(url_for('home'))
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html", version=GetVersion())
 
 
 @app.route("/home", methods=['GET', 'POST'])

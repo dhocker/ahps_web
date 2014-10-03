@@ -23,8 +23,18 @@
 from flask import Flask
 from ahps_web import app
 from Version import GetVersion
+import configuration
+import Logging
+import logging
 
 
 if __name__ == "__main__":
-    print "Starting AHPS_Web version " + GetVersion()
+
     app.run('0.0.0.0')
+
+    logger = logging.getLogger("app")
+
+    logger.info("AHPS_Web ended")
+    logger.info("################################################################################")
+    Logging.Shutdown()
+

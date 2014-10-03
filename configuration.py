@@ -87,7 +87,7 @@ class Configuration():
         #print str(Configuration.ActiveConfig)
         return
 
-    ######################################################################
+######################################################################
     @classmethod
     def IsLinux(cls):
         """
@@ -132,6 +132,11 @@ class Configuration():
     @classmethod
     def DatabasePath(cls):
         return cls.ActiveConfig["DatabasePath"]
+
+    ######################################################################
+    @classmethod
+    def SecretKey(cls):
+        return cls.ActiveConfig["SecretKey"]
 
     ######################################################################
     @classmethod
