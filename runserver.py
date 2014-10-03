@@ -22,7 +22,9 @@
 
 from flask import Flask
 from ahps_web import app
+from Version import GetVersion
 
 
 if __name__ == "__main__":
+    print "Starting AHPS_Web version " + GetVersion()
     app.run('0.0.0.0')
