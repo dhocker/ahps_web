@@ -14,4 +14,4 @@ def GetVersion():
   """
   Returns the current app version
   """
-  return "2014.0.0.1"
+  return "2014.0.0.2"
