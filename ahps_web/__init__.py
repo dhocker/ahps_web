@@ -40,4 +40,5 @@ from views import login_views
 logger = logging.getLogger("app")
 
 logger.info("################################################################################")
-logger.info("Starting AHPS_Web version " + GetVersion())
+logger.info("Starting AHPS_Web version %s", GetVersion())
+logger.info("Using configuration file %s", configuration.Configuration.get_configuration_file_path())
