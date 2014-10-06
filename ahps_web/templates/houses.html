@@ -64,6 +64,7 @@
                     </td>
                     <td>
                         <a class="a-button" href="{{ url_for('select_house', houseid=house.houseid) }}">Select</a>
+                        <a class="a-button" href="{{ url_for('edit_house', houseid=house.houseid) }}">Edit</a>
                         <a class="a-button" href="{{ url_for('copy_house', houseid=house.houseid) }}">Copy</a>
                         <a class="a-button"
                            href="javascript:confirmRemove({{ house.houseid }}, '{{ house.name }}')">Remove</a>

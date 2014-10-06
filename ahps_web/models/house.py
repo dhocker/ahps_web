@@ -54,3 +54,25 @@ def get_houses():
     cur = db.execute('select * from houses order by name asc')
     houses = cur.fetchall()
     return houses
+
+
+def get_house(houseid):
+    '''
+    Return the house record for the given ID
+    :return:
+    '''
+    db = get_db()
+    cur = db.execute('select * from houses where houseid=?', [houseid])
+    house = cur.fetchone()
+    return house
+
+
+def update_house(houseid, name):
+    '''
+    Return the set of all house records
+    :return:
+    '''
+    db = get_db()
+    cur = db.execute('update houses set name=? where houseid=?', [name, houseid])
+    db.commit()
+    return True

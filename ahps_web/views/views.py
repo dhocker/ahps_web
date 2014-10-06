@@ -29,7 +29,7 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
-from ahps_web.models.house import get_current_house, get_houses, set_current_house
+from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house
 from ahps_web.bll.x10_control import device_on, device_off
 from Version import GetVersion
 
@@ -53,10 +53,21 @@ def houses():
         flash("Add house not implemented")
         return redirect(url_for("houses"))
 
+
 @app.route("/houses/select_house/<houseid>", methods=["GET"])
 def select_house(houseid):
     set_current_house(houseid)
     return redirect(url_for("home"))
+
+
+@app.route("/houses/edit_house/<houseid>", methods=["GET", "POST"])
+def edit_house(houseid):
+    if request.method == "GET":
+        house = get_house(houseid)
+        return render_template("edit_house.html", house=house)
+    elif request.method == "POST":
+        update_house(houseid, request.form["house-name"])
+        return redirect(url_for("houses"))
 
 
 @app.route("/houses/remove_house/<houseid>", methods=["GET"])

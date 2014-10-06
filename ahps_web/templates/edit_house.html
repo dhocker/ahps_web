@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <form id="edit-form" action="" method="post">
+        <h2>House name:
+            <input type="text" class="input-program-name" name="house-name" value="{{ house.name }}" />
+        </h2>
+        <button class="edit-button" name="save" type="submit" value="save">Save</button>
+    </form>
+{% endblock %}
+
+{% block footer_links %}
+    <a href="{{ url_for('houses') }}">Back</a>
+{% endblock %}
