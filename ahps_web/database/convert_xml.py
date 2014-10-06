@@ -36,7 +36,7 @@ room_kv = {
     "name": "name"
 }
 room_const = {
-    "roomid": 0
+    "houseid": 0
 }
 
 module_kv = {
@@ -55,7 +55,7 @@ program_kv = {
     "start-time": "start_time",
     # "start-sunset-offset": "start_offset",
     # "start-sunrise-offset": "start_offset", # TODO resolve multiple use
-    "stop-trigger-method": "stop_trigger-method",
+    "stop-trigger-method": "stop_trigger_method",
     "stop-time": "stop_time",
     # "stop-sunset-offset": "stop_offset",
     # "stop-sunrise-offset": "stop_offset", # TODO resolve multiple use
@@ -71,6 +71,7 @@ program_kv = {
 program_const = {
     "moduleid": 0
 }
+
 
 def create_db():
     """
@@ -92,7 +93,17 @@ def create_db():
     return rv
 
 
-def insert_row(table_name, kv_map, const_map, dom_node):
+def insert_db(db, sql):
+    print sql
+    cursor = db.cursor()
+    cursor.execute(sql)
+    inserted_id = cursor.lastrowid
+    cursor.close()
+    db.commit()
+    return inserted_id
+
+
+def insert_row(db, table_name, kv_map, const_map, dom_node):
     cols = ""
     vals = ""
     # k is the DOM attribute, v is the table column name.
@@ -113,10 +124,7 @@ def insert_row(table_name, kv_map, const_map, dom_node):
             vals += str(v)
 
     sql = "insert into {0} ({1}) values ({2})".format(table_name, cols, vals)
-    print sql
-    # TODO
-    inserted_id = 0
-    return inserted_id
+    return insert_db(db, sql)
 
 
 def convert_program(program, moduleid, db):
@@ -137,7 +145,7 @@ def convert_program(program, moduleid, db):
 
     program_const["moduleid"] = moduleid
 
-    programid = insert_row("programs", program_kv_copy, program_const, program)
+    programid = insert_row(db, "programs", program_kv_copy, program_const, program)
 
 
 def convert_device(device, roomid, db):
@@ -146,7 +154,7 @@ def convert_device(device, roomid, db):
 
     # insert device as module
     module_const["roomid"] = roomid
-    moduleid = insert_row("modules", module_kv, module_const, device)
+    moduleid = insert_row(db, "modules", module_kv, module_const, device)
     # get moduleid
 
     programs = device.getElementsByTagName("program")
@@ -160,7 +168,7 @@ def convert_room(room, houseid, db):
 
     # insert room
     room_const["houseid"] = houseid
-    roomid = insert_row("rooms", room_kv, room_const, room)
+    roomid = insert_row(db, "rooms", room_kv, room_const, room)
     # get roomid
 
     devices = room.getElementsByTagName("device")
@@ -181,9 +189,8 @@ if __name__ == "__main__":
 
     # Insert house
     sql = "insert into houses (name) values ('{0}')".format(xml_file)
-    print sql
     # get houseid
-    houseid = 1
+    houseid = insert_db(db, sql)
 
     # Get all of the rooms in the house document element
     rooms = house.getElementsByTagName("room")

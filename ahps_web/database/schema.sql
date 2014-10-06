@@ -19,7 +19,7 @@ drop table if exists rooms;
 drop table if exists modules;
 drop table if exists programs;
 
-crate table houses (
+create table houses (
   houseid integer primary key autoincrement,
   name text not null
 )
