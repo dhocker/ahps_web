@@ -29,6 +29,7 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
+from ahps_web.models.house import get_current_house
 from ahps_web.bll.x10_control import device_on, device_off
 from Version import GetVersion
 
@@ -51,8 +52,9 @@ def home():
         return redirect(url_for('login'))
 
     if request.method == 'GET':
-        rooms = get_rooms()
-        return render_template('home.html', rooms=rooms)
+        current_house = get_current_house()
+        rooms = get_rooms(current_house["houseid"])
+        return render_template('home.html', rooms=rooms, house=current_house)
 
     elif request.method == 'POST':
         button = request.form['button']

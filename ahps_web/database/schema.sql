@@ -21,9 +21,9 @@ drop table if exists programs;
 
 create table houses (
   houseid integer primary key autoincrement,
-  name text not null
-)
-;
+  name text not null,
+  current integer default 0
+);
 
 create table rooms (
   roomid integer primary key autoincrement,

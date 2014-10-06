@@ -197,6 +197,11 @@ if __name__ == "__main__":
     for room in rooms:
         convert_room(room, houseid, db)
 
+    # Make houseid the current house
+    sql = "update houses set current=1 where houseid=1"
+    db.execute(sql)
+    db.commit()
+
     db.close()
 
 

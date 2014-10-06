@@ -1,14 +1,31 @@
+#
+# AHPS Web - web server for managing an AtHomePowerlineServer instance
+# Copyright (C) 2014  Dave Hocker (email: AtHomeX10@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the LICENSE file for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
+#
+
 from ahps_web.database.connection import get_db
 from ahps_web.models.module import delete_room_modules
 
 
-def get_rooms():
+def get_rooms(houseid):
     '''
-    Get all rooms in ascending order by name
+    Get all rooms for a house in ascending order by name
     :return: A list of all rooms
     '''
     db = get_db()
-    cur = db.execute('select roomid,name,description from rooms order by name asc')
+    cur = db.execute('select roomid,name,description from rooms where houseid=? order by name asc', [houseid])
     rooms = cur.fetchall()
     return rooms
 
