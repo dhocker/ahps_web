@@ -49,6 +49,8 @@ def about():
 def houses():
     if request.method == "GET":
         all_houses = get_houses()
+        if request.args.has_key("error"):
+            return render_template("houses.html", houses=all_houses, error=request.args["error"])
         return render_template("houses.html", houses=all_houses)
     elif request.method == "POST":
         insert_house("New House")
@@ -86,8 +88,8 @@ def remove_house(houseid):
 
 @app.route("/houses/copy_house/<houseid>", methods=["GET"])
 def copy_house(houseid):
-    flash("Copy house is not implemented")
-    return redirect(url_for("houses"))
+    error = "Copy house is not implemented"
+    return redirect(url_for("houses", error=error))
 
 
 @app.route("/home", methods=['GET', 'POST'])
