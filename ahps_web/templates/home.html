@@ -139,3 +139,7 @@
         <p><b>Login to view the list of rooms.</b></p>
     {% endif %}
 {% endblock %}
+
+{% block footer_links %}
+    <a href="{{ url_for('houses') }}">Houses</a>
+{% endblock %}

@@ -29,7 +29,7 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
-from ahps_web.models.house import get_current_house
+from ahps_web.models.house import get_current_house, get_houses, set_current_house
 from ahps_web.bll.x10_control import device_on, device_off
 from Version import GetVersion
 
@@ -42,6 +42,33 @@ def root():
 @app.route("/about")
 def about():
     return render_template("about.html", version=GetVersion())
+
+
+@app.route("/houses", methods=["GET", "POST"])
+def houses():
+    if request.method == "GET":
+        all_houses = get_houses()
+        return render_template("houses.html", houses=all_houses)
+    elif request.method == "POST":
+        flash("Add house not implemented")
+        return redirect(url_for("houses"))
+
+@app.route("/houses/select_house/<houseid>", methods=["GET"])
+def select_house(houseid):
+    set_current_house(houseid)
+    return redirect(url_for("home"))
+
+
+@app.route("/houses/remove_house/<houseid>", methods=["GET"])
+def remove_house(houseid):
+    flash("Remove house is not implemented")
+    return redirect(url_for("houses"))
+
+
+@app.route("/houses/copy_house/<houseid>", methods=["GET"])
+def copy_house(houseid):
+    flash("Copy house is not implemented")
+    return redirect(url_for("houses"))
 
 
 @app.route("/home", methods=['GET', 'POST'])

@@ -51,6 +51,6 @@ def get_houses():
     :return:
     '''
     db = get_db()
-    cur = db.execute('select * from houses')
+    cur = db.execute('select * from houses order by name asc')
     houses = cur.fetchall()
-    return row_to_dict(houses)
+    return houses
