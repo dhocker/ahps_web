@@ -17,6 +17,7 @@
 
 from ahps_web.database.connection import get_db
 from ahps_web.models.model_helpers import row_to_dict
+from ahps_web.models.room import delete_rooms
 
 
 def get_current_house():
@@ -69,10 +70,39 @@ def get_house(houseid):
 
 def update_house(houseid, name):
     '''
-    Return the set of all house records
+    Update name for selected house record
     :return:
     '''
     db = get_db()
     cur = db.execute('update houses set name=? where houseid=?', [name, houseid])
+    db.commit()
+    return True
+
+
+def insert_house(name):
+    '''
+    Insert a new house record
+    :return:
+    '''
+    db = get_db()
+    cur = db.execute('insert into houses (name) values (?)', [name])
+    houseid = cur.lastrowid
+    db.commit()
+    return True
+
+
+def delete_house(houseid):
+    '''
+    Delete a house record given its houseid
+    :return: True if record was deleted
+    '''
+
+    # Cascading delete
+    # Delete all rooms in the house.
+    delete_rooms(houseid)
+
+    # Then delete the house
+    db = get_db()
+    db.execute('delete from houses where houseid=?', (houseid,))
     db.commit()
     return True

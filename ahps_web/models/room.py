@@ -41,13 +41,13 @@ def get_room(roomid):
     return room
 
 
-def insert_room(name, desc):
+def insert_room(houseid, name, desc):
     '''
     Insert a room record
     :return: True if record was created
     '''
     db = get_db()
-    db.execute('insert into rooms (name,description) values (?, ?)', [name, desc])
+    db.execute('insert into rooms (name,houseid,description) values (?, ?, ?)', [name, houseid, desc])
     db.commit()
     return True
 
@@ -65,4 +65,18 @@ def delete_room(roomid):
     db = get_db()
     db.execute('delete from rooms where roomid=?', (roomid,))
     db.commit()
+    return True
+
+
+def delete_rooms(houseid):
+    '''
+    Delete all room records given a houseid
+    :return: True if record was deleted
+    '''
+
+    # Cascading delete. Delete all rooms for each module
+    rooms = get_rooms(houseid)
+    for room in rooms:
+        delete_room(room["roomid"])
+
     return True

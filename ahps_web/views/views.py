@@ -29,7 +29,8 @@ from ahps_web.models.program import get_program, get_programs_for_module, insert
 from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
-from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house
+from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
+    insert_house, delete_house
 from ahps_web.bll.x10_control import device_on, device_off
 from Version import GetVersion
 
@@ -50,7 +51,7 @@ def houses():
         all_houses = get_houses()
         return render_template("houses.html", houses=all_houses)
     elif request.method == "POST":
-        flash("Add house not implemented")
+        insert_house("New House")
         return redirect(url_for("houses"))
 
 
@@ -72,7 +73,14 @@ def edit_house(houseid):
 
 @app.route("/houses/remove_house/<houseid>", methods=["GET"])
 def remove_house(houseid):
-    flash("Remove house is not implemented")
+    # Can't remove current house
+    current_house = get_house(houseid)
+    if current_house["current"] != 0:
+        houses = get_houses()
+        error = "Can't delete the current house"
+        return render_template("houses.html", error=error, houses=houses)
+
+    delete_house(houseid)
     return redirect(url_for("houses"))
 
 
@@ -126,8 +134,9 @@ def add_room():
             # The POST request sends the add room form contents
             if request.form["save"] == "save":
                 # Save new room
+                current_house = get_current_house()
                 if request.form["name"]:
-                    insert_room(request.form["name"], request.form["description"])
+                    insert_room(current_house["houseid"], request.form["name"], request.form["description"])
                 else:
                     error = 'Room name is a required field'
                     return render_template('add_room.html', error=error)
