@@ -1,0 +1,71 @@
+<house>
+  <room name="General">
+    <device module-type="appliance" name="Christmas Tree" house-code="C" device-code="2" x="403" y="10">
+  <program days="MTWTF.." start-trigger-method="clock-time" start-time="5:45 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:00 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+      <program days=".....SS" start-trigger-method="clock-time" start-time="9:00 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:59 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Christmas Lights + Beorne" house-code="B" device-code="12" x="602" y="9">
+      <program days="MTWTFSS" start-trigger-method="clock-time" start-time="6:30 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:00 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Foyer " house-code="A" device-code="2" x="4" y="10">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="5:45 PM" start-sunset-offset="-30" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:55 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+      <program days="......." start-trigger-method="clock-time" start-time="6:45 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="1:00 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Outside Lights" house-code="B" device-code="10" x="204" y="9">
+      <program days="MTWTFSS" start-trigger-method="clock-time" start-time="5:20 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="7:00 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Dave's Office">
+    <device module-type="appliance" name="Little Christmas Tree" house-code="A" device-code="7" x="5" y="9">
+      <program days="MTWTFSS" start-trigger-method="clock-time" start-time="8:00 AM" start-sunset-offset="-30" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:00 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="1" stop-randomize="0" start-randomize-amount="5" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="lamp" name="Light" house-code="L" device-code="1" x="220" y="10" dim-percent="0">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="1:53 PM" start-sunset-offset="-20" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="10:30 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="none" stop-action="none" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Craft Room">
+    <device module-type="appliance" name="Light, Wreath, Candles" house-code="B" device-code="5" x="8" y="7">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="7:15 PM" start-sunset-offset="-20" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="10:05 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Family Room">
+    <device module-type="appliance" name="Harvest Tree" house-code="E" device-code="6" x="238" y="9">
+      <program days="MTWTFSS" start-trigger-method="clock-time" start-time="8:00 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:00 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Mantel" house-code="B" device-code="3" x="662" y="11">
+      <program days="MTWTFSS" start-trigger-method="clock-time" start-time="8:00 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:00 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="lamp" name="Fireplace Left" house-code="B" device-code="2" x="4" y="6" dim-percent="100">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="5:35 PM" start-sunset-offset="-45" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:45 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="lamp" name="TV Right" house-code="A" device-code="5" x="448" y="11" dim-percent="100">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="5:35 PM" start-sunset-offset="-45" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:15 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Dining Room">
+    <device module-type="appliance" name="Dining Room" house-code="A" device-code="9" x="5" y="10">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="5:45 PM" start-sunset-offset="-30" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:10 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Dining Room Right" house-code="B" device-code="1" x="486" y="7">
+      <program days="......." start-trigger-method="clock-time" start-time="7:20 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="11:10 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Master Bedoom">
+    <device module-type="appliance" name="Alarm Clock" house-code="A" device-code="6" x="18" y="19">
+      <program days="......." start-trigger-method="clock-time" start-time="6:45 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="7:30 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+      <program days="......." start-trigger-method="clock-time" start-time="6:00 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="7:05 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+      <program days="......." start-trigger-method="clock-time" start-time="5:35 AM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="7:30 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="appliance" name="Bedside Lamp" house-code="A" device-code="8" x="259" y="19">
+      <program days="MTWTFSS" start-trigger-method="sunset" start-time="10:40 AM" start-sunset-offset="-35" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="10:20 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="on" stop-action="off" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+  </room>
+  <room name="Module Test">
+    <device module-type="appliance" name="test device" house-code="G" device-code="16" x="26" y="10">
+      <program days="......." start-trigger-method="clock-time" start-time="2:43 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="clock-time" stop-time="2:43 PM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="none" stop-action="none" start-dim-percent="0" stop-dim-percent="0" />
+    </device>
+    <device module-type="house" name="the house" house-code="A" x="247" y="8">
+      <program days="......." start-trigger-method="none" start-time="3:04 PM" start-sunset-offset="0" start-sunrise-offset="0" stop-trigger-method="none" stop-time="2:00 AM" stop-sunset-offset="0" stop-sunrise-offset="0" start-randomize="0" stop-randomize="0" start-randomize-amount="0" stop-randomize-amount="0" start-action="none" stop-action="none" />
+    </device>
+  </room>
+</house>

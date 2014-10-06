@@ -1,7 +1,6 @@
 secret_key
 *.pyc
 *.log*
-*.xml
 .idea/
 ahps_web.sqlite3
 ahps_web.conf
