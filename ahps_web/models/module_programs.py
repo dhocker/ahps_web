@@ -19,14 +19,19 @@ from ahps_web.database.connection import get_db
 from model_helpers import row_to_dict
 
 
-def get_all_module_programs():
+def get_all_module_programs(houseid):
     '''
-    Get all programs with relevant module information. This is
+    Get all programs with relevant module information for the specified house. This is
     all of the data required to download to the AtHomePowerlineServer.
     :return: A list of module programs where each row in the list is a dict.
     '''
     db = get_db()
-    cur = db.execute('select modules.house_code, modules.device_code, programs.* from programs join modules on programs.moduleid = modules.moduleid')
+    sql = "select houses.houseid, modules.house_code, modules.device_code, programs.* from houses " + \
+        "join rooms on rooms.houseid = houses.houseid " + \
+        "join modules on modules.roomid = rooms.roomid " + \
+        "join programs on programs.moduleid = modules.moduleid " + \
+        "where houses.houseid=?"
+    cur = db.execute(sql, [houseid])
     programs = cur.fetchall()
 
     program_list = []

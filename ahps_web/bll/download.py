@@ -17,6 +17,7 @@
 
 from datetime import datetime
 from ahps_web.models.module_programs import get_all_module_programs
+from ahps_web.models.house import get_current_house
 from ahps_web.ahps_api.ahps_api import AHPSRequest
 from configuration import Configuration
 
@@ -35,14 +36,15 @@ class Downloader():
 
     def download_programs(self):
         '''
-        Download all programs to the AtHomePowerlineServer
+        Download all programs for the current house to the AtHomePowerlineServer
         :return:
         '''
         self.ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
         self.ahps_request.create_timers_request()
         self.ahps_request.create_actions_request()
 
-        programs = get_all_module_programs()
+        current_house = get_current_house()
+        programs = get_all_module_programs(current_house["houseid"])
 
         for program in programs:
             # Translate each program into a set of actions and timers
