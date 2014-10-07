@@ -166,6 +166,25 @@
             return new Date(Date.parse(s));
         }
 
+        {# Format date/time #}
+        function format_datetime(dt){
+            if (dt.getHours() >= 12){
+                hours = (dt.getHours() - 12).toFixed(0);
+            }
+            else{
+                hours = dt.getHours().toFixed(0);
+            }
+            if (hours.length < 2){
+                hours = "0" + hours;
+            }
+            minutes = dt.getMinutes().toFixed(0);
+            if (minutes.length < 2){
+                minutes = "0" + minutes;
+            }
+            ampm = dt.getHours() >= 12 ? "PM" : "AM";
+            return hours + ":" + minutes + " " + ampm;
+        }
+
         {#
         For sunset and sunrise base triggers, show the effective time.
         the sunset/sunrise times are in hidden elements. The start/stop
@@ -183,11 +202,13 @@
                 var sunset = get_sunset();
                 sunset.setMinutes(sunset.getMinutes() + offset);
                 $time.text(sunset.toLocaleTimeString());
+                //$time.text(format_datetime(sunset));
             }
             else if ($method.val() == "sunrise"){
                 var sunrise = get_sunrise();
                 sunrise.setMinutes(sunrise.getMinutes() + offset);
                 $time.text(sunrise.toLocaleTimeString());
+                //$time.text(format_datetime(sunrise));
             }
             else {
                 {#
@@ -210,6 +231,7 @@
                 }
                 clock_time.setMinutes(clock_time.getMinutes() + offset);
                 $time.text(clock_time.toLocaleTimeString());
+                //$time.text(format_datetime(clock_time));
             }
 
         }
