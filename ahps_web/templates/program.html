@@ -217,21 +217,22 @@
                 HH:mm AM to yyyy-mm-ddThh:mm (ISO format). The HH:mm AM format uses 12:00 AM
                 to represent midnight, another complicating factor.
                 #}
-                var clock_time_str = $("#" + clock_time_id).val().substring(0, 5);
-                var ampm =$ ("#" + clock_time_id).val().substring(6, 8);
-                clock_time_str = "2014-01-01T" + clock_time_str;
-                var clock_time = new Date(Date.parse(clock_time_str));
-                {# Adjust for 12:00 AM #}
-                if (ampm == "AM" && $("#" + clock_time_id).val().substring(0, 2) == "12"){
-                    clock_time.setHours(clock_time.getHours() + -12);
-                }
-                {# Adjust for PM #}
-                if (ampm == "PM" && $("#" + clock_time_id).val().substring(0, 2) != "12"){
-                    clock_time.setHours(clock_time.getHours() + 12);
-                }
+
+                {# We'll use this to get the current date (from time zone and DST purposes) #}
+                var current_date = new Date();
+
+                {# This is the time from the control (as a Date), but the date is not current. #}
+                var clock_time = $("#" + clock_time_id).timeEntry('getTime');
+
+                {# Put the current date together with the time from the control #}
+                clock_time.setFullYear(current_date.getFullYear());
+                clock_time.setMonth(current_date.getMonth());
+                clock_time.setDate(current_date.getDate());
+
+                {# Adjust the time with the offset value #}
                 clock_time.setMinutes(clock_time.getMinutes() + offset);
+                
                 $time.text(clock_time.toLocaleTimeString());
-                //$time.text(format_datetime(clock_time));
             }
 
         }
