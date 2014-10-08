@@ -23,7 +23,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
-    update_module_dim_amount, update_module_name, delete_module, delete_room_modules
+    update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
 from ahps_web.views.login_views import is_logged_in
@@ -359,3 +359,10 @@ def download_programs():
                                                     downloader.summary_response["message"])
 
     return result
+
+
+@app.route('/all_house_codes', methods=["GET"])
+def all_house_codes():
+    house = get_current_house()
+    modules = get_modules_for_house(house["houseid"])
+    return render_template("all_house_codes.html", house=house, modules=modules)

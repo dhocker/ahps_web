@@ -13,6 +13,21 @@ def get_modules_for_room(roomid):
     return modules
 
 
+def get_modules_for_house(houseid):
+    '''
+    Get all modules for a house
+    :return: A list of modules sorted by house and device code
+    '''
+    db =    get_db()
+    sql = "select rooms.houseid, rooms.name as room_name, modules.* from rooms " + \
+        "join modules on modules.roomid = rooms.roomid " + \
+        "where rooms.houseid=? " \
+        "order by modules.house_code, modules.device_code"
+    cur = db.execute(sql, [houseid])
+    modules = cur.fetchall()
+    return modules
+
+
 def get_module(moduleid):
     '''
     Get a module record for a given moduleid
