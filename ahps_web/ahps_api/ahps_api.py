@@ -209,6 +209,16 @@ class AHPSRequest:
 
 
     #######################################################################
+    # Test the Device All Light On command
+    def device_all_lights_on(self, house_code):
+        #
+        data = AHPSRequest.create_request("AllLightsOn")
+        data["args"]["house-code"] = house_code
+
+        return self.send_command(data)
+
+
+    #######################################################################
     # Test the Device All Light Off command
     def device_all_lights_off(self, house_code):
         #

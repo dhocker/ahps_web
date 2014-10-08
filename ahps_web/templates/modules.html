@@ -55,18 +55,24 @@
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
                     <input type="hidden" name="module_type" value="{{ module.module_type }}">
                     <div id="module-name-{{ module.moduleid }}" class="name">
-                        <label for="module-name" class="input-label">{{ module.module_type | capitalize() }}</label>
+                        <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label>
                         <input type="text" id="module-name-text{{ module.moduleid }}" name="module-name" value="{{ module.name }}"/>
                     </div>
                     <div class="hdc">
-                        {{ module.house_code }}{{ module.device_code }}
-                        {% include 'house_codes.html' %}
-                        {% include 'device_codes.html' %}
-                        {% if module.module_type == 'lamp' %}
-                            Dim: <input type="text" id="dim_amount" name="dim_amount" class="input-number"
-                                        value="{{ module.dim_amount }}"/>
+                        {% if module.module_type == 'house' %}
+                            <span class="hdc-text">{{ module.house_code }}</span>
+                            {% include 'house_codes.html' %}
                         {% else %}
-                            <br/>
+                            {# appliance or lamp #}
+                            <span class="hdc-text">{{ module.house_code }}{{ module.device_code }}</span>
+                            {% include 'house_codes.html' %}
+                            {% include 'device_codes.html' %}
+                            {% if module.module_type == 'lamp' %}
+                                Dim: <input type="text" id="dim_amount" name="dim_amount" class="input-number"
+                                            value="{{ module.dim_amount }}"/>
+                            {% else %}
+                                <br/>
+                            {% endif %}
                         {% endif %}
                     </div>
                     {# This is used to send the button that was clicked #}
@@ -75,7 +81,9 @@
                     will set the id=submit-button value to indicate the button that was clicked. #}
                     <button onclick="submitForm('save', {{ module.moduleid }})" class="edit-button" name="save-button"
                         type="button" value="save">Save Module</button>
-                    <button onclick="submitForm('editprograms', {{ module.moduleid }})" class="edit-button" name="edit-button" type="button" value="editprograms">Programs</button>
+                    {% if module.module_type != 'house' %}
+                        <button onclick="submitForm('editprograms', {{ module.moduleid }})" class="edit-button" name="edit-button" type="button" value="editprograms">Programs</button>
+                    {% endif %}
                     <br/>
                     <button onclick="submitForm('on', {{ module.moduleid }})" class="edit-button" name="on-button" type="button" value="on">On</button>
                     <button onclick="submitForm('off', {{ module.moduleid }})" class="edit-button" name="off-button" type="button" value="off">Off</button>

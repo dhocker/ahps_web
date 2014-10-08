@@ -31,9 +31,14 @@ h2              { font-size: 1.2em;  margin: 0.5em 0 0.5em 0; }
                     color: #316F31;
                     border: 3px solid #316F31; float: left; margin: 0.3em auto;
                     height: 12em; }
+.house-module   { background: #F0B2E0; width: 15em; padding: 0.5em;
+                    color: #316F31;
+                    border: 3px solid #66004C; float: left; margin: 0.3em auto;
+                    height: 12em; }
 .name           { padding: 0.2em; color: #377BA8; background: #EBF5FB}
 .description    { text-indent: 2em }
 .hdc            { margin: 0.2em; }
+.hdc-text       { text-align: left; vertical-align: middle; padding-top: 3px; }
 .edit-button    { left: 2em; margin-top: 0.5em; padding: 0.2em; }
 .footer         { clear: both; margin-top: 2em; padding: 0.5em;
                     background: #EBF5FB;

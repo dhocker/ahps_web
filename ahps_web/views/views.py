@@ -31,7 +31,7 @@ from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
     insert_house, delete_house
-from ahps_web.bll.x10_control import device_on, device_off
+from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from Version import GetVersion
 
 
@@ -165,7 +165,10 @@ def modules(roomid):
 
         if button == 'save':
             update_module_name(moduleid, request.form["module-name"])
-            update_module_hdc(moduleid, request.form["house_code"], request.form["device_code"])
+            if request.form['module_type'] == 'house':
+                update_module_hdc(moduleid, request.form["house_code"], "")
+            else:
+                update_module_hdc(moduleid, request.form["house_code"], request.form["device_code"])
             if request.form['module_type'] == 'lamp':
                 update_module_dim_amount(moduleid, request.form['dim_amount'])
             flash('Module record saved')
@@ -180,12 +183,23 @@ def modules(roomid):
             flash("The \"{0}\" module was removed".format(module['name']))
 
         elif button == 'on':
-            if device_on(moduleid):
-                flash("Module turned on")
+            if request.form['module_type'] != 'house':
+                # Appliance or lamp
+                if device_on(moduleid):
+                    flash("{0} turned on".format(request.form['module_type']))
+            else:
+                # All lights on for house code
+                if all_lights_on(moduleid):
+                    flash("All lights turned on")
 
         elif button == 'off':
-            if device_off(moduleid):
-                flash("Module turned off")
+            if request.form['module_type'] != 'house':
+                if device_off(moduleid):
+                    flash("{0} turned off".format(request.form['module_type']))
+            else:
+                # All lights off for house code
+                if all_lights_off(moduleid):
+                    flash("All lights turned off")
 
         else:
             return "Unrecognized button action"

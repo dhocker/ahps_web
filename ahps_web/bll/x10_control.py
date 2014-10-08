@@ -43,3 +43,29 @@ def device_off(moduleid):
     ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
     response = ahps_request.device_off(module["house_code"] + module["device_code"], module["dim_amount"])
     return response["result-code"] == 0
+
+
+def all_lights_on(moduleid):
+    '''
+    Turns all lights on for a house code
+    :param moduleid:
+    :return: Returns true if request was successful. Otherwise, returns false.
+    '''
+
+    module = get_module(moduleid)
+    ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
+    response = ahps_request.device_all_lights_on(module["house_code"])
+    return response["result-code"] == 0
+
+
+def all_lights_off(moduleid):
+    '''
+    Turns all lights off for a house code
+    :param moduleid:
+    :return: Returns true if request was successful. Otherwise, returns false.
+    '''
+
+    module = get_module(moduleid)
+    ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
+    response = ahps_request.device_all_lights_off(module["house_code"])
+    return response["result-code"] == 0
