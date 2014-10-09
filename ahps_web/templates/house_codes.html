@@ -1,6 +1,6 @@
 {# Includable file for generating a house code combobox #}
 
-<select name="house_code" id="house_code">
+<select name="house_code" id="house_code" class="input-select">
 {% for hc in ['A','B','C','D','E','F','G','H','I','J','K','L','M','O','P'] %}
     <option value="{{ hc }}"
     {% if module and hc == module.house_code.upper() %}
