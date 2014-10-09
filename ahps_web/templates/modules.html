@@ -56,7 +56,7 @@
                     <input type="hidden" name="module_type" value="{{ module.module_type }}">
                     <div id="module-name-{{ module.moduleid }}" class="name">
                         <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label>
-                        <input type="text" id="module-name-text{{ module.moduleid }}" name="module-name" value="{{ module.name }}"/>
+                        <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name" name="module-name" value="{{ module.name }}"/>
                     </div>
                     <div class="hdc">
                         {% if module.module_type == 'house' %}
