@@ -26,19 +26,19 @@ h2              { font-size: 1.2em;  margin: 0.5em 0 0.5em 0; }
 .lamp-module    { background: #CEE5F5; width: 15em; height: 20em; padding: 0.5em;
                     color: #667A88;
                     border: 3px solid #667A88; float: left; margin: 0.3em auto;
-                    height: 12em; }
+                    height: 10em; }
 .appliance-module { background: #97C897; width: 15em; padding: 0.5em;
                     color: #316F31;
                     border: 3px solid #316F31; float: left; margin: 0.3em auto;
-                    height: 12em; }
+                    height: 10em; }
 .house-module   { background: #F0B2E0; width: 15em; padding: 0.5em;
                     color: #316F31;
                     border: 3px solid #66004C; float: left; margin: 0.3em auto;
-                    height: 12em; }
+                    height: 10em; }
 .name           { padding: 0.2em; color: #377BA8; background: #EBF5FB}
 .description    { text-indent: 2em }
 .hdc            { margin: 0.2em; height: 25px; }
-.hdc-text       { margin: 0.3em; text-align: left; vertical-align: middle; padding-top: 3px; }
+.hdc-text       { margin: 0.3em auto; text-align: left; vertical-align: middle; padding-top: 3px; }
 .edit-button    { left: 2em; margin-top: 0.5em; padding: 0.2em; }
 .footer         { clear: both; margin-top: 2em; padding: 0.5em;
                     background: #EBF5FB;
@@ -47,7 +47,7 @@ h2              { font-size: 1.2em;  margin: 0.5em 0 0.5em 0; }
 .clear          { clear: both }
 .input-form     { margin: 1em auto; }
 .input-text     { margin: 0.3em auto; }
-.input-select   { margin: 0.3em auto; }
+.input-select   { margin: 0.5em auto; }
 .input-number   { margin: 0.3em auto; width: 2em; }
 .input-time     { margin: 0.3em auto; width: 5em; height: 1em; }
 .input-label    { margin: 0.3em auto; display: block }

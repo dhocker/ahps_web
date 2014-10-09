@@ -68,7 +68,8 @@
                             {% include 'house_codes.html' %}
                             {% include 'device_codes.html' %}
                             {% if module.module_type == 'lamp' %}
-                                Dim: <input type="text" id="dim_amount" name="dim_amount" class="input-number"
+                                <span class="hdc-text">Dim:</span>
+                                <input type="text" id="dim_amount" name="dim_amount" class="input-number"
                                             value="{{ module.dim_amount }}"/>
                             {% else %}
                                 <br/>
