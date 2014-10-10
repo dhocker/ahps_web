@@ -44,6 +44,12 @@
             $("#module-form-" + moduleid).submit();
         };
 
+        /* When the module type changes, immediately save the module
+        so the type change is obvious */
+        function moduleTypeChanged(moduleid){
+            submitForm("save", moduleid);
+        }
+
     </script>
 {% endblock %}
 
@@ -53,15 +59,19 @@
             <form id="module-form-{{ module.moduleid }}" action="{{ room.roomid }}" method="post">
                 <div class="{{ module.module_type }}-module">
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
-                    <input type="hidden" name="module_type" value="{{ module.module_type }}">
+                    {# <input type="hidden" name="module_type" value="{{ module.module_type }}"> #}
                     <div id="module-name-{{ module.moduleid }}" class="name">
-                        <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label>
+                        {# <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label> #}
+                        {% include 'module_types.html' %}
+                        <br/>
                         <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name" name="module-name" value="{{ module.name }}"/>
                     </div>
                     <div class="hdc">
                         {% if module.module_type == 'house' %}
                             <span class="hdc-text">{{ module.house_code }}</span>
                             {% include 'house_codes.html' %}
+                            <input type="hidden" id="device_code" name="device_code" value="{{ module.device_code }}"/>
+                            <input type="hidden" id="dim_amount" name="dim_amount" value="{{ module.dim_amount }}"/>
                         {% else %}
                             {# appliance or lamp #}
                             <span class="hdc-text">{{ module.house_code }}{{ module.device_code }}</span>
@@ -72,6 +82,7 @@
                                 <input type="text" id="dim_amount" name="dim_amount" class="input-number"
                                             value="{{ module.dim_amount }}"/>
                             {% else %}
+                                <input type="hidden" id="dim_amount" name="dim_amount" value="{{ module.dim_amount }}"/>
                                 <br/>
                             {% endif %}
                         {% endif %}

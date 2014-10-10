@@ -23,7 +23,8 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
-    update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house
+    update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house, \
+    update_module_type
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
 from ahps_web.views.login_views import is_logged_in
@@ -164,6 +165,7 @@ def modules(roomid):
         button = request.form["button"]
 
         if button == 'save':
+            update_module_type(moduleid, request.form["module_type"])
             update_module_name(moduleid, request.form["module-name"])
             if request.form['module_type'] == 'house':
                 update_module_hdc(moduleid, request.form["house_code"], "")

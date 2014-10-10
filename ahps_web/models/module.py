@@ -82,6 +82,20 @@ def update_module_name(moduleid, name):
     return True
 
 
+def update_module_type(moduleid, module_type):
+    '''
+    Update the module type for a given module record
+    :param moduleid:
+    :param name:
+    :return:
+    '''
+    db = get_db()
+    db.execute('update modules set module_type=? where moduleid=?',
+               [module_type, moduleid])
+    db.commit()
+    return True
+
+
 def insert_module(roomid, module_type, name, house_code, device_code, dim_amount=0):
     '''
     Insert a module record
