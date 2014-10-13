@@ -24,16 +24,40 @@
                 }
             });
 
+            $("#move-module-dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "Move": function(event) {
+                        $("#move-module-dialog").dialog( "close" );
+                        $("#module-to-move").val($(this).data("moduleid"));
+                        $("#move-module-form").submit();
+                        },
+                    "Cancel": function(event) {
+                        $("#move-module-dialog").dialog( "close" );
+                        }
+                }
+            });
+
         });
 
-        /* Show confirmation dialog for removing a module */
-        function showDialog(moduleid){
+        {# Show confirmation dialog for removing a module #}
+        function showRemoveDialog(moduleid){
             /* Set the value of the hidden button tag to reflect this is a remove */
             $("#submit-button-" + moduleid).val("remove");
             /* Set the dialog text with the room name */
             $("#dialog-text").text("Remove " + $("#module-name-text" + moduleid).val() + "?");
             /* Spring the dialog for the given room */
             $("#dialog")
+                .data("moduleid", moduleid)
+                .dialog("open");
+        };
+
+        {# Show dialog for moving a module to another room #}
+        function showMoveDialog(moduleid){
+            $("#move-module-dialog")
                 .data("moduleid", moduleid)
                 .dialog("open");
         };
@@ -100,7 +124,8 @@
                     <button onclick="submitForm('on', {{ module.moduleid }})" class="edit-button" name="on-button" type="button" value="on">On</button>
                     <button onclick="submitForm('off', {{ module.moduleid }})" class="edit-button" name="off-button" type="button" value="off">Off</button>
                     <br/>
-                    <button onclick="showDialog({{ module.moduleid }})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
+                    <button onclick="showMoveDialog({{ module.moduleid }})" class="edit-button" name="move-button" type="button" value="move">Move Module</button>
+                    <button onclick="showRemoveDialog({{ module.moduleid }})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
                 </div>
             </form>
         {% endfor %}
@@ -112,4 +137,18 @@
         <button class="edit-button" name=add-appliance type="submit" value="{{ room.roomid }}">Add Appliance</button>
         <button class="edit-button" name=add-lamp type="submit" value="{{ room.roomid }}">Add Lamp</button>
     </form>
+
+    {# The jQuery UI dialog for moving a module to another room #}
+    <div id="move-module-dialog" title="Move Module">
+        <form id="move-module-form" action="move_module" method="post">
+            <input id="module-to-move" type="hidden" name="moduleid" value="">
+            <label>New room</label>
+            <select name="new_room" id="new_room" class="input-select">
+            {% for r in rooms -%}
+                <option value="{{ r.roomid }}">{{ r.name }}</option>
+            {%- endfor %}
+            </select>
+        </form>
+    </div>
+
 {% endblock %}

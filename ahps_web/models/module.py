@@ -135,3 +135,16 @@ def delete_room_modules(roomid):
         delete_module(module["moduleid"])
 
     return True
+
+
+def move_module_room(moduleid, roomid):
+    '''
+    Move a module to a different room. Essentially, this simply
+    sets the roomid of the module to the new room's ID.
+    :return: True if module was moved
+    '''
+
+    db = get_db()
+    db.execute('update modules set roomid=? where moduleid=?', [roomid, moduleid])
+    db.commit()
+    return True

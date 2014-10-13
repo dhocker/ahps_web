@@ -24,7 +24,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house, \
-    update_module_type
+    update_module_type, move_module_room
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
 from ahps_web.views.login_views import is_logged_in
@@ -208,7 +208,8 @@ def modules(roomid):
 
     modules = get_modules_for_room(roomid)
     room = get_room(roomid)
-    return render_template('modules.html', room=room, modules=modules)
+    all_rooms = get_rooms(get_current_house()["houseid"])
+    return render_template('modules.html', room=room, modules=modules, rooms=all_rooms)
 
 
 @app.route('/modules/edit_module', methods=['POST'])
@@ -260,6 +261,17 @@ def new_lamp_module():
     return redirect(url_for('modules', roomid=roomid))
 
 
+@app.route('/modules/move_module', methods=['POST'])
+def move_module():
+    moduleid = request.form["moduleid"]
+    new_roomid = request.form["new_room"]
+
+    # Implement move to new room
+    move_module_room(moduleid, new_roomid)
+
+    return redirect(url_for('modules', roomid=new_roomid))
+
+
 @app.route('/modules/programs/<moduleid>', methods=['GET', 'POST'])
 def module_programs(moduleid):
     '''
@@ -294,7 +306,7 @@ def edit_program(programid):
         program = get_program(programid)
         moduleid = program["moduleid"]
 
-        # TODO Implement save
+        # Save all program data
 
         program["name"] = request.form["program-name"]
 
