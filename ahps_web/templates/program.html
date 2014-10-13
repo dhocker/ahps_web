@@ -32,6 +32,8 @@
             {# Initialize start and stop triggers. #}
             startTriggerChanged();
             stopTriggerChanged();
+            {# Reset change tracking #}
+            window.onbeforeunload = null;
 
             {# Initialize time controls #}
             {# We have to explicitly supply the spinnerImage because the widget looks for the
@@ -51,10 +53,12 @@
 
         function setWeekdays(){
             $('.weekday').each(function(){ this.checked = !this.checked; });
+            track_change();
         }
 
         function setWeekenddays(){
             $('.weekendday').each(function(){ this.checked = !this.checked; });
+            track_change();
         }
 
         function showHideFieldset(name){
@@ -63,6 +67,7 @@
         }
 
         function startTriggerChanged(){
+            track_change();
             // Cases for each trigger method. Show/hide group boxes.
             triggerMethod = $("#start-trigger-method").val();
             switch (triggerMethod.toLowerCase())
@@ -91,6 +96,7 @@
         }
 
         function stopTriggerChanged(){
+            track_change();
             // Cases for each trigger method. Show/hide group boxes.
             triggerMethod = $("#stop-trigger-method").val();
             switch (triggerMethod.toLowerCase())
@@ -237,6 +243,19 @@
 
         }
 
+        function unsaved_changes_warning(e){
+            e.returnValue = "You have unsaved changes on this page.";
+            {#
+            Some browsers (e.g. Chrome, Safari will display the returned text.
+            Firefox does not display the returned text.
+            #}
+            return e.returnValue;
+        }
+
+        function track_change(){
+            window.onbeforeunload = unsaved_changes_warning;
+        }
+
     </script>
 {% endblock %}
 
@@ -252,7 +271,7 @@
 {%- endmacro %}
 
 {% macro program_actions(id, class, name, selected_value) %}
-    <select id="{{ id }}" class="{{ class }}" name="{{ name }}">
+    <select id="{{ id }}" class="{{ class }}" name="{{ name }}" onchange="track_change()">
         {{ select_option("none", selected_value) }}
         {{ select_option("on", selected_value) }}
         {{ select_option("off", selected_value) }}
@@ -273,7 +292,8 @@
 {% block body %}
     <form id="program-form" action="" method="post" onsubmit="return validate_inputs()">
         <h2>Module: {{ module.name }} - Program:
-            <input type="text" class="input-program-name" name="program-name" value="{{ program.name }}" >
+            <input type="text" class="input-program-name" name="program-name" value="{{ program.name }}"
+                    onchange="track_change()" >
         </h2>
 
         {#
@@ -289,13 +309,13 @@
         <fieldset id="days-of-week" class="days-of-week">
             <legend>Days</legend>
             {# The initial state of the checkboxes is set by Javascript above #}
-            <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" >Monday<br/>
-            <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" >Tuesday<br/>
-            <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" >Wednesday<br/>
-            <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" >Thursday<br/>
-            <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" >Friday<br/>
-            <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" >Saturday<br/>
-            <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" >Sunday<br/>
+            <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" onchange="track_change()">Monday<br/>
+            <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" onchange="track_change()">Tuesday<br/>
+            <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" onchange="track_change()">Wednesday<br/>
+            <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" onchange="track_change()">Thursday<br/>
+            <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" onchange="track_change()">Friday<br/>
+            <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" onchange="track_change()">Saturday<br/>
+            <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" onchange="track_change()">Sunday<br/>
 
             <button type="button" class="edit-button" onclick="setWeekdays()">Week Days</button>
             <button type="button" class="edit-button" onclick="setWeekenddays()">Week End</button>
@@ -314,22 +334,27 @@
             <fieldset id="start-time-group" class="program-trigger-group">
                 <legend>Start time</legend>
                 <input id="start-time" type="text" class="input-time" name="start-time" value="{{ program.start_time }}"
-                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'>
+                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+                       onchange="track_change()">
             </fieldset>
 
             <fieldset id="start-offset-group" class="program-trigger-group">
                 <legend>Start Offset</legend>
                 <input type="text" id="start-offset" class="input-number" name="start-offset"
                        value="{{ program.start_offset }}"
-                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'>
+                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+                       onchange="track_change()">
                 <span> = </span>
                 <span id="start-offset-time" class="offset-time">TIME</span>
             </fieldset>
 
             <fieldset id="start-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
-                <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1" >Randomize +/-
-                <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount" value="{{ program.start_randomize_amount }}">
+                <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1"
+                       onchange="track_change()">Randomize +/-
+                <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount"
+                       value="{{ program.start_randomize_amount }}"
+                       onchange="track_change()">
                 <br/>
             </fieldset>
         </fieldset>
@@ -347,22 +372,26 @@
             <fieldset id="stop-time-group" class="program-trigger-group">
                 <legend>Stop time</legend>
                 <input id="stop-time" type="text" class="input-time" name="stop-time" value="{{ program.stop_time }}"
-                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'>
+                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
+                       onchange="track_change()">
             </fieldset>
 
             <fieldset id="stop-offset-group" class="program-trigger-group">
                 <legend>Stop Offset</legend>
                 <input type="text" id="stop-offset" class="input-number" name="stop-offset"
                        value="{{ program.stop_offset }}"
-                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'>
+                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
+                       onchange="track_change()">
                 <span> = </span>
                 <span id="stop-offset-time" class="offset-time">TIME</span>
             </fieldset>
 
             <fieldset id="stop-randomize-group" class="program-trigger-group">
                 <legend>Randomize</legend>
-                <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1" >Randomize +/-
-                <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount" value="{{ program.stop_randomize_amount }}">
+                <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1"
+                       onchange="track_change()" >Randomize +/-
+                <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount"
+                       value="{{ program.stop_randomize_amount }}" onchange="track_change()">
                 <br/>
             </fieldset>
         </fieldset>
@@ -384,10 +413,7 @@
         </fieldset>
 
         <div class="clear"></div>
-        <button class="edit-button" name="save" type="submit" value="save">Save</button>
-        {#
-        <button class="edit-button" name="cancel" type="submit" value="cancel">Cancel</button>
-        #}
+        <button class="edit-button" name="save" type="submit" value="save" onclick="window.onbeforeunload=null">Save</button>
         <button class="edit-button" name="cancel" type="button" value="cancel"
                 onclick="window.location.replace('{{ url_for('module_programs', moduleid=program.moduleid) }}')">Cancel</button>
     </form>
