@@ -5,7 +5,7 @@
     <div class="input-form">
     <form action="new_lamp_module" method="post">
         <label for="name" class="input-label">*Module name:</label>
-        <input id="name" type="text" name="name" class="input-text" autofocus="True">
+        <input id="name" type="text" name="name" class="input-text" autofocus="True" onchange="track_change()">
 
         <label for="house_code" class="input-label">House code:</label>
         {% include 'house_codes.html' %}
@@ -14,11 +14,13 @@
         {% include 'device_codes.html' %}
 
         <label for="dimamount" class="input-label">Dim amount:</label>
-        <input id="dimamount" type="text" name="dim_amount" class="input-text" value="0" autofocus="True"/>
+        <input id="dimamount" type="text" name="dim_amount" class="input-text" value="0" autofocus="True"
+               onchange="track_change()"/>
 
         <br/>
         <button class="edit-button" name=cancel type="submit" value="{{ roomid }}">Cancel</button>
-        <button class="edit-button" name=save type="submit" value="{{ roomid }}">Save</button>
+        <button class="edit-button" name=save type="submit" value="{{ roomid }}"
+                onclick="window.onbeforeunload=null">Save</button>
     </form>
     </div>
 

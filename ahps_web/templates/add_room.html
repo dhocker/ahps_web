@@ -5,13 +5,13 @@
     <div class="input-form">
     <form action="add_room" method="post">
         <label for="name" class="input-label">*Room name:</label>
-        <input id="name" type="text" name="name" class="input-text" autofocus="True">
+        <input id="name" type="text" name="name" class="input-text" autofocus="True" onchange="track_change()">
         <br/>
         <label for="description" class="input-label">Description:</label>
-        <input id="description" type="text" name="description" class="input-text">
+        <input id="description" type="text" name="description" class="input-text" onchange="track_change()">
         <br/>
         <button class="edit-button" name=save type="submit" value="cancel">Cancel</button>
-        <button class="edit-button" name=save type="submit" value="save">Save</button>
+        <button class="edit-button" name=save type="submit" value="save" onclick="window.onbeforeunload=null">Save</button>
     </form>
     </div>
 
