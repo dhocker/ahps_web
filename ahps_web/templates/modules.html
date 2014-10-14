@@ -64,6 +64,7 @@
 
         /* Submit the form */
         function submitForm(form_action, moduleid){
+            window.onbeforeunload=null;
             $("#submit-button-" + moduleid).val(form_action);
             $("#module-form-" + moduleid).submit();
         };
@@ -88,7 +89,9 @@
                         {# <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label> #}
                         {% include 'module_types.html' %}
                         <br/>
-                        <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name" name="module-name" value="{{ module.name }}"/>
+                        <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name"
+                               name="module-name" value="{{ module.name }}"
+                               onchange="track_change()"/>
                     </div>
                     <div class="hdc">
                         {% if module.module_type == 'house' %}
@@ -104,7 +107,8 @@
                             {% if module.module_type == 'lamp' %}
                                 <span class="hdc-text">Dim:</span>
                                 <input type="text" id="dim_amount" name="dim_amount" class="input-number"
-                                            value="{{ module.dim_amount }}"/>
+                                         value="{{ module.dim_amount }}"
+                                         onchange="track_change()"/>
                             {% else %}
                                 <input type="hidden" id="dim_amount" name="dim_amount" value="{{ module.dim_amount }}"/>
                                 <br/>

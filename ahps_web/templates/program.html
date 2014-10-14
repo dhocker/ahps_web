@@ -243,19 +243,6 @@
 
         }
 
-        function unsaved_changes_warning(e){
-            e.returnValue = "You have unsaved changes on this page.";
-            {#
-            Some browsers (e.g. Chrome, Safari will display the returned text.
-            Firefox does not display the returned text.
-            #}
-            return e.returnValue;
-        }
-
-        function track_change(){
-            window.onbeforeunload = unsaved_changes_warning;
-        }
-
     </script>
 {% endblock %}
 

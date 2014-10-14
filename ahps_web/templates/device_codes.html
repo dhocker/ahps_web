@@ -1,6 +1,6 @@
 {# Includable file for generating a device code combobox #}
 
-<select name="device_code" id="device_code" class="input-select">
+<select name="device_code" id="device_code" class="input-select" onchange="track_change()">
 {% for dc in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16'] %}
     <option value="{{ dc }}"
     {% if module and dc == module.device_code %}
