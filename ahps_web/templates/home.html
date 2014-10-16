@@ -108,7 +108,13 @@
                 <form id="room-form-{{ room.roomid }}" action="" method="post">
                     <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
                     <div id="room-name-{{ room.roomid }}"  class="name">{{ room.name }}</div>
-                    <div class="description">{{ room.description }}</div>
+                    <div class="description">
+                        {% if room.description %}
+                            {{ room.description }}
+                        {% else %}
+                            <span>&nbsp;</span>
+                        {% endif %}
+                    </div>
                     {# This is used to send the button that was clicked #}
                     <input id="submit-button-{{ room.roomid }}" type="hidden" name="button" value=""/>
                     {# These buttons are used to capture user clicks. The underlying Javascript
