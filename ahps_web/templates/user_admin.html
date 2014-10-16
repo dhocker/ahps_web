@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {# The jQuery UI dialog for confirming module removal #}
+    <div id="dialog" title="Confirmation">
+        <p id="dialog-text">Remove the selected user?</p>
+    </div>
+    <script type="text/javascript">
+        /* Initialize the confirmation dialog */
+        $(document).ready(function() {
+            $("#dialog").dialog(
+            {
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "Remove": function(event) {
+                        $("#dialog").dialog( "close" );
+                        /* Effectively a redirect to the remove user page */
+                        window.location.replace('/user/remove/' + $(this).data("userid"));
+                        },
+                    "Cancel": function(event) {
+                        $("#dialog").dialog( "close" );
+                        }
+                }
+            });
+
+        });
+
+        /* Show confirmation dialog for removing a program */
+        function confirmRemove(userid, name){
+            /* Set the dialog text with the user name */
+            $("#dialog-text").text("Remove user " + name + "?");
+            /* Pop the confirmation dialog */
+            $("#dialog")
+                .data("userid", userid)
+                .data("name", name)
+                .dialog("open");
+        };
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <h2>Users</h2>
+        <table id="programs" style="table-layout: fixed">
+            <tr>
+                <th style="width: 10%">User ID</th>
+                <th style="width: 20%">User Name</th>
+                <th style="width: 50%">Encoded Password</th>
+                <th style="width: 10%">Active</th>
+                <th style="width: 10%">Actions</th>
+            </tr>
+            {% for user in users %}
+                {% if loop.index is not divisibleby 2 %}
+                <tr>
+                {% else %}
+                <tr class="alt">
+                {% endif %}
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td  style="width: 50%; overflow: hidden; text-overflow: ellipsis;">{{ user.password }}</td>
+                    <td>
+                        {% if user.active -%}
+                            <span>Yes</span>
+                        {% else %}
+                            <span>No</span>
+                        {%- endif %}
+                    </td>
+                    <td>
+                        {% if user.username != "admin" %}
+                            <a class="a-button"
+                               href="javascript:confirmRemove({{ user.id }}, '{{ user.username }}')">Remove</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    <div class="clear"></div>
+
+    {# Button for adding a user #}
+    <form action="{{ url_for('new_user_page') }}" method="get">
+        <button class="edit-button" name="add-user" type="submit" value="">Add User</button>
+    </form>
+{% endblock %}
+
+{% block footer_links %}
+{% endblock %}

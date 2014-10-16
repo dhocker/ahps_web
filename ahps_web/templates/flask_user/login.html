@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h2>Login</h2>
+
+    <form action="" method="POST" class="input-form" role="form">
+        {{ form.hidden_tag() }}
+        <label class="input-label">User name</label>
+        <input type="text" class="input-text" name="username"/>
+        <br/>
+        <label class="input-label">Password</label>
+        <input type="password" class="input-text" name="password"/>
+        <br/>
+        <input type="submit" class="edit-button" name="submit" value="Login">
+    </form>
+
+{% endblock %}

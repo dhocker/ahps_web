@@ -91,6 +91,8 @@ h2              { font-size: 1.2em;  margin: 0.5em 0 0.5em 0; }
                     color: #000000;
                     background-color: #EBF5FB; }
 
+#programs .fixed-wide-col { width: 25%; }
+
 /* Styling for the program editing page */
 .days-of-week       {
                     margin: 1em 1em 0.5em 0;

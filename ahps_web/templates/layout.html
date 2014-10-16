@@ -38,19 +38,22 @@
 <div class="page">
 	<h1><img class="logo" src="{{ url_for('static', filename='AtHomeX10.png') }}" />AHPS Web</h1>
 	<div class="metanav">
-		{% if not session.logged_in %}
-			<a href="{{ url_for('login') }}">log in</a>
-		{% else %}
-			<a href="{{ url_for('logout') }}">log out</a>
-		{% endif %}
+        {% if current_user.is_authenticated() %}
+            <span>Logged in as {{ current_user.username }} </span>&nbsp
+    	    <a href="{{ url_for('user.logout') }}">Logout</a>
+            <a href="{{ url_for('user.change_password') }}">Change Password</a>
+        {% else %}
+            {# Place holder to keep header bar size #}
+            <p/>
+        {% endif %}
 	</div>
 
     {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
     {% endif %}
 
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash">{{ category | capitalize() }}: {{ message }}</div>
     {% endfor %}
 
     {% block body %}{% endblock %}

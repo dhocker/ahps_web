@@ -27,16 +27,17 @@ from ahps_web.models.module import get_modules_for_room, get_module, insert_modu
     update_module_type, move_module_room
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
-from ahps_web.views.login_views import is_logged_in
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
     insert_house, delete_house
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from Version import GetVersion
+from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 
 @app.route("/")
+@login_required                                 # Use of @login_required decorator
 def root():
     return redirect(url_for('home'))
 
@@ -47,6 +48,7 @@ def about():
 
 
 @app.route("/houses", methods=["GET", "POST"])
+@login_required                                 # Use of @login_required decorator
 def houses():
     if request.method == "GET":
         all_houses = get_houses()
@@ -57,12 +59,14 @@ def houses():
 
 
 @app.route("/houses/select_house/<houseid>", methods=["GET"])
+@login_required                                 # Use of @login_required decorator
 def select_house(houseid):
     set_current_house(houseid)
     return redirect(url_for("home"))
 
 
 @app.route("/houses/edit_house/<houseid>", methods=["GET", "POST"])
+@login_required                                 # Use of @login_required decorator
 def edit_house(houseid):
     if request.method == "GET":
         house = get_house(houseid)
@@ -73,6 +77,7 @@ def edit_house(houseid):
 
 
 @app.route("/houses/remove_house/<houseid>", methods=["GET"])
+@login_required                                 # Use of @login_required decorator
 def remove_house(houseid):
     # Can't remove current house
     current_house = get_house(houseid)
@@ -86,6 +91,7 @@ def remove_house(houseid):
 
 
 @app.route("/houses/copy_house/<houseid>", methods=["GET"])
+@login_required                                 # Use of @login_required decorator
 def copy_house(houseid):
     error = "Copy house is not implemented"
     houses = get_houses()
@@ -93,12 +99,8 @@ def copy_house(houseid):
 
 
 @app.route("/home", methods=['GET', 'POST'])
+@login_required                                 # Use of @login_required decorator
 def home():
-    # login is required
-    if not is_logged_in():
-        # Force login
-        return redirect(url_for('login'))
-
     if request.method == 'GET':
         current_house = get_current_house()
         rooms = get_rooms(current_house["houseid"])
@@ -126,30 +128,28 @@ def home():
 
 
 @app.route('/home/add_room', methods=['GET', 'POST'])
+@login_required                                 # Use of @login_required decorator
 def add_room():
-    # login is required
-    if is_logged_in():
-        if request.method == 'GET':
-            # For a GET request, return the add room page
-            return render_template('add_room.html')
-        elif request.method == 'POST':
-            # The POST request sends the add room form contents
-            if request.form["save"] == "save":
-                # Save new room
-                current_house = get_current_house()
-                if request.form["name"]:
-                    insert_room(current_house["houseid"], request.form["name"], request.form["description"])
-                else:
-                    error = 'Room name is a required field'
-                    return render_template('add_room.html', error=error)
+    if request.method == 'GET':
+        # For a GET request, return the add room page
+        return render_template('add_room.html')
+    elif request.method == 'POST':
+        # The POST request sends the add room form contents
+        if request.form["save"] == "save":
+            # Save new room
+            current_house = get_current_house()
+            if request.form["name"]:
+                insert_room(current_house["houseid"], request.form["name"], request.form["description"])
+            else:
+                error = 'Room name is a required field'
+                return render_template('add_room.html', error=error)
 
-            # Return to the home page (list of rooms)
-            return redirect(url_for('home'))
-    else:
-        return redirect(url_for('login'))
+        # Return to the home page (list of rooms)
+        return redirect(url_for('home'))
 
 
 @app.route('/modules/<roomid>', methods=['GET', 'POST'])
+@login_required                                 # Use of @login_required decorator
 def modules(roomid):
     '''
     Show the modules for a given room
@@ -213,11 +213,13 @@ def modules(roomid):
 
 
 @app.route('/modules/edit_module', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
 def edit_module():
     return 'Edit module'
 
 
 @app.route('/modules/add_module', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
 def add_module():
     # The target room where the module is to be added is the value of the button that
     # was clicked.
@@ -231,6 +233,7 @@ def add_module():
 
 
 @app.route('/modules/new_appliance_module', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
 def new_appliance_module():
     # Save or cancel
     if request.form.has_key('save'):
@@ -246,6 +249,7 @@ def new_appliance_module():
 
 
 @app.route('/modules/new_lamp_module', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
 def new_lamp_module():
     # Save or cancel
     if request.form.has_key('save'):
@@ -262,6 +266,7 @@ def new_lamp_module():
 
 
 @app.route('/modules/move_module', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
 def move_module():
     moduleid = request.form["moduleid"]
     new_roomid = request.form["new_room"]
@@ -273,6 +278,7 @@ def move_module():
 
 
 @app.route('/modules/programs/<moduleid>', methods=['GET', 'POST'])
+@login_required                                 # Use of @login_required decorator
 def module_programs(moduleid):
     '''
     Show list of programs for the given module ID
@@ -293,6 +299,7 @@ def module_programs(moduleid):
 
 
 @app.route('/modules/programs/edit_program/<programid>', methods=['GET', 'POST'])
+@login_required                                 # Use of @login_required decorator
 def edit_program(programid):
     if request.method == 'GET':
         program = get_program(programid)
@@ -364,6 +371,7 @@ def edit_program(programid):
 
 
 @app.route('/modules/programs/remove_program/<moduleid>', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
 def remove_program(moduleid):
     programid = request.args["programid"]
     delete_program(programid)
@@ -372,6 +380,7 @@ def remove_program(moduleid):
 
 
 @app.route('/download_programs', methods=["POST"])
+@login_required                                 # Use of @login_required decorator
 def download_programs():
     '''
     This is the target of an AJAX call mainly from the home page.
@@ -390,6 +399,7 @@ def download_programs():
 
 
 @app.route('/all_house_codes', methods=["GET"])
+@login_required                                 # Use of @login_required decorator
 def all_house_codes():
     house = get_current_house()
     modules = get_modules_for_house(house["houseid"])
