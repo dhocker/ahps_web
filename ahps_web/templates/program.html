@@ -32,8 +32,6 @@
             {# Initialize start and stop triggers. #}
             startTriggerChanged();
             stopTriggerChanged();
-            {# Reset change tracking #}
-            window.onbeforeunload = null;
 
             {# Initialize time controls #}
             {# We have to explicitly supply the spinnerImage because the widget looks for the
@@ -49,6 +47,9 @@
             {# Initialize sunset/sunrise times #}
             show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time");
             show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time");
+
+            {# Reset change tracking so initialization changes don't trigger it #}
+            window.onbeforeunload = null;
         });
 
         function setWeekdays(){
