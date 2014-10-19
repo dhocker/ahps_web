@@ -49,8 +49,60 @@ def insert_program(moduleid, name):
     db = get_db()
     db.execute('insert into programs (moduleid, name) values (?,?)',
                [moduleid, name])
+    programid = cur.lastrowid
     db.commit()
-    return True
+    return programid
+
+
+def insert_program_from_record(program, new_moduleid):
+    '''
+    Insert a program record from a modified copy of the record
+    :return: True if record was created
+    '''
+    # moduleid integer not null,
+    # name text default '',
+    # days text default '.......',
+    # start_trigger_method text default 'none',
+    # start_time text default '12:00 AM',
+    # start_offset integer default 0,
+    # stop_trigger_method text default 'none',
+    # stop_time text default '12:00 AM',
+    # stop_offset integer default 0,
+    # start_randomize integer default 0,
+    # stop_randomize integer default 0,
+    # start_randomize_amount integer default 0,
+    # stop_randomize_amount integer default 0,
+    # start_action text default 'none',
+    # stop_action text default 'none',
+    # start_dim_percent integer default 0,
+    # stop_dim_percent integer default 0
+
+    db = get_db()
+    cur = db.execute('''insert into programs (moduleid, name, days, start_trigger_method, start_time,
+                     start_offset, stop_trigger_method, stop_time, stop_offset, start_randomize,
+                     stop_randomize, start_randomize_amount, stop_randomize_amount, start_action,
+                     stop_action, start_dim_percent, stop_dim_percent) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+                     [new_moduleid,
+                     program["name"],
+                     program["days"],
+                     program["start_trigger_method"],
+                     program["start_time"],
+                     program["start_offset"],
+                     program["stop_trigger_method"],
+                     program["stop_time"],
+                     program["stop_offset"],
+                     program["start_randomize"],
+                     program["stop_randomize"],
+                     program["start_randomize_amount"],
+                     program["stop_randomize_amount"],
+                     program["start_action"],
+                     program["stop_action"],
+                     program["start_dim_percent"],
+                     program["stop_dim_percent"]]
+                     )
+    programid = cur.lastrowid
+    db.commit()
+    return programid
 
 
 def delete_program(programid):

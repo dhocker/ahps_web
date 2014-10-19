@@ -102,10 +102,11 @@ def insert_module(roomid, module_type, name, house_code, device_code, dim_amount
     :return: True if record was created
     '''
     db = get_db()
-    db.execute('insert into modules (roomid, module_type, name, house_code, device_code, dim_amount) values (?,?,?,?,?,?)',
+    cur = db.execute('insert into modules (roomid, module_type, name, house_code, device_code, dim_amount) values (?,?,?,?,?,?)',
                [roomid, module_type, name, house_code, device_code, dim_amount])
+    moduleid = cur.lastrowid
     db.commit()
-    return True
+    return moduleid
 
 
 def delete_module(moduleid):

@@ -88,7 +88,7 @@ def insert_house(name):
     cur = db.execute('insert into houses (name) values (?)', [name])
     houseid = cur.lastrowid
     db.commit()
-    return True
+    return houseid
 
 
 def delete_house(houseid):

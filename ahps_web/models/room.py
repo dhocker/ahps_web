@@ -47,9 +47,10 @@ def insert_room(houseid, name, desc):
     :return: True if record was created
     '''
     db = get_db()
-    db.execute('insert into rooms (name,houseid,description) values (?, ?, ?)', [name, houseid, desc])
+    cur = db.execute('insert into rooms (name,houseid,description) values (?, ?, ?)', [name, houseid, desc])
+    roomid = cur.lastrowid
     db.commit()
-    return True
+    return roomid
 
 
 def delete_room(roomid):

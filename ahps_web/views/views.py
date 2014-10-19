@@ -32,6 +32,7 @@ from ahps_web.bll.sun_data import get_sun_data
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
     insert_house, delete_house
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
+from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from Version import GetVersion
 from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
@@ -93,9 +94,12 @@ def remove_house(houseid):
 @app.route("/houses/copy_house/<houseid>", methods=["GET"])
 @login_required                                 # Use of @login_required decorator
 def copy_house(houseid):
-    error = "Copy house is not implemented"
+    # Run the copying logic
+    bll_copy_house(houseid)
+
+    # Return new list of houses
     houses = get_houses()
-    return render_template("houses.html", error=error, houses=houses)
+    return render_template("houses.html", houses=houses)
 
 
 @app.route("/home", methods=['GET', 'POST'])
