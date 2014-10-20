@@ -80,6 +80,13 @@
             $("#room-form-" + roomid).submit();
         };
 
+        /* Submit the form */
+        function submitForm(form_action, roomid){
+            window.onbeforeunload=null;
+            $("#submit-button-" + roomid).val(form_action);
+            $("#room-form-" + roomid).submit();
+        };
+
         {# Download actions and programs. Makes an AJAX call to url /download_programs #}
         function downloadPrograms(){
             $("#download-progress-dialog").dialog("open")
@@ -107,16 +114,18 @@
             <div class="room">
                 <form id="room-form-{{ room.roomid }}" action="" method="post">
                     <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
-                    <div id="room-name-{{ room.roomid }}"  class="name">{{ room.name }}</div>
+                    <div id="room-name-{{ room.roomid }}"  class="name">
+                        <input type="text" class="room-name" name="room-name" value="{{ room.name }}"
+                                onchange="track_change()" />
+                    </div>
                     <div class="description">
-                        {% if room.description %}
-                            {{ room.description }}
-                        {% else %}
-                            <span>&nbsp;</span>
-                        {% endif %}
+                        <input type="text" class="room-description" name="room-description" value="{{ room.description }}"
+                                onchange="track_change()" />
                     </div>
                     {# This is used to send the button that was clicked #}
                     <input id="submit-button-{{ room.roomid }}" type="hidden" name="button" value=""/>
+                    <button onclick="submitForm('save', {{ room.roomid }})" class="edit-button" name="save-button"
+                        type="button" value="save">Save Room</button>
                     {# These buttons are used to capture user clicks. The underlying Javascript
                     will set the id=submit-button value to indicate the button that was clicked. #}
                     <button onclick="showModules({{ room.roomid }})"  class="edit-button" name="show-button" type="button"
@@ -124,14 +133,6 @@
                     <button onclick="showDialog({{ room.roomid }})" class="edit-button" name="remove-button" type="button"
                             value="remove">Remove Room</button>
                 </form>
-{#
-                <form id="remove" action="" method="post">
-                    <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
-                    <input id="submit-button" type="hidden" name="button" value="remove"/>
-                    <button onclick="showDialog()" class="edit-button" name="remove-button" type="button"
-                            value="remove">Remove Room</button>
-                </form>
-#}
             </div>
         {% endfor %}
 

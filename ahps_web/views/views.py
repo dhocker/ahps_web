@@ -21,7 +21,7 @@ from datetime import datetime
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
-from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room
+from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room, update_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house, \
     update_module_type, move_module_room
@@ -113,7 +113,15 @@ def home():
     elif request.method == 'POST':
         button = request.form['button']
 
-        if button == 'showmodules':
+        if button == "save":
+            roomid = request.form['roomid']
+            room = get_room(roomid)
+            # TODO Need model update methods
+            update_room(roomid, request.form["room-name"], request.form['room-description'])
+            flash("The \"{0}\" room was saved".format(request.form['room-name']))
+            return redirect(url_for("home"))
+
+        elif button == 'showmodules':
             roomid = request.form['roomid']
             return redirect(url_for('modules', roomid=roomid))
 

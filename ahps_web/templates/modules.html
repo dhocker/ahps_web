@@ -86,7 +86,6 @@
                     <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
                     {# <input type="hidden" name="module_type" value="{{ module.module_type }}"> #}
                     <div id="module-name-{{ module.moduleid }}" class="name">
-                        {# <label for="module-name-text{{ module.moduleid }}" class="input-label">{{ module.module_type | capitalize() }}</label> #}
                         {% include 'module_types.html' %}
                         <br/>
                         <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name"

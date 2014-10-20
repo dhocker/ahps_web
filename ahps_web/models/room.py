@@ -41,6 +41,21 @@ def get_room(roomid):
     return room
 
 
+def update_room(roomid, name, description):
+    '''
+    Update the name and description columns
+    :param roomid:
+    :param name:
+    :param description:
+    :return:
+    '''
+    db = get_db()
+    db.execute('update rooms set name=?, description=? where roomid=?',
+               [name, description, roomid])
+    db.commit()
+    return True
+
+
 def insert_room(houseid, name, desc):
     '''
     Insert a room record
