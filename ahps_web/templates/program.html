@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 
 {% block head %}
+	<script type="text/javascript" src="{{ url_for('static', filename='watermark/watermark.js') }}"></script>
+
     <script type="text/javascript">
         {# Page initialization #}
         $(document).ready(function() {
@@ -47,6 +49,9 @@
             {# Initialize sunset/sunrise times #}
             show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time");
             show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time");
+
+            {# Set up watermarks in program name field #}
+            $('#program-name').watermark({text:'Enter a program name...',color: '#c0c0c0'});
 
             {# Reset change tracking so initialization changes don't trigger it #}
             window.onbeforeunload = null;
@@ -280,7 +285,7 @@
 {% block body %}
     <form id="program-form" action="" method="post" onsubmit="return validate_inputs()">
         <h2>Module: {{ module.name }} - Program:
-            <input type="text" class="input-program-name" name="program-name" value="{{ program.name }}"
+            <input type="text" class="input-program-name" id="program-name" name="program-name" value="{{ program.name }}"
                     onchange="track_change()" >
         </h2>
 
