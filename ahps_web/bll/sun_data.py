@@ -23,11 +23,13 @@ from configuration import Configuration
 def get_sun_data(for_datetime):
     target_date = for_datetime.strftime("%Y-%m-%d")
     ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
-    sun_data_response = ahps_request.get_sun_data(target_date)
-    # TODO Handle error
 
-    if sun_data_response["result-code"] == 0:
-        return sun_data_response["data"]
+    try:
+        sun_data_response = ahps_request.get_sun_data(target_date)
+        if sun_data_response["result-code"] == 0:
+            return sun_data_response["data"]
+    except:
+        pass
 
     # Error
     return { "sunrise": None, "sunset": None }
