@@ -16,9 +16,11 @@ $.fn.watermark = function(options) {
         }, options);
     var original_color = $(this).css('color');
     var original_font_style = $(this).css('font-style');
+    var class_marker = "watermark";
 
     $(this).focus(function() {
-        if ($(this).val() == settings.text) {
+        if ($(this).hasClass(class_marker)) {
+            $(this).removeClass(class_marker);
             $(this).val('');
             $(this).css('color', original_color);
             $(this).css('font-style', original_font_style);
@@ -27,6 +29,7 @@ $.fn.watermark = function(options) {
 
     $(this).blur(function() {
         if($(this).val().length == 0) {
+            $(this).addClass(class_marker);
             $(this).val(settings.text);
             $(this).css('color', settings.color);
             $(this).css('font-style', settings.font_style);
