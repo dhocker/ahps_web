@@ -47,7 +47,7 @@ def insert_program(moduleid, name):
     :return: True if record was created
     '''
     db = get_db()
-    db.execute('insert into programs (moduleid, name) values (?,?)',
+    cur = db.execute('insert into programs (moduleid, name) values (?,?)',
                [moduleid, name])
     programid = cur.lastrowid
     db.commit()
