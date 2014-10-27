@@ -15,10 +15,7 @@
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
 #
 from ahps_web import app
-import os
-import time
 from datetime import datetime
-from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room, update_room
@@ -33,8 +30,7 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
     insert_house, delete_house
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
-from Version import GetVersion
-from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask.ext.user import login_required
 
 
 @app.route("/")
@@ -45,7 +41,11 @@ def root():
 
 @app.route("/about")
 def about():
-    return render_template("about.html", version=GetVersion())
+    '''
+    This is the only page that does not require login
+    :return:
+    '''
+    return render_template("about.html")
 
 
 @app.route("/houses", methods=["GET", "POST"])

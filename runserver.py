@@ -20,9 +20,7 @@
 #   workon flask-env            # Establish working virtual environment with Flask
 #   python runserver.py
 
-from flask import Flask
 from ahps_web import app
-from Version import GetVersion
 import configuration
 import Logging
 import logging

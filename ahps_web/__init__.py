@@ -1,7 +1,6 @@
 import os
 import Logging
 import logging
-from Version import GetVersion
 
 from flask import Flask
 
@@ -44,6 +43,7 @@ from views import login_views
 
 logger = logging.getLogger("app")
 
+from Version import GetVersion
 logger.info("################################################################################")
 logger.info("Starting AHPS_Web version %s", GetVersion())
 logger.info("Using configuration file %s", configuration.Configuration.get_configuration_file_path())

@@ -10,8 +10,19 @@
 #
 #######################################################################
 
+from ahps_web import app
+
 def GetVersion():
   """
   Returns the current app version
   """
   return "2014.0.0.3"
+
+
+@app.context_processor
+def get_version():
+    '''
+    Exposes the variable version to jinga2 teplate renderer.
+    :return:
+    '''
+    return dict(version = GetVersion())
