@@ -145,6 +145,21 @@ class Configuration():
 
     ######################################################################
     @classmethod
+    def City(cls):
+        return cls.ActiveConfig["City"]
+
+    ######################################################################
+    @classmethod
+    def Latitude(cls):
+        return cls.ActiveConfig["Latitude"]
+
+    ######################################################################
+    @classmethod
+    def Longitude(cls):
+        return cls.ActiveConfig["Longitude"]
+
+    ######################################################################
+    @classmethod
     def get_configuration_file_path(cls):
         """
         Returns the full path to the configuration file

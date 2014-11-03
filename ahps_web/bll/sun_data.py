@@ -16,20 +16,53 @@
 #
 
 from datetime import datetime
+from astral import Astral
 from ahps_web.ahps_api.ahps_api import AHPSRequest
 from configuration import Configuration
 
 
+# def get_sun_data(for_datetime):
+#     target_date = for_datetime.strftime("%Y-%m-%d")
+#     ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
+#
+#     try:
+#         sun_data_response = ahps_request.get_sun_data(target_date)
+#         if sun_data_response["result-code"] == 0:
+#             return sun_data_response["data"]
+#     except:
+#         pass
+#
+#     # Error
+#     return { "sunrise": None, "sunset": None }
+
+
 def get_sun_data(for_datetime):
-    target_date = for_datetime.strftime("%Y-%m-%d")
-    ahps_request = AHPSRequest(Configuration.Server(), port=Configuration.Port())
+    '''
+    Returns the sunrise and sunset times for the given date.
+    Uses the Astral package to compute sunrise/sunset for the
+    configured city.
+    Reference https://pythonhosted.org/astral/module.html
+    :param for_datetime:
+    :return: Returns a dict containing the keys sunrise and sunset.
+    '''
+    a = Astral()
+    a.solar_depression = "civil"
+    # We use a city just to get a city object. Then we override the lat/long.
+    # The city object can produce sunrise/sunset in local time.
+    if Configuration.City() != "":
+        city = a[Configuration.City()]
+    else:
+        # Default if no city is configured
+        city = a["New York"]
+    if Configuration.Latitude() != "":
+        city.latitude = float(Configuration.Latitude())
+    if Configuration.Longitude() != "":
+        city.longitude = float(Configuration.Longitude())
 
-    try:
-        sun_data_response = ahps_request.get_sun_data(target_date)
-        if sun_data_response["result-code"] == 0:
-            return sun_data_response["data"]
-    except:
-        pass
+    sun_data = city.sun(date=for_datetime, local=True)
 
-    # Error
-    return { "sunrise": None, "sunset": None }
+    sun_data_response = {}
+    sun_data_response["sunrise"] = sun_data["sunrise"].isoformat()
+    sun_data_response["sunset"] = sun_data["sunset"].isoformat()
+
+    return sun_data_response
