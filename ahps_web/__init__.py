@@ -1,11 +1,11 @@
 import os
 import Logging
 import logging
-
 from flask import Flask
-
 import configuration
 
+# Enable logging for start up. Will be changed later.
+Logging.EnableStartupLogging()
 
 app = Flask(__name__)
 

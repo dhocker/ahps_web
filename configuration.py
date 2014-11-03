@@ -1,4 +1,3 @@
-# coding=utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
 # Copyright (C) 2014  Dave Hocker (email: AtHomeX10@gmail.com)
@@ -39,6 +38,9 @@
 
 import os
 import json
+import logging
+
+logger = logging.getLogger("app")
 
 ########################################################################
 class Configuration():
@@ -62,11 +64,11 @@ class Configuration():
         # Try to open the conf file. If there isn't one, we give up.
         try:
             cfg_path = Configuration.get_configuration_file_path()
-            print "Opening configuration file {0}".format(cfg_path)
+            logger.info("Opening configuration file {0}".format(cfg_path))
             cfg = open(cfg_path, 'r')
         except Exception as ex:
-            print "Unable to open {0}".format(cfg_path)
-            print str(ex)
+            logger.error("Unable to open {0}".format(cfg_path))
+            logger.error(str(ex))
             return
 
         # Read the entire contents of the conf file
@@ -80,8 +82,8 @@ class Configuration():
             # The interesting part of the configuration is in the "Configuration" section.
             cls.ActiveConfig = config["Configuration"]
         except Exception as ex:
-            print "Unable to parse configuration file as JSON"
-            print str(ex)
+            logger.error("Unable to parse configuration file as JSON")
+            logger.error(str(ex))
             return
 
         #print str(Configuration.ActiveConfig)
@@ -105,58 +107,68 @@ class Configuration():
 
     ######################################################################
     @classmethod
+    def get_config_var(cls, var_name):
+        try:
+            return cls.ActiveConfig[var_name]
+        except Exception as ex:
+            logger.error("Unable to find configuration variable {0}".format(var_name))
+            logger.error(str(ex))
+        return None
+
+    ######################################################################
+    @classmethod
     def Server(cls):
-        return cls.ActiveConfig["Server"]
+        return cls.get_config_var("Server")
 
     ######################################################################
     @classmethod
     def Port(cls):
-        return int(cls.ActiveConfig["Port"])
+        return int(cls.get_config_var("Port"))
 
     ######################################################################
     @classmethod
     def Debug(cls):
-        return cls.ActiveConfig["Debug"].lower() == "true"
+        return cls.get_config_var("Debug").lower() == "true"
 
     ######################################################################
     @classmethod
     def Logconsole(cls):
-        return cls.ActiveConfig["LogConsole"].lower() == "true"
+        return cls.get_config_var("LogConsole").lower() == "true"
 
     ######################################################################
     @classmethod
     def Logfile(cls):
-        return cls.ActiveConfig["LogFile"]
+        return cls.get_config_var("LogFile")
 
     ######################################################################
     @classmethod
     def LogLevel(cls):
-        return cls.ActiveConfig["LogLevel"]
+        return cls.get_config_var("LogLevel")
 
     ######################################################################
     @classmethod
     def DatabasePath(cls):
-        return cls.ActiveConfig["DatabasePath"]
+        return cls.get_config_var("DatabasePath")
 
     ######################################################################
     @classmethod
     def SecretKey(cls):
-        return cls.ActiveConfig["SecretKey"]
+        return cls.get_config_var("SecretKey")
 
     ######################################################################
     @classmethod
     def City(cls):
-        return cls.ActiveConfig["City"]
+        return cls.get_config_var("City")
 
     ######################################################################
     @classmethod
     def Latitude(cls):
-        return cls.ActiveConfig["Latitude"]
+        return cls.get_config_var("Latitude")
 
     ######################################################################
     @classmethod
     def Longitude(cls):
-        return cls.ActiveConfig["Longitude"]
+        return cls.get_config_var("Longitude")
 
     ######################################################################
     @classmethod

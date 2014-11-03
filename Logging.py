@@ -1,5 +1,5 @@
 #
-# AtHomePowerlineServer - networked server for CM11/CM11A/XTB-232 X10 controllers
+# AHPS Web - Web server app for AtHOmePowerlineServer management
 # Copyright (C) 2014  Dave Hocker
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,54 +13,82 @@ import logging
 import logging.handlers
 import configuration
 
+
+# Default overrides
+logformat = '%(asctime)s, %(module)s, %(levelname)s, %(message)s'
+logdateformat = '%Y-%m-%d %H:%M:%S'
+
+formatter = logging.Formatter(logformat, datefmt=logdateformat)
+
+# Console handler
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+
+# File handler logging to a fixed file
+fh = logging.handlers.TimedRotatingFileHandler("/tmp/ahps_web.log", when='midnight', backupCount=3)
+
+
+# #######################################################################
+# Enable logging for the application startup. This logging is used
+# until the configuration file is read. This may seem a bit awkward, but
+# you can only log to fixed locations (e.g. console or a specifically
+# located file like /tmp/app.log) until the configuration file has been
+# read.
+def EnableStartupLogging():
+    logger = logging.getLogger("app")
+    logger.setLevel(logging.DEBUG)
+
+    # Force log to console
+    ch.setLevel(logging.DEBUG)
+    logger.addHandler(ch)
+
+    # Force log to fixed file
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
+
 ########################################################################
 # Enable logging for the AtHomePowerlineServer application
-# TODO In order to get dual logging to work, we'll need to create
+# In order to get dual logging to work, we'll need to create
 # a logger instance in every module that logs. We can configure that
 # instance here. In the mean time, we'll use logging to file.
 def EnableServerLogging():
-  # Default overrides
-  logformat = '%(asctime)s, %(module)s, %(levelname)s, %(message)s'
-  logdateformat = '%Y-%m-%d %H:%M:%S'
+    # Logging level override
+    log_level_override = configuration.Configuration.LogLevel().lower()
+    if log_level_override == "debug":
+        loglevel = logging.DEBUG
+    elif log_level_override == "info":
+        loglevel = logging.INFO
+    elif log_level_override == "warn":
+        loglevel = logging.WARNING
+    elif log_level_override == "error":
+        loglevel = logging.ERROR
+    else:
+        loglevel = logging.DEBUG
 
-  # Logging level override
-  log_level_override = configuration.Configuration.LogLevel().lower()
-  if log_level_override == "debug":
-    loglevel = logging.DEBUG
-  elif log_level_override == "info":
-    loglevel = logging.INFO
-  elif log_level_override == "warn":
-    loglevel = logging.WARNING
-  elif log_level_override == "error":
-    loglevel = logging.ERROR
-  else:
-    loglevel = logging.DEBUG
+    logger = logging.getLogger("app")
+    logger.info("Switching to run time server logging")
+    logger.setLevel(loglevel)
 
-  logger = logging.getLogger("app")
-  logger.setLevel(loglevel)
+    # Do we log to console?
+    if not configuration.Configuration.Logconsole():
+        logger.removeHandler(ch)
 
-  formatter = logging.Formatter(logformat, datefmt=logdateformat)
+    # Do we log to a file?
+    logfile = configuration.Configuration.Logfile()
+    if logfile != "":
+        # Remove the start up handler
+        logger.removeHandler(fh)
+        # Set up a new run time handler to log to the specified file
+        rtfh = logging.handlers.TimedRotatingFileHandler(logfile, when='midnight', backupCount=3)
+        rtfh.setLevel(loglevel)
+        rtfh.setFormatter(formatter)
+        logger.addHandler(rtfh)
+        logger.debug("Logging to file: %s", logfile)
 
-  # Do we log to console?
-  if configuration.Configuration.Logconsole():
-    ch = logging.StreamHandler()
-    ch.setLevel(loglevel)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
-  # Do we log to a file?
-  logfile = configuration.Configuration.Logfile()
-  if logfile != "":
-    # To file
-    fh = logging.handlers.TimedRotatingFileHandler(logfile, when='midnight', backupCount=3)
-    fh.setLevel(loglevel)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    logger.debug("Logging to file: %s", logfile)
-
-  logger.debug("Logging to console")
 
 # Controlled logging shutdown
 def Shutdown():
-  logging.shutdown()
-  print "Logging shutdown"
+    logging.shutdown()
+    print "Logging shutdown"
