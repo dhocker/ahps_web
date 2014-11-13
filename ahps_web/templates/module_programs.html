@@ -61,8 +61,7 @@
                     <td>{{ program.name }}</td>
                     <td>
                         <p class="program-summary">{{ program.days }}</p>
-                        <p class="program-summary">Start: {{ program.start_trigger_method }} {{ program.start_offset }} {{ program.start_action }}</p>
-                        <p class="program-summary">Stop: {{ program.stop_trigger_method }} {{ program.stop_offset }} {{ program.stop_action }}</p>
+                        <p class="program-summary">{{ program_summary(program) | safe }}</p>
                 </td>
                     <td>
                         <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) }}">Edit</a>

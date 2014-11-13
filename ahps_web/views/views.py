@@ -31,6 +31,7 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from flask.ext.user import login_required
+import view_helpers # register context processors
 
 
 @app.route("/")

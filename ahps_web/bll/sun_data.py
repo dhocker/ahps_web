@@ -36,7 +36,7 @@ from configuration import Configuration
 #     return { "sunrise": None, "sunset": None }
 
 
-def get_sun_data(for_datetime):
+def get_astral_data(for_datetime):
     '''
     Returns the sunrise and sunset times for the given date.
     Uses the Astral package to compute sunrise/sunset for the
@@ -44,6 +44,7 @@ def get_sun_data(for_datetime):
     Reference https://pythonhosted.org/astral/module.html
     :param for_datetime:
     :return: Returns a dict containing the keys sunrise and sunset.
+    The values are datetime objects.
     '''
     a = Astral()
     a.solar_depression = "civil"
@@ -59,7 +60,20 @@ def get_sun_data(for_datetime):
     if Configuration.Longitude() != "":
         city.longitude = float(Configuration.Longitude())
 
-    sun_data = city.sun(date=for_datetime, local=True)
+    return city.sun(date=for_datetime, local=True)
+
+
+def get_sun_data(for_datetime):
+    '''
+    Returns the sunrise and sunset times for the given date.
+    Uses the Astral package to compute sunrise/sunset for the
+    configured city.
+    Reference https://pythonhosted.org/astral/module.html
+    :param for_datetime:
+    :return: Returns a dict containing the keys sunrise and sunset.
+    '''
+
+    sun_data = get_astral_data(for_datetime)
 
     sun_data_response = {}
     sun_data_response["sunrise"] = sun_data["sunrise"].isoformat()
