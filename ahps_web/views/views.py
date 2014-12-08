@@ -322,17 +322,33 @@ def module_programs(moduleid):
 @app.route('/modules/programs/edit_program/<programid>', methods=['GET', 'POST'])
 @login_required                                 # Use of @login_required decorator
 def edit_program(programid):
+    # This is not particularly elegant but it is functional.
+    # If there is a returnto arg we will set up to go back to that page.
+    # If there is no returnto arg we will default to going back to the
+    # module programs page.
+    if request.args.has_key("returnto"):
+        returnto = request.args["returnto"]
+    else:
+        returnto = None
+
     if request.method == 'GET':
         program = get_program(programid)
-        module = get_module(program["moduleid"])
+        moduleid = program["moduleid"]
+        module = get_module(moduleid)
+
+        if not returnto:
+            returnto = url_for("module_programs", moduleid=moduleid)
 
         sun_data = get_sun_data(datetime.now())
 
-        return render_template("program.html", module=module, program=program, sun_data=sun_data)
+        return render_template("program.html", module=module, program=program, sun_data=sun_data, returnto=returnto)
 
     elif request.method == 'POST' and request.form.has_key("save"):
         program = get_program(programid)
         moduleid = program["moduleid"]
+
+        if not returnto:
+            returnto = url_for("module_programs", moduleid=moduleid)
 
         # Save all program data
 
@@ -384,7 +400,7 @@ def edit_program(programid):
 
         flash(program["name"] + " saved")
 
-        return redirect(url_for("module_programs", moduleid=moduleid))
+        return redirect(returnto)
     else:
         program = get_program(programid)
         moduleid = program["moduleid"]

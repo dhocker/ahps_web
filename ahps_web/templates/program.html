@@ -408,7 +408,7 @@
         <div class="clear"></div>
         <button class="edit-button" name="save" type="submit" value="save" onclick="window.onbeforeunload=null">Save</button>
         <button class="edit-button" name="cancel" type="button" value="cancel"
-                onclick="window.location.replace('{{ url_for('module_programs', moduleid=program.moduleid) }}')">Cancel</button>
+                onclick="window.location.replace('{{ returnto }}')">Cancel</button>
     </form>
 
     <div class="clear"></div>
@@ -416,5 +416,5 @@
 {% endblock %}
 
 {% block footer_links %}
-    <a href="{{ url_for('module_programs', moduleid=program.moduleid) }}">Back</a>
+    <a href="{{ returnto }}">Back</a>
 {% endblock %}
