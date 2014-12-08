@@ -49,7 +49,7 @@
 	</div>
 
     {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
+        <p class="error"><strong>Error:</strong> {{ error }}</p>
     {% endif %}
 
     {% for category, message in get_flashed_messages(with_categories=true) %}

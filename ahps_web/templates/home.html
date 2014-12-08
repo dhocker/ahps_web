@@ -152,6 +152,7 @@
 {% endblock %}
 
 {% block footer_links %}
+    <a href="{{ url_for('house_summary') }}">Summary</a>
     <a href="{{ url_for('houses') }}">Houses</a>
     <a href="{{ url_for('all_house_codes') }}">All House/Device Codes</a>
     {% if current_user.username == "admin" %}

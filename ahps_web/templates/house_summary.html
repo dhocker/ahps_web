@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <h2>All programs for house: {{ programs.house_name }}</h2>
+        <table class="common-table">
+            <tr>
+                <th>Room</th>
+                <th>Module</th>
+                <th>House Code</th>
+                <th>Name</th>
+                <th>Program</th>
+            </tr>
+            {% for program in programs %}
+                {% if loop.index is not divisibleby 2 %}
+                <tr>
+                {% else %}
+                <tr class="alt">
+                {% endif %}
+                    <td>{{ program.room_name }}</td>
+                    <td>{{ program.module_name }}</td>
+                    <td>{{ program.house_code }}{{ program.device_code }}</td>
+                    <td>{{ program.name }}</td>
+                    <td>
+                        <p class="program-summary">{{ program.days }}</p>
+                        <p class="program-summary">Start: {{ program.start_trigger_method }} {{ program.start_offset }} {{ program.start_action }}</p>
+                        <p class="program-summary">Stop: {{ program.stop_trigger_method }} {{ program.stop_offset }} {{ program.stop_action }}</p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    <div class="clear"></div>
+{% endblock %}
+
+{% block footer_links %}
+    {#
+    <a href="{{ url_for('modules', roomid=module.roomid) }}">Back</a>
+    #}
+{% endblock %}

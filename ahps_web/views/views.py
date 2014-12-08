@@ -24,6 +24,7 @@ from ahps_web.models.module import get_modules_for_room, get_module, insert_modu
     update_module_type, move_module_room
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
+from ahps_web.models.house_programs import get_house_summary
 from ahps_web.bll.download import Downloader
 from ahps_web.bll.sun_data import get_sun_data
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
@@ -158,6 +159,13 @@ def add_room():
 
         # Return to the home page (list of rooms)
         return redirect(url_for('home'))
+
+
+@app.route("/house_summary", methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def house_summary():
+    programs = get_house_summary(get_current_house()["houseid"])
+    return render_template("house_summary.html", programs=programs)
 
 
 @app.route('/modules/<roomid>', methods=['GET', 'POST'])
