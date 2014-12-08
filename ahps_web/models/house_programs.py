@@ -32,7 +32,7 @@ def get_house_summary(houseid):
         "join rooms on rooms.houseid = houses.houseid " + \
         "join modules on modules.roomid = rooms.roomid " + \
         "join programs on programs.moduleid = modules.moduleid " + \
-        "where houses.houseid=?"
+        "where houses.houseid=? order by rooms.name, modules.name"
     cur = db.execute(sql, [houseid])
     programs = cur.fetchall()
 
