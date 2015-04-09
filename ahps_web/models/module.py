@@ -1,3 +1,21 @@
+# coding=utf-8
+#
+# AHPS Web - web server for managing an AtHomePowerlineServer instance
+# Copyright (C) 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the LICENSE file for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
+#
+
 from ahps_web.database.connection import get_db
 from ahps_web.models.program import get_programs_for_module, delete_module_programs
 
@@ -92,6 +110,20 @@ def update_module_type(moduleid, module_type):
     db = get_db()
     db.execute('update modules set module_type=? where moduleid=?',
                [module_type, moduleid])
+    db.commit()
+    return True
+
+
+def update_module_selected(moduleid, selected):
+    '''
+    Update the selected status for a given module record
+    :param moduleid:
+    :param selected:
+    :return:
+    '''
+    db = get_db()
+    db.execute('update modules set selected=? where moduleid=?',
+               [selected, moduleid])
     db.commit()
     return True
 

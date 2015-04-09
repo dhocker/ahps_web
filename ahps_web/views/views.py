@@ -1,6 +1,6 @@
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room, update_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house, \
-    update_module_type, move_module_room
+    update_module_type, move_module_room, update_module_selected
 from ahps_web.models.program import get_program, get_programs_for_module, insert_program, delete_program, \
     update_program, delete_module_programs
 from ahps_web.models.house_programs import get_house_summary
@@ -425,7 +425,6 @@ def download_programs():
     :return:
     '''
 
-    # TODO Implement download
     downloader = Downloader()
     downloader.download_programs()
 
@@ -435,9 +434,42 @@ def download_programs():
     return result
 
 
-@app.route('/all_house_codes', methods=["GET"])
+@app.route('/all_house_codes', methods=["GET", "POST"])
 @login_required                                 # Use of @login_required decorator
 def all_house_codes():
+    if request.method == 'GET':
+        house = get_current_house()
+        mods = get_modules_for_house(house["houseid"])
+        return render_template("all_house_codes.html", house=house, modules=mods)
+    elif request.method == 'POST':
+        return redirect(url_for("all_house_codes"))
+
+
+@app.route('/all_house_codes/save', methods=["POST"])
+@login_required                                 # Use of @login_required decorator
+def save_selected():
+    """
+    Form actions on list of all house codes. The user
+    can alter the list of selected modules, turn selected
+    modules on or turn them off.
+    :return:
+    """
     house = get_current_house()
-    modules = get_modules_for_house(house["houseid"])
-    return render_template("all_house_codes.html", house=house, modules=modules)
+    mods = get_modules_for_house(house["houseid"])
+    # Handle save, on, off cases
+    for module in mods:
+        moduleid = module["moduleid"]
+
+        key = "selected-" + str(moduleid)
+        selected = 0
+        if request.form.has_key(key):
+            selected = 1
+
+        if request.form.has_key("save"):
+            update_module_selected(moduleid, selected)
+        elif request.form.has_key("selected-on") and selected:
+            device_on(moduleid);
+        elif request.form.has_key("selected-off") and selected:
+            device_off(moduleid);
+
+    return redirect(url_for("all_house_codes"))

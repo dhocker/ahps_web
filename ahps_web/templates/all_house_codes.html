@@ -1,17 +1,46 @@
+{#
+# AHPS Web - web server for managing an AtHomePowerlineServer instance
+# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the LICENSE file for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
+#}
+
 {% extends "layout.html" %}
 
 {% block head %}
     <script type="text/javascript">
+        $(document).ready(function() {
+
+            {#  Initialize selection checkboxes #}
+            {% for module in modules %}
+                if ({{ module.selected }} != 0)
+                {
+                    $("#selected-{{ module.moduleid }}").attr("checked","checked");
+                }
+            {% endfor %}
+        });
     </script>
 {% endblock %}
 
 {% block body %}
     <h2>All house/device codes in use for house: {{ house.name }}</h2>
+    <form action="all_house_codes/save" method="post">
         <table class="common-table">
             <tr>
                 <th>House/Device Code</th>
                 <th>Room</th>
                 <th>Module</th>
+                <th>Selected</th>
             </tr>
             {% for module in modules %}
                 {% if loop.index is not divisibleby 2 %}
@@ -22,9 +51,17 @@
                     <td>{{ module.house_code }}{{ module.device_code }}</td>
                     <td>{{ module.room_name }}</td>
                     <td>{{ module.name }}</td>
+                    <td>
+                        <input type="checkbox" class="selected" id="selected-{{ module.moduleid }}"
+                               name="selected-{{ module.moduleid }}" value="0"/>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
+        <button class="edit-button" name=save type="submit" value="save">Save selections</button>
+        <button class="edit-button" name=selected-on type="submit" value="on">Selected lights on</button>
+        <button class="edit-button" name=selected-off type="submit" value="off">Selected lights off</button>
+    </form>
 
     <div class="clear"></div>
 
