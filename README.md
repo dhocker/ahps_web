@@ -3,7 +3,7 @@ Copyright © 2015 by Dave Hocker
 
 ## Overview
 
-ahps\_web is a companion web server for the AtHomePowerlineServer ([GitHub](https://www.github.com/dhocker/athomepowerlineserver).
+ahps\_web is a companion web server for the [AtHomePowerlineServer](https://www.github.com/dhocker/athomepowerlineserver).
 It will allow you to control one running instance of the AtHomePowerlineServer from any web browser (it has been tested
 with Chrome and Firefox).
 
