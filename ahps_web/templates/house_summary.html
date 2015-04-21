@@ -21,37 +21,41 @@
 {% endblock %}
 
 {% block body %}
-    <h2>Summary for house: {{ programs[0].house_name }}</h2>
-        <table class="common-table">
-            <tr>
-                <th>Room</th>
-                <th>Module</th>
-                <th>H/C</th>
-                <th>Name</th>
-                <th>Program</th>
-                <th>Actions</th>
-            </tr>
-            {% for program in programs %}
-                {% if loop.index is not divisibleby 2 %}
+    {% if (programs | length) > 0 %}
+        <h2>Summary for house: {{ programs[0].house_name }}</h2>
+            <table class="common-table">
                 <tr>
-                {% else %}
-                <tr class="alt">
-                {% endif %}
-                    <td>{{ program.room_name }}</td>
-                    <td>{{ program.module_name }}</td>
-                    <td>{{ program.house_code }}{{ program.device_code }}</td>
-                    <td>{{ program.name }}</td>
-                    <td>
-                        <p class="program-summary">{{ program.days }}</p>
-                        <p class="program-summary">{{ program_summary(program) | safe }}</p>
-                    </td>
-                    <td>
-                        <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) +
-                        '?returnto=' + url_for('house_summary') }}">Edit</a>
-                    </td>
+                    <th>Room</th>
+                    <th>Module</th>
+                    <th>H/C</th>
+                    <th>Name</th>
+                    <th>Program</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for program in programs %}
+                    {% if loop.index is not divisibleby 2 %}
+                    <tr>
+                    {% else %}
+                    <tr class="alt">
+                    {% endif %}
+                        <td>{{ program.room_name }}</td>
+                        <td>{{ program.module_name }}</td>
+                        <td>{{ program.house_code }}{{ program.device_code }}</td>
+                        <td>{{ program.name }}</td>
+                        <td>
+                            <p class="program-summary">{{ program.days }}</p>
+                            <p class="program-summary">{{ program_summary(program) | safe }}</p>
+                        </td>
+                        <td>
+                            <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) +
+                            '?returnto=' + url_for('house_summary') }}">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+    {% else %}
+        <h2>No programs are defined</h2>
+    {% endif %}
 
     <div class="clear"></div>
 {% endblock %}
