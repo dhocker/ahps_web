@@ -52,6 +52,8 @@ class Downloader():
 
         # Send the actions. If this was successful, send the timers.
         self.actions_response = self.ahps_request.send_actions_request()
+        # If the send fails, the resone is None. This code does not handle such a condition.
+        # TODO Handle error return
         if self.actions_response["result-code"] == 0:
             self.timers_response = self.ahps_request.send_timers_request()
             self.summary_response = self.timers_response

@@ -18,10 +18,11 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<script type="text/javascript" src="{{ url_for('static', filename='watermark/watermark.js') }}"></script>
 
     {#
         jQuery UI Dialogs
+        TODO These dialogs need to be replaced by new implementations that
+        are AngularJS friendly.
     #}
     {# The jQuery UI dialog for confirming room removal #}
     <div id="dialog" title="Confirmation">
@@ -42,90 +43,7 @@
     </div>
 
     <script type="text/javascript">
-        /* Initialize the confirmation dialog */
-        $(document).ready(function() {
-            $("#dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    "Remove": function(event) {
-                        $("#dialog").dialog( "close" );
-                        $("#room-form-" + $(this).data("roomid")).submit();
-                        },
-                    "Cancel": function(event) {
-                        $("#dialog").dialog( "close" );
-                        }
-                }
-            });
-
-            {# Initialize the download dialog boxes #}
-            $("#download-progress-dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-            });
-            $("#download-results-dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: true,
-                buttons: {
-                    "Close": function(event) {
-                        $("#download-results-dialog").dialog( "close" );
-                        },
-                }
-            });
-
-            {# Set up watermarks in description fields #}
-            $('.room-description').watermark({text:'Enter a room description...',color: '#c0c0c0'});
-
-            {# Reset change tracking to avoid false positives #}
-            window.onbeforeunload=null;
-
-        });
-
-        /* Show confirmation dialog for removing a room */
-        function showDialog(roomid){
-            /* Set the value of the hidden button tag to reflect this is a remove */
-            $("#submit-button-" + roomid).val("remove");
-            /* Set the dialog text with the room name */
-            $("#dialog-text").text("Remove room: " + $("#room-name-" + roomid).text() + "?");
-            /* Spring the dialog for the given room */
-            $("#dialog")
-                .data("roomid", roomid)
-                .dialog("open");
-        };
-
-        /* Show modules for a room */
-        function showModules(roomid){
-            $("#submit-button-" + roomid).val("showmodules");
-            $("#room-form-" + roomid).submit();
-        };
-
-        /* Submit the form */
-        function submitForm(form_action, roomid){
-            window.onbeforeunload=null;
-            $("#submit-button-" + roomid).val(form_action);
-            $("#room-form-" + roomid).submit();
-        };
-
-        {# Download actions and programs. Makes an AJAX call to url /download_programs #}
-        function downloadPrograms(){
-            $("#download-progress-dialog").dialog("open")
-            $.post("{{ url_for('download_programs') }}",
-            {
-                {# Data intentionally empty #}
-            },
-            function(result, status){
-                $("#download-progress-dialog").dialog("close")
-                $("#download-results").html(result)
-                $("#download-results-dialog").dialog("open")
-            });
-        }
-
+        {# Script code moved to home.js #}
     </script>
 
 {% endblock %}
@@ -135,37 +53,37 @@
     <p>This is the home page for the AHPS Web server.</p>
 
     <h2>Rooms for {{ house.name }}</h2>
-        {% for room in rooms %}
-            <div class="room">
-                <form id="room-form-{{ room.roomid }}" action="" method="post">
-                    <input type="hidden" name="roomid" value="{{ room.roomid }}"/>
-                    <div id="room-name-{{ room.roomid }}"  class="name">
-                        <input type="text" class="room-name" name="room-name" value="{{ room.name }}"
-                                onchange="track_change()" />
-                    </div>
-                    <div class="description">
-                        <input type="text" class="room-description" name="room-description" value="{{ room.description }}"
-                                onchange="track_change()" />
-                    </div>
-                    {# This is used to send the button that was clicked #}
-                    <input id="submit-button-{{ room.roomid }}" type="hidden" name="button" value=""/>
-                    <button onclick="submitForm('save', {{ room.roomid }})" class="edit-button" name="save-button"
-                        type="button" value="save">Save Room</button>
-                    {# These buttons are used to capture user clicks. The underlying Javascript
-                    will set the id=submit-button value to indicate the button that was clicked. #}
-                    <button onclick="showModules({{ room.roomid }})"  class="edit-button" name="show-button" type="button"
-                            value="showmodules">Modules</button>
-                    <button onclick="showDialog({{ room.roomid }})" class="edit-button" name="remove-button" type="button"
-                            value="remove">Remove Room</button>
-                </form>
-            </div>
-        {% endfor %}
+    <div class="room" ng-repeat="room in rooms">
+        <input type="hidden" name="roomid" value="{= room.roomid =}"/>
 
-        <div class="clear"></div>
-        <form action="" method="post">
-            <button class="edit-button" name=button type="submit" value="addroom">Add a Room</button>
-            <button class="edit-button" name="download" type="button" onclick="downloadPrograms();">Download</button>
-        </form>
+        <div id="room-name-{= room.roomid =}"  class="name">
+            <input type="text" id="room-name-text-{= room.roomid =}" class="room-name" name="room-name" value="{= room.name =}"
+                    onchange="track_change()" />
+        </div>
+
+        <div class="description">
+            <input type="text" id="room-desc-{= room.roomid =}" class="room-description" name="room-description" value="{= room.description =}"
+                    onchange="track_change()" />
+        </div>
+
+        {# This is used to send the button that was clicked #}
+        <input id="submit-button-{= room.roomid =}" type="hidden" name="button" value=""/>
+
+        <button ng-click="save_room(room.roomid)" class="edit-button" name="save-button"
+            type="button" value="save">Save Room</button>
+
+        {# These buttons are used to capture user clicks. The underlying Javascript
+        will set the id=submit-button value to indicate the button that was clicked. #}
+        <button ng-click="show_modules(room.roomid)" class="edit-button" name="show-button" type="button"
+                value="showmodules">Modules</button>
+        <button ng-click="show_dialog(room.roomid)" class="edit-button" name="remove-button" type="button"
+                value="remove">Remove Room</button>
+    </div>
+
+    <div class="clear"></div>
+
+    <button class="edit-button" name=button ng-click="add_room()" value="addroom">Add a Room</button>
+    <button class="edit-button" name="download" type="button" ng-click="download_programs()">Download</button>
 {% endblock %}
 
 {% block footer_links %}
@@ -174,4 +92,10 @@
     {% if current_user.username == "admin" %}
         <a href="{{ url_for('administration') }}">User Administration</a>
     {% endif %}
+{% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/home.js') }}" type="text/javascript"></script>
 {% endblock %}

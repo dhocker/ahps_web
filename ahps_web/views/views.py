@@ -17,7 +17,7 @@
 from ahps_web import app
 from datetime import datetime
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-    render_template, flash
+    render_template, flash, jsonify
 from ahps_web.models.room import get_rooms, get_room, insert_room, delete_room, update_room
 from ahps_web.models.module import get_modules_for_room, get_module, insert_module, update_module_hdc, \
     update_module_dim_amount, update_module_name, delete_module, delete_room_modules, get_modules_for_house, \
@@ -33,6 +33,7 @@ from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from flask.ext.user import login_required
 import view_helpers # register context processors
+import json
 
 
 @app.route("/")
@@ -109,8 +110,7 @@ def copy_house(houseid):
 def home():
     if request.method == 'GET':
         current_house = get_current_house()
-        rooms = get_rooms(current_house["houseid"])
-        return render_template('home.html', rooms=rooms, house=current_house)
+        return render_template('home.html', ngapp="ahps_web", ngcontroller="homeController", house=current_house)
 
     elif request.method == 'POST':
         button = request.form['button']
@@ -141,25 +141,53 @@ def home():
             return redirect(url_for('add_room'))
 
 
-@app.route('/home/add_room', methods=['GET', 'POST'])
-@login_required                                 # Use of @login_required decorator
-def add_room():
-    if request.method == 'GET':
-        # For a GET request, return the add room page
-        return render_template('add_room.html')
-    elif request.method == 'POST':
-        # The POST request sends the add room form contents
-        if request.form["save"] == "save":
-            # Save new room
-            current_house = get_current_house()
-            if request.form["name"]:
-                insert_room(current_house["houseid"], request.form["name"], request.form["description"])
-            else:
-                error = 'Room name is a required field'
-                return render_template('add_room.html', error=error)
+@app.route("/home/rooms", methods=['GET'])
+def get_all_rooms():
+    """
+    Return all of the rooms
+    :return:
+    """
+    current_house = get_current_house()
+    rooms = get_rooms(current_house["houseid"])
+    return jsonify({"rooms" : rooms})
 
-        # Return to the home page (list of rooms)
-        return redirect(url_for('home'))
+
+@app.route("/home/room/<roomid>", methods=['PUT'])
+@login_required                                 # Use of @login_required decorator
+def save_room(roomid):
+    args = json.loads(request.data.decode())["data"]
+    update_room(roomid, args["room-name"], args['room-desc'])
+    return ""
+
+
+@app.route("/home/room/<roomid>", methods=['DELETE'])
+@login_required                                 # Use of @login_required decorator
+def remove_room(roomid):
+    # This is a cascading delete
+    delete_room(roomid)
+    return ""
+
+
+@app.route('/home/room', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def show_add_room():
+    # For a GET request, return the add room page
+    return render_template('add_room.html')
+
+
+@app.route('/home/room', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
+def create_new_room():
+    # Save new room
+    current_house = get_current_house()
+    if request.form["name"]:
+        insert_room(current_house["houseid"], request.form["name"], request.form["description"])
+    else:
+        error = 'Room name is a required field'
+        return render_template('add_room.html', error=error)
+
+    # Return to the home page (list of rooms)
+    return redirect(url_for('home'))
 
 
 @app.route("/house_summary", methods=['GET'])
@@ -416,7 +444,7 @@ def remove_program(moduleid):
     return redirect(url_for("module_programs", moduleid=moduleid))
 
 
-@app.route('/download_programs', methods=["POST"])
+@app.route('/home/download_programs', methods=["PUT"])
 @login_required                                 # Use of @login_required decorator
 def download_programs():
     '''

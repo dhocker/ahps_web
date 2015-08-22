@@ -17,6 +17,7 @@
 
 from ahps_web.database.connection import get_db
 from ahps_web.models.module import delete_room_modules
+from model_helpers import row_to_dict
 
 
 def get_rooms(houseid):
@@ -27,7 +28,10 @@ def get_rooms(houseid):
     db = get_db()
     cur = db.execute('select roomid,name,description from rooms where houseid=? order by name asc', [houseid])
     rooms = cur.fetchall()
-    return rooms
+    lst = []
+    for room in rooms:
+        lst.append(row_to_dict(room))
+    return lst
 
 
 def get_room(roomid):
