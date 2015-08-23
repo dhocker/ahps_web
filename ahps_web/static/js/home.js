@@ -114,6 +114,7 @@ $(document).ready(function() {
         autoOpen: false,
         modal: true,
         closeOnEscape: false,
+        width: 400,
         buttons: {
             "Remove": function(event) {
                 $("#dialog").dialog( "close" );

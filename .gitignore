@@ -5,3 +5,4 @@ secret_key
 ahps_web.sqlite3
 ahps_web.conf
 *~
+*.DS_Store
