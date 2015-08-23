@@ -20,16 +20,19 @@
     <h2>Add a New Room</h2>
 
     <div class="input-form">
-        <form action="room" method="post">
-            <label for="name" class="input-label">*Room name:</label>
-            <input id="name" type="text" name="name" class="input-text" autofocus="True" onchange="track_change()">
-            <br/>
-            <label for="description" class="input-label">Description:</label>
-            <input id="description" type="text" name="description" class="input-text" onchange="track_change()">
-            <br/>
-            <button class="edit-button" name=save type="submit" value="cancel">Cancel</button>
-                <button class="edit-button" name=save type="submit" value="save" onclick="window.onbeforeunload=null">Save</button>
-        </form>
+        <label for="name" class="input-label">*Room name:</label>
+        <input id="name" ng-model="name" type="text" name="name" class="input-text" autofocus="True" onchange="track_change()">
+        <br/>
+        <label for="description" class="input-label">Description:</label>
+        <input id="description" ng-model="description" type="text" name="description" class="input-text" onchange="track_change()">
+        <br/>
+        <button class="edit-button" name=save value="save" ng-click="add_room()">Save</button>
+        <button class="edit-button" name=save value="cancel" ng-click="cancel()">Cancel</button>
     </div>
 
+{% endblock %}
+
+{% block angularjs%}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/add_room.js') }}" type="text/javascript"></script>
 {% endblock %}

@@ -24,6 +24,7 @@ app.controller('homeController', function($scope, $http) {
     // Initialization
 
     $scope.title = "AHPS Web";
+    $scope.error = "";
     get_rooms();
 
     // Save room data (name and description)

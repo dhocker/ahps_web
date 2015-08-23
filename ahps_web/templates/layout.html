@@ -67,6 +67,12 @@
             {% endif %}
         </div>
 
+        {# AngularJS error messsage. This can probably be styled better, but it is serviceable as-is. #}
+        <div class="" ng-if="error != ''">
+            <p class="error"><strong>Error:</strong> {= error =}</p>
+        </div>
+
+        {# TODO Eventually this Flash based error display can be removed #}
         {% if error %}
             <p class="error"><strong>Error:</strong> {{ error }}</p>
         {% endif %}

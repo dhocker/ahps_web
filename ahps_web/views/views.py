@@ -172,22 +172,17 @@ def remove_room(roomid):
 @login_required                                 # Use of @login_required decorator
 def show_add_room():
     # For a GET request, return the add room page
-    return render_template('add_room.html')
+    return render_template('add_room.html', ngapp="ahps_web", ngcontroller="addroomController")
 
 
 @app.route('/home/room', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
 def create_new_room():
-    # Save new room
+    # Create new room
+    args = json.loads(request.data.decode())["data"]
     current_house = get_current_house()
-    if request.form["name"]:
-        insert_room(current_house["houseid"], request.form["name"], request.form["description"])
-    else:
-        error = 'Room name is a required field'
-        return render_template('add_room.html', error=error)
-
-    # Return to the home page (list of rooms)
-    return redirect(url_for('home'))
+    insert_room(current_house["houseid"], args["name"], args["description"])
+    return ""
 
 
 @app.route("/house_summary", methods=['GET'])
