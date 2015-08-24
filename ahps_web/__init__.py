@@ -56,6 +56,9 @@ Logging.EnableServerLogging()
 
 # All views must be imported after the app is defined
 from views import views
+from views import home
+from views import modules
+from views import module_programs
 from views import login_views
 
 logger = logging.getLogger("app")
