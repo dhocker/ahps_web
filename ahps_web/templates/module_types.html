@@ -17,13 +17,9 @@
 
 {# Includable file for generating a module type combobox #}
 
-<select name="module_type" id="module_type" class="module-type-select" onchange="moduleTypeChanged({= module.moduleid =})">
-{% for mt in ['appliance','lamp', 'house'] %}
-    <option value="{{ mt }}"
-        {% if module and mt == module.module_type.lower() %}
-            selected="true"
-        {% endif %}
-    >{{ mt | capitalize() }}
+<select name="module_type" id="module_type" class="module-type-select" ng-changed="module_type_changed(module.moduleid)">
+    <option value="{= mt =}" ng-repeat="mt in ['Appliance','Lamp', 'House']"
+        ng-selected="isModuleTypeMatch(module, mt)"
+    >{= mt =}
     </option>
-{% endfor %}
 </select>

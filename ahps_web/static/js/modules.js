@@ -39,6 +39,18 @@ app.controller('modulesController', function($scope, $http) {
             });
     };
 
+    $scope.isModuleTypeMatch = function(module, mt) {
+        return module && (mt.toLowerCase() == module.module_type.toLowerCase());
+    };
+
+    /* When the module type changes, immediately save the module
+    so the type change is obvious */
+    $scope.module_type_changed = function(moduleid) {
+        // TODO Rework
+        console.log("Module type was changed");
+        // submitForm("save", moduleid);
+    }
+
     $scope.get_modules();
 
 });
