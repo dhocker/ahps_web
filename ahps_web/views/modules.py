@@ -168,9 +168,10 @@ def put_module(moduleid):
 
 @app.route('/module/<moduleid>', methods=['DELETE'])
 @login_required                                 # Use of @login_required decorator
-def delete_module(moduleid):
+def delete_room_module(moduleid):
     # This is a cascading delete
     delete_module(moduleid)
+    return ""
 
 
 @app.route('/modules/edit_module', methods=['POST'])
@@ -183,7 +184,8 @@ def edit_module():
 @login_required                                 # Use of @login_required decorator
 def add_appliance_module(roomid):
     room = get_room(roomid)
-    return render_template('new_appliance_module.html', roomid=room['roomid'], room_name=room['name'])
+    return render_template('new_appliance_module.html', roomid=room['roomid'], room_name=room['name'],
+                           ngapp="ahps_web", ngcontroller="addApplianceController")
 
 
 @app.route('/room/<roomid>/new_lamp_module', methods=['GET'])
@@ -191,6 +193,29 @@ def add_appliance_module(roomid):
 def add_lamp_module(roomid):
     room = get_room(roomid)
     return render_template('new_lamp_module.html', roomid=room['roomid'], room_name=room['name'])
+
+
+@app.route('/room/<roomid>', methods=["POST"])
+@login_required
+def create_module(roomid):
+    """
+    Add a new module to a room.
+    :return:
+    """
+    args = json.loads(request.data.decode())["data"]
+
+    if args["module_type"] == "appliance":
+        insert_module(roomid, args["module_type"], args['name'],
+                      args['house_code'], args['device_code'])
+    elif args["module_type"] == "lamp":
+        pass
+        insert_module(roomid, args["module_type"], args['name'],
+                      args['house_code'], args['device_code'], args["dim_amount"])
+    else:
+        # House?
+        pass
+
+    return ""
 
 
 # @app.route('/modules/new_appliance_module', methods=['POST'])

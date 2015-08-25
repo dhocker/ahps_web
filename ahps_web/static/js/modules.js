@@ -132,7 +132,7 @@ app.controller('modulesController', function($scope, $http) {
 
     $scope.angular_delete = function() {
         // Refresh page
-        get_modules();
+        $scope.get_modules();
     };
 
     $scope.show_move_dialog = function(moduleid) {

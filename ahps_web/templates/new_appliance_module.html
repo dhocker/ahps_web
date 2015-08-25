@@ -20,9 +20,8 @@
     <h2>Add a New Appliance Module to {{ room_name }}</h2>
 
     <div class="input-form">
-    <form action="new_appliance_module" method="post">
         <label for="name" class="input-label">*Module name:</label>
-        <input id="name" type="text" name="name" class="input-text" autofocus="True" onchange="track_change()">
+        <input id="name" type="text" class="input-text" autofocus="True" onchange="track_change()">
 
         <label for="house_code" class="input-label">House code:</label>
         {% include 'house_codes.html' %}
@@ -31,10 +30,14 @@
         {% include 'device_codes.html' %}
 
         <br/>
-        <button class="edit-button" name=cancel type="submit" value="{{ roomid }}">Cancel</button>
-        <button class="edit-button" name=save type="submit" value="{{ roomid }}"
-                onclick="window.onbeforeunload=null">Save</button>
-    </form>
+        <button class="edit-button" value="{{ roomid }}" ng-click="save_module({{ roomid }})">Save</button>
+        <button class="edit-button" value="{{ roomid }}" ng-click="cancel({{ roomid }})">Cancel</button>
     </div>
 
+{% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/add_appliance.js') }}" type="text/javascript"></script>
 {% endblock %}
