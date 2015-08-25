@@ -17,13 +17,9 @@
 
 {# Includable file for generating a house code combobox #}
 
-<select name="house_code" id="house_code" class="input-select" onchange="track_change()">
-{% for hc in ['A','B','C','D','E','F','G','H','I','J','K','L','M','O','P'] %}
-    <option value="{{ hc }}"
-    {% if module and hc == module.house_code.upper() %}
-        selected="true"
-    {% endif %}
-    >{{ hc }}
+<select name="house_code" id="house_code" class="input-select" ng-changed="house_code_changed(module.moduleid)">
+    <option value="{= hc =}" ng-repeat="hc in ['A','B','C','D','E','F','G','H','I','J','K','L','M','O','P']"
+            ng-selected="is_house_code_match(module, hc)"
+    >{= hc =}
     </option>
-{% endfor %}
 </select>

@@ -65,20 +65,16 @@
                     </span>
                 </div>
             </div>
-            {# This is used to send the button that was clicked #}
-            <input id="submit-button-{= module.moduleid =}" type="hidden" name="button" value=""/>
-            {# These buttons are used to capture user clicks. The underlying Javascript
-            will set the id=submit-button value to indicate the button that was clicked. #}
-            <button onclick="submitForm('save', {= module.moduleid =})" class="edit-button" name="save-button"
-                type="button" value="save">Save Module</button>
-            <button ng-show="module_type != 'house'" onclick="submitForm('editprograms', {= module.moduleid =})" class="edit-button" name="edit-button"
-                    type="button" value="editprograms">Programs</button>
+            {# These buttons are used to capture user clicks #}
+            <button ng-click="save_room(module.moduleid)" class="edit-button" type="button" value="save">Save Module</button>
+            <button ng-show="module_type != 'house'" ng-click="edit_programs(module.moduleid)" class="edit-button"
+                    type="button">Programs</button>
             <br/>
-            <button onclick="submitForm('on', {= module.moduleid =})" class="edit-button" name="on-button" type="button" value="on">On</button>
-            <button onclick="submitForm('off', {= module.moduleid =})" class="edit-button" name="off-button" type="button" value="off">Off</button>
+            <button ng-click="module_on(module.moduleid)" class="edit-button" type="button">On</button>
+            <button ng-click="module_off(module.moduleid)" class="edit-button" type="button">Off</button>
             <br/>
-            <button onclick="showMoveDialog({= module.moduleid =})" class="edit-button" name="move-button" type="button" value="move">Move Module</button>
-            <button onclick="showRemoveDialog({= module.moduleid =})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
+            <button ng-click="show_move_dialog(module.moduleid)" class="edit-button" type="button">Move Module</button>
+            <button onclick="show_remove_dialog(module.moduleid)" class="edit-button" type="button">Remove Module</button>
         </div>
     </div>
 

@@ -43,6 +43,14 @@ app.controller('modulesController', function($scope, $http) {
         return module && (mt.toLowerCase() == module.module_type.toLowerCase());
     };
 
+    $scope.is_house_code_match = function(module, hc) {
+        return module && (hc.toLowerCase() == module.house_code.toLowerCase());
+    };
+
+    $scope.is_device_code_match = function(module, dc) {
+        return module && (String(dc) == String(module.device_code));
+    };
+
     /* When the module type changes, immediately save the module
     so the type change is obvious */
     $scope.module_type_changed = function(moduleid) {
@@ -51,6 +59,57 @@ app.controller('modulesController', function($scope, $http) {
         // submitForm("save", moduleid);
     }
 
+    $scope.house_code_changed = function(moduleid) {
+    };
+
+    $scope.device_code_changed = function(moduleid) {
+    };
+
+    $scope.save_room = function(moduleid) {
+    };
+
+    $scope.edit_programs = function(moduleid) {
+    };
+
+    $scope.module_on = function(moduleid) {
+        $http.put('/modules/' + String(moduleid) + '/state' , {"data": {"state": "on"}}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error turning on module"
+                }
+            });
+    };
+
+    $scope.module_off = function(moduleid) {
+        $http.put('/modules/' + String(moduleid) + '/state' , {"data": {"state": "off"}}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error turning off module"
+                }
+            });
+    };
+
+    $scope.show_remove_dialog = function(moduleid) {
+    };
+
+    $scope.show_move_dialog = function(moduleid) {
+    };
+
+    /* More initialization */
     $scope.get_modules();
 
 });

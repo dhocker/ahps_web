@@ -21,7 +21,7 @@ def GetVersion():
   """
   Returns the current app version
   """
-  return "2014.0.0.4"
+  return "2015.1.0.1"
 
 
 @app.context_processor

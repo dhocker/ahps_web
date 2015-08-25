@@ -56,6 +56,35 @@ def get_modules(roomid):
     return jsonify({"modules": modules})
 
 
+@app.route('/modules/<moduleid>/state', methods=['PUT'])
+@login_required                                 # Use of @login_required decorator
+def set_module_state(moduleid):
+    """
+    Change state of module to on or off
+    :param roomid:
+    :return:
+    """
+    args = json.loads(request.data.decode())["data"]
+    if args["state"] == "on":
+        if device_on(moduleid):
+            # Return success
+            pass
+        else:
+            # Return error
+            pass
+    elif args["state"] == "off":
+        if device_off(moduleid):
+            # Return success
+            pass
+        else:
+            # Return error
+            pass
+    else:
+        # Return an error
+        pass
+    return ""
+
+
 @app.route('/modules/<roomid>', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
 def post_modules(roomid):
