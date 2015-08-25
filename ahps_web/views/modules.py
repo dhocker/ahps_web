@@ -36,63 +36,78 @@ from flask.ext.user import login_required
 import json
 
 
-@app.route('/modules/<roomid>', methods=['GET', 'POST'])
+@app.route('/modules_page/<roomid>', methods=['GET'])
 @login_required                                 # Use of @login_required decorator
-def modules(roomid):
+def get_modules_page(roomid):
     '''
     Show the modules for a given room
     :return:
     '''
+    #modules = get_modules_for_room(roomid)
+    room = get_room(roomid)
+    all_rooms = get_rooms(get_current_house()["houseid"])
+    return render_template('modules.html', room=room, rooms=all_rooms, ngapp="ahps_web", ngcontroller="modulesController")
 
-    if request.method == 'GET':
-        # Show modules for the roomid
-        pass
-    elif request.method == 'POST':
-        # Possible actions: Save, edit programs, remove, on, off
-        moduleid = request.form["moduleid"]
-        button = request.form["button"]
 
-        if button == 'save':
-            update_module_type(moduleid, request.form["module_type"])
-            update_module_name(moduleid, request.form["module-name"])
-            if request.form['module_type'] == 'house':
-                update_module_hdc(moduleid, request.form["house_code"], "")
-            else:
-                update_module_hdc(moduleid, request.form["house_code"], request.form["device_code"])
-            if request.form['module_type'] == 'lamp':
-                update_module_dim_amount(moduleid, request.form['dim_amount'])
-            flash('Module record saved')
+@app.route('/modules/<roomid>', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def get_modules(roomid):
+    modules = get_modules_for_room(roomid)
+    return jsonify({"modules": modules})
 
-        elif button == 'editprograms':
-            return redirect(url_for("module_programs", moduleid=moduleid))
 
-        elif button == 'remove':
-            module = get_module(moduleid)
-            # This is a cascading delete
-            delete_module(moduleid)
-            flash("The \"{0}\" module was removed".format(module['name']))
+@app.route('/modules/<roomid>', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
+def post_modules(roomid):
+    '''
+    Show the modules page for a given room
+    :return:
+    '''
+    # Possible actions: Save, edit programs, remove, on, off
+    moduleid = request.form["moduleid"]
+    button = request.form["button"]
 
-        elif button == 'on':
-            if request.form['module_type'] != 'house':
-                # Appliance or lamp
-                if device_on(moduleid):
-                    flash("{0} turned on".format(request.form['module_type']))
-            else:
-                # All lights on for house code
-                if all_lights_on(moduleid):
-                    flash("All lights turned on")
-
-        elif button == 'off':
-            if request.form['module_type'] != 'house':
-                if device_off(moduleid):
-                    flash("{0} turned off".format(request.form['module_type']))
-            else:
-                # All lights off for house code
-                if all_lights_off(moduleid):
-                    flash("All lights turned off")
-
+    if button == 'save':
+        update_module_type(moduleid, request.form["module_type"])
+        update_module_name(moduleid, request.form["module-name"])
+        if request.form['module_type'] == 'house':
+            update_module_hdc(moduleid, request.form["house_code"], "")
         else:
-            return "Unrecognized button action"
+            update_module_hdc(moduleid, request.form["house_code"], request.form["device_code"])
+        if request.form['module_type'] == 'lamp':
+            update_module_dim_amount(moduleid, request.form['dim_amount'])
+        flash('Module record saved')
+
+    elif button == 'editprograms':
+        return redirect(url_for("module_programs", moduleid=moduleid))
+
+    elif button == 'remove':
+        module = get_module(moduleid)
+        # This is a cascading delete
+        delete_module(moduleid)
+        flash("The \"{0}\" module was removed".format(module['name']))
+
+    elif button == 'on':
+        if request.form['module_type'] != 'house':
+            # Appliance or lamp
+            if device_on(moduleid):
+                flash("{0} turned on".format(request.form['module_type']))
+        else:
+            # All lights on for house code
+            if all_lights_on(moduleid):
+                flash("All lights turned on")
+
+    elif button == 'off':
+        if request.form['module_type'] != 'house':
+            if device_off(moduleid):
+                flash("{0} turned off".format(request.form['module_type']))
+        else:
+            # All lights off for house code
+            if all_lights_off(moduleid):
+                flash("All lights turned off")
+
+    else:
+        return "Unrecognized button action"
 
     modules = get_modules_for_room(roomid)
     room = get_room(roomid)

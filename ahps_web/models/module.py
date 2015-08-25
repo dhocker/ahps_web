@@ -18,6 +18,7 @@
 
 from ahps_web.database.connection import get_db
 from ahps_web.models.program import get_programs_for_module, delete_module_programs
+from model_helpers import row_to_dict
 
 
 def get_modules_for_room(roomid):
@@ -28,7 +29,10 @@ def get_modules_for_room(roomid):
     db =    get_db()
     cur = db.execute('select * from modules where roomid=?', [roomid])
     modules = cur.fetchall()
-    return modules
+    lst = []
+    for module in modules:
+        lst.append(row_to_dict(module))
+    return lst
 
 
 def get_modules_for_house(houseid):

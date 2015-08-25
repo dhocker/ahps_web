@@ -23,132 +23,64 @@
         <p id="dialog-text">Remove the selected module?</p>
     </div>
     <script type="text/javascript">
-        /* Initialize the confirmation dialog */
-        $(document).ready(function() {
-            $("#dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    "Remove": function(event) {
-                        $("#dialog").dialog( "close" );
-                        $("#module-form-" + $(this).data("moduleid")).submit();
-                        },
-                    "Cancel": function(event) {
-                        $("#dialog").dialog( "close" );
-                        }
-                }
-            });
-
-            $("#move-module-dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    "Move": function(event) {
-                        $("#move-module-dialog").dialog( "close" );
-                        $("#module-to-move").val($(this).data("moduleid"));
-                        $("#move-module-form").submit();
-                        },
-                    "Cancel": function(event) {
-                        $("#move-module-dialog").dialog( "close" );
-                        }
-                }
-            });
-
-        });
-
-        {# Show confirmation dialog for removing a module #}
-        function showRemoveDialog(moduleid){
-            /* Set the value of the hidden button tag to reflect this is a remove */
-            $("#submit-button-" + moduleid).val("remove");
-            /* Set the dialog text with the room name */
-            $("#dialog-text").text("Remove " + $("#module-name-text" + moduleid).val() + "?");
-            /* Spring the dialog for the given room */
-            $("#dialog")
-                .data("moduleid", moduleid)
-                .dialog("open");
-        };
-
-        {# Show dialog for moving a module to another room #}
-        function showMoveDialog(moduleid){
-            $("#move-module-dialog")
-                .data("moduleid", moduleid)
-                .dialog("open");
-        };
-
-        /* Submit the form */
-        function submitForm(form_action, moduleid){
-            window.onbeforeunload=null;
-            $("#submit-button-" + moduleid).val(form_action);
-            $("#module-form-" + moduleid).submit();
-        };
-
-        /* When the module type changes, immediately save the module
-        so the type change is obvious */
-        function moduleTypeChanged(moduleid){
-            submitForm("save", moduleid);
-        }
 
     </script>
 {% endblock %}
 
 {% block body %}
     <h2>Modules for room: {{ room.name }}</h2>
-        {% for module in modules %}
-            <form id="module-form-{{ module.moduleid }}" action="{{ room.roomid }}" method="post">
-                <div class="{{ module.module_type }}-module">
-                    <input type="hidden" name="moduleid" value="{{ module.moduleid }}">
-                    {# <input type="hidden" name="module_type" value="{{ module.module_type }}"> #}
-                    <div id="module-name-{{ module.moduleid }}" class="name">
-                        {% include 'module_types.html' %}
-                        <br/>
-                        <input type="text" id="module-name-text{{ module.moduleid }}" class="module-name"
-                               name="module-name" value="{{ module.name }}"
-                               onchange="track_change()"/>
-                    </div>
-                    <div class="hdc">
-                        {% if module.module_type == 'house' %}
-                            <span class="hdc-text">{{ module.house_code }}</span>
-                            {% include 'house_codes.html' %}
-                            <input type="hidden" id="device_code" name="device_code" value="{{ module.device_code }}"/>
-                            <input type="hidden" id="dim_amount" name="dim_amount" value="{{ module.dim_amount }}"/>
-                        {% else %}
-                            {# appliance or lamp #}
-                            <span class="hdc-text">{{ module.house_code }}{{ module.device_code }}</span>
-                            {% include 'house_codes.html' %}
-                            {% include 'device_codes.html' %}
-                            {% if module.module_type == 'lamp' %}
-                                <span class="hdc-text">Dim:</span>
-                                <input type="text" id="dim_amount" name="dim_amount" class="input-number"
-                                         value="{{ module.dim_amount }}"
-                                         onchange="track_change()"/>
-                            {% else %}
-                                <input type="hidden" id="dim_amount" name="dim_amount" value="{{ module.dim_amount }}"/>
-                                <br/>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    {# This is used to send the button that was clicked #}
-                    <input id="submit-button-{{ module.moduleid }}" type="hidden" name="button" value=""/>
-                    {# These buttons are used to capture user clicks. The underlying Javascript
-                    will set the id=submit-button value to indicate the button that was clicked. #}
-                    <button onclick="submitForm('save', {{ module.moduleid }})" class="edit-button" name="save-button"
-                        type="button" value="save">Save Module</button>
-                    {% if module.module_type != 'house' %}
-                        <button onclick="submitForm('editprograms', {{ module.moduleid }})" class="edit-button" name="edit-button" type="button" value="editprograms">Programs</button>
-                    {% endif %}
-                    <br/>
-                    <button onclick="submitForm('on', {{ module.moduleid }})" class="edit-button" name="on-button" type="button" value="on">On</button>
-                    <button onclick="submitForm('off', {{ module.moduleid }})" class="edit-button" name="off-button" type="button" value="off">Off</button>
-                    <br/>
-                    <button onclick="showMoveDialog({{ module.moduleid }})" class="edit-button" name="move-button" type="button" value="move">Move Module</button>
-                    <button onclick="showRemoveDialog({{ module.moduleid }})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
+    <input type="hidden" id="roomid" value="{{ room.roomid }}">
+    <div id="module-form-{= module.moduleid =}" ng-repeat="module in room_modules">
+        <div class="{= module.module_type =}-module">
+            <input type="hidden" name="moduleid" value="{= module.moduleid =}">
+            {# <input type="hidden" name="module_type" value="{= module.module_type =}"> #}
+            <div id="module-name-{= module.moduleid =}" class="name">
+                {% include 'module_types.html' %}
+                <br/>
+                <input type="text" id="module-name-text{= module.moduleid =}" class="module-name"
+                       name="module-name" value="{= module.name =}"
+                       onchange="track_change()"/>
+            </div>
+            <div class="hdc">
+                <div ng-show="module_type == 'house'">
+                    <span class="hdc-text">{= module.house_code =}</span>
+                    {% include 'house_codes.html' %}
+                    <input type="hidden" id="device_code" name="device_code" value="{= module.device_code =}"/>
+                    <input type="hidden" id="dim_amount" name="dim_amount" value="{= module.dim_amount =}"/>
                 </div>
-            </form>
-        {% endfor %}
+                <div ng-show="module_type != 'house'">
+                    {# appliance or lamp #}
+                    <span class="hdc-text">{= module.house_code =}{= module.device_code =}</span>
+                    {% include 'house_codes.html' %}
+                    {% include 'device_codes.html' %}
+                    <span ng-show="module.type == 'lamp'">
+                        <span class="hdc-text">Dim:</span>
+                        <input type="text" id="dim_amount" name="dim_amount" class="input-number"
+                                 value="{= module.dim_amount =}"
+                                 onchange="track_change()"/>
+                    </span>
+                    <span ng-show="module.type == 'appliance'">
+                        <input type="hidden" id="dim_amount" name="dim_amount" value="{= module.dim_amount =}"/>
+                        <br/>
+                    </span>
+                </div>
+            </div>
+            {# This is used to send the button that was clicked #}
+            <input id="submit-button-{= module.moduleid =}" type="hidden" name="button" value=""/>
+            {# These buttons are used to capture user clicks. The underlying Javascript
+            will set the id=submit-button value to indicate the button that was clicked. #}
+            <button onclick="submitForm('save', {= module.moduleid =})" class="edit-button" name="save-button"
+                type="button" value="save">Save Module</button>
+            <button ng-show="module_type != 'house'" onclick="submitForm('editprograms', {= module.moduleid =})" class="edit-button" name="edit-button"
+                    type="button" value="editprograms">Programs</button>
+            <br/>
+            <button onclick="submitForm('on', {= module.moduleid =})" class="edit-button" name="on-button" type="button" value="on">On</button>
+            <button onclick="submitForm('off', {= module.moduleid =})" class="edit-button" name="off-button" type="button" value="off">Off</button>
+            <br/>
+            <button onclick="showMoveDialog({= module.moduleid =})" class="edit-button" name="move-button" type="button" value="move">Move Module</button>
+            <button onclick="showRemoveDialog({= module.moduleid =})" class="edit-button" name="remove-button" type="button" value="remove">Remove Module</button>
+        </div>
+    </div>
 
     <div class="clear"></div>
 
@@ -171,4 +103,10 @@
         </form>
     </div>
 
+{% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/modules.js') }}" type="text/javascript"></script>
 {% endblock %}

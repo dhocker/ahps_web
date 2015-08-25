@@ -49,7 +49,7 @@ app.controller('homeController', function($scope, $http) {
     };
 
     $scope.show_modules = function(room_id) {
-        window.location.replace("/modules/" + String(room_id));
+        window.location.replace("/modules_page/" + String(room_id));
     };
 
     /* Show confirmation dialog for removing a room */
