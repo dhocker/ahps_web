@@ -36,7 +36,7 @@ from flask.ext.user import login_required
 import json
 
 
-@app.route('/modules/programs/<moduleid>', methods=['GET', 'POST'])
+@app.route('/module/programs/<moduleid>', methods=['GET', 'POST'])
 @login_required                                 # Use of @login_required decorator
 def module_programs(moduleid):
     '''

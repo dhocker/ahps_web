@@ -32,21 +32,20 @@
     <input type="hidden" id="roomid" value="{{ room.roomid }}">
     <div id="module-form-{= module.moduleid =}" ng-repeat="module in room_modules">
         <div class="{= module.module_type =}-module">
-            <input type="hidden" name="moduleid" value="{= module.moduleid =}">
+            <input type="hidden" id="moduleid-{= module.moduleid =}" value="{= module.moduleid =}">
             {# <input type="hidden" name="module_type" value="{= module.module_type =}"> #}
             <div id="module-name-{= module.moduleid =}" class="name">
                 {% include 'module_types.html' %}
                 <br/>
-                <input type="text" id="module-name-text{= module.moduleid =}" class="module-name"
-                       name="module-name" value="{= module.name =}"
-                       onchange="track_change()"/>
+                <input type="text" id="module-name-text-{= module.moduleid =}" class="module-name"
+                       value="{= module.name =}" onchange="track_change()"/>
             </div>
             <div class="hdc">
                 <div ng-show="module_type == 'house'">
                     <span class="hdc-text">{= module.house_code =}</span>
                     {% include 'house_codes.html' %}
-                    <input type="hidden" id="device_code" name="device_code" value="{= module.device_code =}"/>
-                    <input type="hidden" id="dim_amount" name="dim_amount" value="{= module.dim_amount =}"/>
+                    <input type="hidden" id="device_code-{= module.moduleid =}" value="{= module.device_code =}"/>
+                    <input type="hidden" id="dim-amount-{= module.moduleid =}" value="{= module.dim_amount =}"/>
                 </div>
                 <div ng-show="module_type != 'house'">
                     {# appliance or lamp #}
@@ -55,36 +54,36 @@
                     {% include 'device_codes.html' %}
                     <span ng-show="module.type == 'lamp'">
                         <span class="hdc-text">Dim:</span>
-                        <input type="text" id="dim_amount" name="dim_amount" class="input-number"
+                        <input type="text" id="dim-amount-{= module.moduleid =}" class="input-number"
                                  value="{= module.dim_amount =}"
                                  onchange="track_change()"/>
                     </span>
                     <span ng-show="module.type == 'appliance'">
-                        <input type="hidden" id="dim_amount" name="dim_amount" value="{= module.dim_amount =}"/>
+                        <input type="hidden" id="dim-amount-{= module.moduleid =}" value="{= module.dim_amount =}"/>
                         <br/>
                     </span>
                 </div>
             </div>
             {# These buttons are used to capture user clicks #}
             <button ng-click="save_room(module.moduleid)" class="edit-button" type="button" value="save">Save Module</button>
-            <button ng-show="module_type != 'house'" ng-click="edit_programs(module.moduleid)" class="edit-button"
+            <button ng-show="module_type != 'house'" ng-click="show_programs(module.moduleid)" class="edit-button"
                     type="button">Programs</button>
             <br/>
             <button ng-click="module_on(module.moduleid)" class="edit-button" type="button">On</button>
             <button ng-click="module_off(module.moduleid)" class="edit-button" type="button">Off</button>
             <br/>
             <button ng-click="show_move_dialog(module.moduleid)" class="edit-button" type="button">Move Module</button>
-            <button onclick="show_remove_dialog(module.moduleid)" class="edit-button" type="button">Remove Module</button>
+            <button ng-click="show_remove_dialog(module.moduleid)" class="edit-button" type="button">Remove Module</button>
         </div>
     </div>
 
     <div class="clear"></div>
 
     {# Buttons for adding various module types #}
-    <form action="add_module" method="post">
-        <button class="edit-button" name=add-appliance type="submit" value="{{ room.roomid }}">Add Appliance</button>
-        <button class="edit-button" name=add-lamp type="submit" value="{{ room.roomid }}">Add Lamp</button>
-    </form>
+    <div>
+        <button class="edit-button" ng-click="add_appliance({{ room.roomid }})" value="{{ room.roomid }}">Add Appliance</button>
+        <button class="edit-button" ng-click="add_lamp({{ room.roomid }})" value="{{ room.roomid }}">Add Lamp</button>
+    </div>
 
     {# The jQuery UI dialog for moving a module to another room #}
     <div id="move-module-dialog" title="Move Module">

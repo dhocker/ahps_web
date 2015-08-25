@@ -28,6 +28,7 @@ app.controller('modulesController', function($scope, $http) {
     $scope.roomid = $("#roomid").val();
     $scope.room_modules = [];
 
+    /* Get all modules for the current house */
     $scope.get_modules = function() {
         $http.get('/modules/' + String($scope.roomid), {}).
             success(function(data, status, headers, config) {
@@ -54,9 +55,8 @@ app.controller('modulesController', function($scope, $http) {
     /* When the module type changes, immediately save the module
     so the type change is obvious */
     $scope.module_type_changed = function(moduleid) {
-        // TODO Rework
         console.log("Module type was changed");
-        // submitForm("save", moduleid);
+        $scope.save_room(moduleid);
     }
 
     $scope.house_code_changed = function(moduleid) {
@@ -65,10 +65,32 @@ app.controller('modulesController', function($scope, $http) {
     $scope.device_code_changed = function(moduleid) {
     };
 
+    /* Save all room properties */
     $scope.save_room = function(moduleid) {
+        rp = {};
+        rp["module_type"] = $("#module-type-" + String(moduleid)).val().toLowerCase();
+        rp["name"] = $("#module-name-text-" + String(moduleid)).val();
+        rp["house_code"] = $("#house-code-" + String(moduleid)).val();
+        rp["device_code"] = $("#device-code-" + String(moduleid)).val();
+        rp["dim_amount"] = $("#dim-amount-" + String(moduleid)).val();
+
+        $http.put('/module/' + String(moduleid), {"data": rp}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error saving module"
+                }
+            });
     };
 
-    $scope.edit_programs = function(moduleid) {
+    $scope.show_programs = function(moduleid) {
+        window.location.replace("/module/programs/" + String(moduleid));
     };
 
     $scope.module_on = function(moduleid) {
@@ -104,9 +126,24 @@ app.controller('modulesController', function($scope, $http) {
     };
 
     $scope.show_remove_dialog = function(moduleid) {
+        // Show confirmation dialog for removing a module #}
+        $("#dialog").data("moduleid", moduleid).dialog("open");
+    };
+
+    $scope.angular_delete = function() {
+        // Refresh page
+        get_modules();
     };
 
     $scope.show_move_dialog = function(moduleid) {
+    };
+
+    $scope.add_appliance = function(roomid) {
+        window.location.replace("/room/" + String(roomid) + "/new_appliance_module");
+    };
+
+    $scope.add_lamp = function(roomid) {
+        window.location.replace("/room/" + String(roomid) + "/new_lamp_module");
     };
 
     /* More initialization */
@@ -121,10 +158,26 @@ $(document).ready(function() {
         autoOpen: false,
         modal: true,
         closeOnEscape: false,
+        width: 400,
         buttons: {
             "Remove": function(event) {
                 $("#dialog").dialog( "close" );
-                $("#module-form-" + $(this).data("moduleid")).submit();
+                // $("#module-form-" + $(this).data("moduleid")).submit();
+
+                $.ajax({
+                    url: '/module/' + $(this).data("moduleid"),
+                    type: 'DELETE',
+                    success: function() {
+                        console.log("Successful module delete");
+                        // Get the scope for the html element
+                        // and call the delete event.
+                        // This is a bit of a hack, but to get rid
+                        // of it will require replacing all of the dialogs.
+                        var el = $("html");
+                        var scope = angular.element(el).scope();
+                        scope.angular_delete();
+                    }
+                });
                 },
             "Cancel": function(event) {
                 $("#dialog").dialog( "close" );
@@ -151,17 +204,6 @@ $(document).ready(function() {
 
 });
 
-// Show confirmation dialog for removing a module #}
-function showRemoveDialog(moduleid){
-    /* Set the value of the hidden button tag to reflect this is a remove */
-    $("#submit-button-" + moduleid).val("remove");
-    /* Set the dialog text with the room name */
-    $("#dialog-text").text("Remove " + $("#module-name-text" + moduleid).val() + "?");
-    /* Spring the dialog for the given room */
-    $("#dialog")
-        .data("moduleid", moduleid)
-        .dialog("open");
-};
 
 // Show dialog for moving a module to another room #}
 function showMoveDialog(moduleid){
