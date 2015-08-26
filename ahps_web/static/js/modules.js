@@ -88,7 +88,7 @@ app.controller('modulesController', function($scope, $http) {
     };
 
     $scope.show_programs = function(moduleid) {
-        window.location.replace("/module/programs/" + String(moduleid));
+        window.location.replace('/module/' + String(moduleid) + '/programs/page');
     };
 
     $scope.module_on = function(moduleid) {

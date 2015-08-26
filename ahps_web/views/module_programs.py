@@ -32,117 +32,144 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from flask.ext.user import login_required
-# import view_helpers # register context processors
+from view_helpers import build_program_summary
 import json
 
 
-@app.route('/module/programs/<moduleid>', methods=['GET', 'POST'])
+@app.route('/module/<moduleid>/programs/page', methods=['GET'])
 @login_required                                 # Use of @login_required decorator
-def module_programs(moduleid):
+def module_programs_page(moduleid):
     '''
     Show list of programs for the given module ID
     :param moduleid:
     :return:
     '''
-    if request.method == 'GET':
-        module = get_module(moduleid)
-        programs = get_programs_for_module(moduleid)
-        return render_template("module_programs.html", module=module, programs=programs)
-    elif request.method == 'POST':
-        if request.form.has_key('add-program'):
-            moduleid = request.form["add-program"]
-            insert_program(moduleid, "New Program")
-            return redirect(url_for("module_programs", moduleid=moduleid))
-    else:
-        pass
+    module = get_module(moduleid)
+    return render_template("module_programs.html", module=module,
+                           ngapp="ahps_web", ngcontroller="moduleProgramsController")
 
 
-@app.route('/modules/programs/edit_program/<programid>', methods=['GET', 'POST'])
+@app.route('/module/<moduleid>/program', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
-def edit_program(programid):
+def add_module_program(moduleid):
+    '''
+    Add an empty program to the given module ID
+    :param moduleid:
+    :return:
+    '''
+    insert_program(moduleid, "New Program")
+    return ""
+
+
+@app.route('/module/<moduleid>/programs', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def get_module_programs(moduleid):
+    '''
+    Show list of programs for the given module ID
+    :param moduleid:
+    :return:
+    '''
+    programs = get_programs_for_module(moduleid)
+    for program in programs:
+        program["program_summary"] = build_program_summary(program);
+    return jsonify({"programs" : programs})
+
+
+@app.route('/modules/program/<programid>/page', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def edit_program_page(programid):
     # This is not particularly elegant but it is functional.
     # If there is a returnto arg we will set up to go back to that page.
     # If there is no returnto arg we will default to going back to the
     # module programs page.
-    if request.args.has_key("returnto"):
-        returnto = request.args["returnto"]
-    else:
-        returnto = None
+    # if request.args.has_key("returnto"):
+    #     returnto = request.args["returnto"]
+    # else:
+    #     returnto = None
 
-    if request.method == 'GET':
-        program = get_program(programid)
-        moduleid = program["moduleid"]
-        module = get_module(moduleid)
+    program = get_program(programid)
+    moduleid = program["moduleid"]
+    module = get_module(moduleid)
 
-        if not returnto:
-            returnto = url_for("module_programs", moduleid=moduleid)
+    # if not returnto:
+    #     returnto = url_for("module_programs", moduleid=moduleid)
 
-        sun_data = get_sun_data(datetime.now())
+    sun_data = get_sun_data(datetime.now())
 
-        return render_template("program.html", module=module, program=program, sun_data=sun_data, returnto=returnto)
+    #return render_template("program.html", module=module, program=program, sun_data=sun_data, returnto=returnto)
+    return render_template("program.html", module=module, program=program, sun_data=sun_data)
 
-    elif request.method == 'POST' and request.form.has_key("save"):
-        program = get_program(programid)
-        moduleid = program["moduleid"]
 
-        if not returnto:
-            returnto = url_for("module_programs", moduleid=moduleid)
 
-        # Save all program data
+@app.route('/modules/program/<programid>', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
+def save_edit_program(programid):
+    # This is not particularly elegant but it is functional.
+    # If there is a returnto arg we will set up to go back to that page.
+    # If there is no returnto arg we will default to going back to the
+    # module programs page.
+    # if request.args.has_key("returnto"):
+    #     returnto = request.args["returnto"]
+    # else:
+    #     returnto = None
 
-        program["name"] = request.form["program-name"]
+    program = get_program(programid)
+    moduleid = program["moduleid"]
 
-        # Build program days string from from inputs
-        wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-        days = ""
-        for d in range(0, 7):
-            key = "dow" + str(d)
-            if request.form.has_key(key):
-                days += wd[d]
-            else:
-                days += '.'
-        program["days"] = days
+    # if not returnto:
+    #     returnto = url_for("module_programs", moduleid=moduleid)
 
-        program["start_action"] = request.form["start-action"]
-        program["stop_action"] = request.form["stop-action"]
+    # Save all program data
 
-        program["start_trigger_method"] = request.form["start-trigger-method"]
-        program["stop_trigger_method"] = request.form["stop-trigger-method"]
+    program["name"] = request.form["program-name"]
 
-        program["start_time"] = request.form["start-time"]
-        program["stop_time"] = request.form["stop-time"]
-
-        if request.form.has_key("start-randomize"):
-            v = request.form["start-randomize"]
-            program["start_randomize"] = 1
+    # Build program days string from from inputs
+    wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+    days = ""
+    for d in range(0, 7):
+        key = "dow" + str(d)
+        if request.form.has_key(key):
+            days += wd[d]
         else:
-            program["start_randomize"] = 0
+            days += '.'
+    program["days"] = days
 
-        if request.form.has_key("stop-randomize"):
-            v = request.form["stop-randomize"]
-            program["stop_randomize"] = 1
-        else:
-            program["stop_randomize"] = 0
+    program["start_action"] = request.form["start-action"]
+    program["stop_action"] = request.form["stop-action"]
 
-        program["start_offset"] = int(request.form["start-offset"])
+    program["start_trigger_method"] = request.form["start-trigger-method"]
+    program["stop_trigger_method"] = request.form["stop-trigger-method"]
 
-        program["stop_offset"] = int(request.form["stop-offset"])
+    program["start_time"] = request.form["start-time"]
+    program["stop_time"] = request.form["stop-time"]
 
-        if request.form.has_key("start-randomize-amount"):
-            program["start_randomize_amount"] = int(request.form["start-randomize-amount"])
-        if request.form.has_key("stop-randomize-amount"):
-            program["stop_randomize_amount"] = int(request.form["stop-randomize-amount"])
-
-        # Finally! Update the program record with all of the changes
-        update_program(program)
-
-        flash(program["name"] + " saved")
-
-        return redirect(returnto)
+    if request.form.has_key("start-randomize"):
+        v = request.form["start-randomize"]
+        program["start_randomize"] = 1
     else:
-        program = get_program(programid)
-        moduleid = program["moduleid"]
-        return redirect(url_for("module_programs", moduleid=moduleid))
+        program["start_randomize"] = 0
+
+    if request.form.has_key("stop-randomize"):
+        v = request.form["stop-randomize"]
+        program["stop_randomize"] = 1
+    else:
+        program["stop_randomize"] = 0
+
+    program["start_offset"] = int(request.form["start-offset"])
+
+    program["stop_offset"] = int(request.form["stop-offset"])
+
+    if request.form.has_key("start-randomize-amount"):
+        program["start_randomize_amount"] = int(request.form["start-randomize-amount"])
+    if request.form.has_key("stop-randomize-amount"):
+        program["stop_randomize_amount"] = int(request.form["stop-randomize-amount"])
+
+    # Finally! Update the program record with all of the changes
+    update_program(program)
+
+    flash(program["name"] + " saved")
+
+    return redirect(returnto)
 
 
 @app.route('/modules/programs/remove_program/<moduleid>', methods=['GET'])

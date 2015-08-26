@@ -28,15 +28,10 @@ app.controller('homeController', function($scope, $http) {
     get_rooms();
 
     // Save room data (name and description)
-    $scope.save_room = function(room_id) {
-        var name_id = "#room-name-text-" + String(room_id);
-        var room_name = $(name_id).val();
-        var desc_id = "#room-desc-" + String(room_id);
-        var room_desc = $(desc_id).val();
-
-        $http.put("/home/room/" + String(room_id), {"data" :
-                    {'room-name': room_name,
-                    'room-desc': room_desc
+    $scope.save_room = function(room) {
+        $http.put("/home/room/" + String(room.roomid), {"data" :
+                    {'room-name': room.name,
+                    'room-desc': room.description
                     }
                 }).
             success(function(data, status, headers, config) {
@@ -54,8 +49,6 @@ app.controller('homeController', function($scope, $http) {
 
     /* Show confirmation dialog for removing a room */
     $scope.show_dialog = function(roomid){
-        /* Set the value of the hidden button tag to reflect this is a remove */
-        $("#submit-button-" + roomid).val("remove");
         /* Set the dialog text with the room name */
         $("#dialog-text").text("Remove room: " + $("#room-name-text-" + roomid).val() + "?");
         /* Spring the dialog for the given room */
@@ -85,7 +78,7 @@ app.controller('homeController', function($scope, $http) {
 
     $scope.angular_delete = function() {
         console.log("Angualar_Delete was called");
-        // TODO Reload the rooms list
+        // Reload the rooms list
         get_rooms();
     };
 
@@ -118,7 +111,6 @@ $(document).ready(function() {
         buttons: {
             "Remove": function(event) {
                 $("#dialog").dialog( "close" );
-                // $("#room-form-" + $(this).data("roomid")).submit();
 
                 $.ajax({
                     url: '/home/room/' + $(this).data("roomid"),
@@ -167,8 +159,6 @@ $(document).ready(function() {
 
 /* Show confirmation dialog for removing a room */
 function showDialog(roomid){
-    /* Set the value of the hidden button tag to reflect this is a remove */
-    $("#submit-button-" + roomid).val("remove");
     /* Set the dialog text with the room name */
     $("#dialog-text").text("Remove room: " + $("#room-name-text-" + roomid).val() + "?");
     /* Spring the dialog for the given room */

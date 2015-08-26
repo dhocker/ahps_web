@@ -58,18 +58,15 @@
 
         <div id="room-name-{= room.roomid =}"  class="name">
             <input type="text" id="room-name-text-{= room.roomid =}" class="room-name" name="room-name" value="{= room.name =}"
-                    onchange="track_change()" />
+                    onchange="track_change()" ng-model="room.name"/>
         </div>
 
         <div class="description">
             <input type="text" id="room-desc-{= room.roomid =}" class="room-description" name="room-description" value="{= room.description =}"
-                    onchange="track_change()" />
+                    onchange="track_change()" ng-model="room.description"/>
         </div>
 
-        {# This is used to send the button that was clicked #}
-        <input id="submit-button-{= room.roomid =}" type="hidden" name="button" value=""/>
-
-        <button ng-click="save_room(room.roomid)" class="edit-button" name="save-button"
+        <button ng-click="save_room(room)" class="edit-button" name="save-button"
             type="button" value="save">Save Room</button>
 
         {# These buttons are used to capture user clicks. The underlying Javascript

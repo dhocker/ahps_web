@@ -38,7 +38,10 @@ def get_programs_for_module(moduleid):
     db = get_db()
     cur = db.execute('select * from programs where moduleid=?', [moduleid])
     programs = cur.fetchall()
-    return programs
+    lst = []
+    for program in programs:
+        lst.append(row_to_dict(program))
+    return lst
 
 
 def insert_program(moduleid, name):

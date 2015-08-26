@@ -22,81 +22,48 @@
     <div id="dialog" title="Confirmation">
         <p id="dialog-text">Remove the selected program?</p>
     </div>
-    <script type="text/javascript">
-        /* Initialize the confirmation dialog */
-        $(document).ready(function() {
-            $("#dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    "Remove": function(event) {
-                        $("#dialog").dialog( "close" );
-                        /* Effectively a redirect to the remove page */
-                        moduleid = $(this).data("moduleid");
-                        programid = $(this).data("programid");
-                        window.location.replace('/modules/programs/remove_program/' + moduleid + '?programid=' + programid);
-                        },
-                    "Cancel": function(event) {
-                        $("#dialog").dialog( "close" );
-                        }
-                }
-            });
-
-        });
-
-        /* Show confirmation dialog for removing a program */
-        function confirmRemove(moduleid, programid, name){
-            /* Set the dialog text with the room name */
-            $("#dialog-text").text("Remove program " + name + "?");
-            /* Pop the confirmation dialog */
-            $("#dialog")
-                .data("moduleid", moduleid)
-                .data("programid", programid)
-                .data("name", name)
-                .dialog("open");
-        };
-
-    </script>
 {% endblock %}
 
 {% block body %}
     <h2>Programs for module: {{ module.name }}</h2>
+        <input type="hidden" id="moduleid" value="{{ module.moduleid }}">
         <table class="common-table">
-            <tr>
-                <th>Program Name</th>
-                <th>Summary</th>
-                <th>Actions</th>
-            </tr>
-            {% for program in programs %}
-                {% if loop.index is not divisibleby 2 %}
+            <thead>
                 <tr>
-                {% else %}
-                <tr class="alt">
-                {% endif %}
-                    <td>{{ program.name }}</td>
+                    <th>Program Name</th>
+                    <th>Summary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="program in programs" ng-class-even="'alt'">
+                    <td>{= program.name =}</td>
                     <td>
-                        <p class="program-summary">{{ program.days }}</p>
-                        <p class="program-summary">{{ program_summary(program) | safe }}</p>
-                </td>
+                        <p class="program-summary">{= program.days =}</p>
+                        <p class="program-summary" ng-bind-html="program.program_summary"></p>
+                    </td>
                     <td>
-                        <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) }}">Edit</a>
+                        <a class="a-button" ng-click="edit_program(program.programid)">Edit</a>
                         <a class="a-button"
-                           href="javascript:confirmRemove({{ module.moduleid }}, {{ program.programid }}, '{{ program.name }}')">Remove</a>
+                           ng-click="remove_progam(program.programid, program.name)">Remove</a>
                     </td>
                 </tr>
-            {% endfor %}
+            </tbody>
         </table>
 
     <div class="clear"></div>
 
     {# Button for adding a program #}
-    <form action="" method="post">
-        <button class="edit-button" name=add-program type="submit" value="{{ module.moduleid }}">Add Program</button>
-    </form>
+    <button class="edit-button" value="{{ module.moduleid }}" ng-click="add_program()">Add Program</button>
+
 {% endblock %}
 
 {% block footer_links %}
     <a href="{{ url_for('get_modules_page', roomid=module.roomid) }}">Back</a>
+{% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/module_programs.js') }}" type="text/javascript"></script>
 {% endblock %}

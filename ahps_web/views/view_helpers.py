@@ -41,43 +41,47 @@ def program_summary_formatter():
     :return:
     '''
     def program_summary(program):
-        # Calculate effective start and stop times
-        sun_data = get_astral_data(datetime.now())
-        sunset = sun_data["sunset"]
-        sunrise = sun_data["sunrise"]
-
-        effective_start_time = "No Time"
-        offset = timedelta(minutes=int(program["start_offset"]))
-        if program["start_trigger_method"] == "sunset":
-            effective_start_time = (sunset + offset).strftime("%I:%M%p")
-        elif program["start_trigger_method"] == "sunrise":
-            effective_start_time = (sunrise + offset).strftime("%I:%M%p")
-        elif program["start_trigger_method"] == "clock-time":
-            st = program["start_time"]
-            start_time = datetime.strptime(program["start_time"], "%I:%M %p")
-            effective_start_time = (start_time + offset).strftime("%I:%M%p")
-        else:
-            effective_start_time = "No Time"
-
-        effective_stop_time = "No Time"
-        offset = timedelta(minutes=int(program["stop_offset"]))
-        if program["stop_trigger_method"] == "sunset":
-            effective_start_time = (sunset + offset).strftime("%I:%M%p")
-        elif program["stop_trigger_method"] == "sunrise":
-            effective_stop_time = (sunrise + offset).strftime("%I:%M%p")
-        elif program["stop_trigger_method"] == "clock-time":
-            st = program["stop_time"]
-            stop_time = datetime.strptime(program["stop_time"], "%I:%M %p")
-            effective_stop_time = (stop_time + offset).strftime("%I:%M%p")
-        else:
-            effective_stop_time = "No Time"
-
-        start = "Start: Method={0} Offset={1} EffectiveTime={2} Action={3}".format(program["start_trigger_method"],
-            program["start_offset"],
-            effective_start_time, program["start_action"])
-        stop = "Stop: Method={0} Offset={1} EffectiveTime={2} Action={3}".format(program["stop_trigger_method"],
-            program["stop_offset"],
-            effective_stop_time, program["stop_action"])
-        return start + "<br/>" + stop
+        return build_program_summary(program)
 
     return dict(program_summary = program_summary)
+
+
+def build_program_summary(program):
+    # Calculate effective start and stop times
+    sun_data = get_astral_data(datetime.now())
+    sunset = sun_data["sunset"]
+    sunrise = sun_data["sunrise"]
+
+    effective_start_time = "No Time"
+    offset = timedelta(minutes=int(program["start_offset"]))
+    if program["start_trigger_method"] == "sunset":
+        effective_start_time = (sunset + offset).strftime("%I:%M%p")
+    elif program["start_trigger_method"] == "sunrise":
+        effective_start_time = (sunrise + offset).strftime("%I:%M%p")
+    elif program["start_trigger_method"] == "clock-time":
+        st = program["start_time"]
+        start_time = datetime.strptime(program["start_time"], "%I:%M %p")
+        effective_start_time = (start_time + offset).strftime("%I:%M%p")
+    else:
+        effective_start_time = "No Time"
+
+    effective_stop_time = "No Time"
+    offset = timedelta(minutes=int(program["stop_offset"]))
+    if program["stop_trigger_method"] == "sunset":
+        effective_start_time = (sunset + offset).strftime("%I:%M%p")
+    elif program["stop_trigger_method"] == "sunrise":
+        effective_stop_time = (sunrise + offset).strftime("%I:%M%p")
+    elif program["stop_trigger_method"] == "clock-time":
+        st = program["stop_time"]
+        stop_time = datetime.strptime(program["stop_time"], "%I:%M %p")
+        effective_stop_time = (stop_time + offset).strftime("%I:%M%p")
+    else:
+        effective_stop_time = "No Time"
+
+    start = "Start: Method={0} Offset={1} EffectiveTime={2} Action={3}".format(program["start_trigger_method"],
+        program["start_offset"],
+        effective_start_time, program["start_action"])
+    stop = "Stop: Method={0} Offset={1} EffectiveTime={2} Action={3}".format(program["stop_trigger_method"],
+        program["stop_offset"],
+        effective_stop_time, program["stop_action"])
+    return start + "<br/>" + stop
