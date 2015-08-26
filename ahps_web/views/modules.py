@@ -192,7 +192,8 @@ def add_appliance_module(roomid):
 @login_required                                 # Use of @login_required decorator
 def add_lamp_module(roomid):
     room = get_room(roomid)
-    return render_template('new_lamp_module.html', roomid=room['roomid'], room_name=room['name'])
+    return render_template('new_lamp_module.html', roomid=room['roomid'], room_name=room['name'],
+                           ngapp="ahps_web", ngcontroller="addLampController")
 
 
 @app.route('/room/<roomid>', methods=["POST"])
@@ -208,7 +209,6 @@ def create_module(roomid):
         insert_module(roomid, args["module_type"], args['name'],
                       args['house_code'], args['device_code'])
     elif args["module_type"] == "lamp":
-        pass
         insert_module(roomid, args["module_type"], args['name'],
                       args['house_code'], args['device_code'], args["dim_amount"])
     else:

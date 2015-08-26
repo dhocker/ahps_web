@@ -18,9 +18,9 @@
 */
 
 /*
-    Add appliance module controller
+    Add lamp module page controller
 */
-app.controller('addApplianceController', function($scope, $http) {
+app.controller('addLampController', function($scope, $http) {
     // Initialization
 
     $scope.title = "AHPS Web";
@@ -31,13 +31,15 @@ app.controller('addApplianceController', function($scope, $http) {
     $scope.module["moduleid"] = "0";
     $scope.module["house_code"] = "A";
     $scope.module["device_code"] = "1";
+    $scope.module["dim_amount"] = "0";
 
     $scope.save_module = function(roomid) {
         rp = {};
-        rp["module_type"] = "appliance";
+        rp["module_type"] = "lamp";
         rp["name"] = $("#name").val();
         rp["house_code"] = $scope.module["house_code"];
         rp["device_code"] = $scope.module["device_code"];
+        rp["dim_amount"] = $("#dim-amount").val();
 
         if (!rp["name"]) {
             $scope.error = "Module name is required";
@@ -57,7 +59,7 @@ app.controller('addApplianceController', function($scope, $http) {
                     $scope.error = data.message;
                 }
                 else {
-                    $scope.error = "Attempt to add appliance module failed"
+                    $scope.error = "Attempt to add lamp module failed"
                 }
             });
     };

@@ -33,12 +33,11 @@
     <div id="module-form-{= module.moduleid =}" ng-repeat="module in room_modules">
         <div class="{= module.module_type =}-module">
             <input type="hidden" id="moduleid-{= module.moduleid =}" value="{= module.moduleid =}">
-            {# <input type="hidden" name="module_type" value="{= module.module_type =}"> #}
             <div id="module-name-{= module.moduleid =}" class="name">
                 {% include 'module_types.html' %}
                 <br/>
                 <input type="text" id="module-name-text-{= module.moduleid =}" class="module-name"
-                       value="{= module.name =}" onchange="track_change()"/>
+                       value="{= module.name =}" ng-model="module.name"/>
             </div>
             <div class="hdc">
                 <div ng-show="module_type == 'house'">
@@ -65,7 +64,7 @@
                 </div>
             </div>
             {# These buttons are used to capture user clicks #}
-            <button ng-click="save_room(module.moduleid)" class="edit-button" type="button" value="save">Save Module</button>
+            <button ng-click="save_module(module)" class="edit-button" type="button" value="save">Save Module</button>
             <button ng-show="module_type != 'house'" ng-click="show_programs(module.moduleid)" class="edit-button"
                     type="button">Programs</button>
             <br/>

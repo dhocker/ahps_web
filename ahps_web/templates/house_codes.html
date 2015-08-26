@@ -17,9 +17,9 @@
 
 {# Includable file for generating a house code combobox #}
 
-<select name="house_code" id="house-code-{= module.moduleid =}" class="input-select" ng-changed="house_code_changed(module.moduleid)">
+<select name="house-code-{= module.moduleid =}" id="house-code-{= module.moduleid =}" class="input-select" ng-model="module.house_code">
     <option value="{= hc =}" ng-repeat="hc in ['A','B','C','D','E','F','G','H','I','J','K','L','M','O','P']"
-            ng-selected="is_house_code_match(module, hc)"
+            ng-selected="is_house_code_match(module.house_code, hc)"
     >{= hc =}
     </option>
 </select>

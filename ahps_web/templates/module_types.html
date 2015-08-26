@@ -17,7 +17,8 @@
 
 {# Includable file for generating a module type combobox #}
 
-<select name="module_type" id="module-type-{= module.moduleid =}" class="module-type-select" ng-changed="module_type_changed(module.moduleid)">
+<select name="module_type" id="module-type-{= module.moduleid =}" class="module-type-select"
+        ng-change="module_type_changed(module)" ng-model="module.module_type">
     <option value="{= mt =}" ng-repeat="mt in ['Appliance','Lamp', 'House']"
         ng-selected="isModuleTypeMatch(module, mt)"
     >{= mt =}

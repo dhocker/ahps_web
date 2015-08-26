@@ -44,19 +44,15 @@ app.controller('modulesController', function($scope, $http) {
         return module && (mt.toLowerCase() == module.module_type.toLowerCase());
     };
 
-    $scope.is_house_code_match = function(module, hc) {
-        return module && (hc.toLowerCase() == module.house_code.toLowerCase());
-    };
-
-    $scope.is_device_code_match = function(module, dc) {
-        return module && (String(dc) == String(module.device_code));
+    $scope.is_house_code_match = function(module_hc, hc) {
+        return hc.toLowerCase() == module_hc.toLowerCase();
     };
 
     /* When the module type changes, immediately save the module
     so the type change is obvious */
-    $scope.module_type_changed = function(moduleid) {
+    $scope.module_type_changed = function(module) {
         console.log("Module type was changed");
-        $scope.save_room(moduleid);
+        $scope.save_module(module);
     }
 
     $scope.house_code_changed = function(moduleid) {
@@ -65,16 +61,17 @@ app.controller('modulesController', function($scope, $http) {
     $scope.device_code_changed = function(moduleid) {
     };
 
-    /* Save all room properties */
-    $scope.save_room = function(moduleid) {
-        rp = {};
+    /* Save all module properties */
+    $scope.save_module = function(module) {
+        var moduleid = module.moduleid;
+        var rp = {};
         rp["module_type"] = $("#module-type-" + String(moduleid)).val().toLowerCase();
         rp["name"] = $("#module-name-text-" + String(moduleid)).val();
-        rp["house_code"] = $("#house-code-" + String(moduleid)).val();
-        rp["device_code"] = $("#device-code-" + String(moduleid)).val();
+        rp["house_code"] = module["house_code"];
+        rp["device_code"] = module["device_code"];
         rp["dim_amount"] = $("#dim-amount-" + String(moduleid)).val();
 
-        $http.put('/module/' + String(moduleid), {"data": rp}).
+        $http.put('/module/' + String(module.moduleid), {"data": rp}).
             success(function(data, status, headers, config) {
                 // Success
                 $scope.error = "";
