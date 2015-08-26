@@ -21,7 +21,7 @@
 
     <div class="input-form">
         <label for="name" class="input-label">*Module name:</label>
-        <input id="name" type="text" class="input-text" autofocus="True" onchange="track_change()">
+        <input id="name" type="text" class="input-text" autofocus="True" onchange="track_change()" ng-model="model.name">
 
         <label for="house_code" class="input-label">House code:</label>
         {% include 'house_codes.html' %}

@@ -31,33 +31,33 @@
     <h2>Modules for room: {{ room.name }}</h2>
     <input type="hidden" id="roomid" value="{{ room.roomid }}">
     <div id="module-form-{= module.moduleid =}" ng-repeat="module in room_modules">
-        <div class="{= module.module_type =}-module">
+        <div class="{= module.module_type.toLowerCase() =}-module">
             <input type="hidden" id="moduleid-{= module.moduleid =}" value="{= module.moduleid =}">
             <div id="module-name-{= module.moduleid =}" class="name">
                 {% include 'module_types.html' %}
                 <br/>
                 <input type="text" id="module-name-text-{= module.moduleid =}" class="module-name"
-                       value="{= module.name =}" ng-model="module.name"/>
+                       value="{= module.name =}" ng-model="module.name" onchange="track_change()"/>
             </div>
             <div class="hdc">
-                <div ng-show="module_type == 'house'">
+                <div ng-show="module.module_type.toLowerCase() == 'house'">
                     <span class="hdc-text">{= module.house_code =}</span>
                     {% include 'house_codes.html' %}
                     <input type="hidden" id="device_code-{= module.moduleid =}" value="{= module.device_code =}"/>
                     <input type="hidden" id="dim-amount-{= module.moduleid =}" value="{= module.dim_amount =}"/>
                 </div>
-                <div ng-show="module_type != 'house'">
+                <div ng-show="module.module_type.toLowerCase() != 'house'">
                     {# appliance or lamp #}
                     <span class="hdc-text">{= module.house_code =}{= module.device_code =}</span>
                     {% include 'house_codes.html' %}
                     {% include 'device_codes.html' %}
-                    <span ng-show="module.type == 'lamp'">
+                    <span ng-show="module.module_type.toLowerCase() == 'lamp'">
                         <span class="hdc-text">Dim:</span>
                         <input type="text" id="dim-amount-{= module.moduleid =}" class="input-number"
                                  value="{= module.dim_amount =}"
-                                 onchange="track_change()"/>
+                                 onchange="track_change()" ng-model="module.dim_amount"/>
                     </span>
-                    <span ng-show="module.type == 'appliance'">
+                    <span ng-show="module.module.type.toLowerCase() == 'appliance'">
                         <input type="hidden" id="dim-amount-{= module.moduleid =}" value="{= module.dim_amount =}"/>
                         <br/>
                     </span>
@@ -65,7 +65,7 @@
             </div>
             {# These buttons are used to capture user clicks #}
             <button ng-click="save_module(module)" class="edit-button" type="button" value="save">Save Module</button>
-            <button ng-show="module_type != 'house'" ng-click="show_programs(module.moduleid)" class="edit-button"
+            <button ng-show="module.module_type.toLowerCase() != 'house'" ng-click="show_programs(module.moduleid)" class="edit-button"
                     type="button">Programs</button>
             <br/>
             <button ng-click="module_on(module.moduleid)" class="edit-button" type="button">On</button>

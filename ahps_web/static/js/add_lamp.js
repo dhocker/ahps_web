@@ -27,6 +27,7 @@ app.controller('addLampController', function($scope, $http) {
     $scope.error = "";
     // Scaffold for house and device code includes
     $scope.module = {};
+    $scope.module["name"] = "";
     // Module id is arbitrary and used only to satisfy includes for house and device codes
     $scope.module["moduleid"] = "0";
     $scope.module["house_code"] = "A";
@@ -36,10 +37,10 @@ app.controller('addLampController', function($scope, $http) {
     $scope.save_module = function(roomid) {
         rp = {};
         rp["module_type"] = "lamp";
-        rp["name"] = $("#name").val();
+        rp["name"] = $scope.module["name"];
         rp["house_code"] = $scope.module["house_code"];
         rp["device_code"] = $scope.module["device_code"];
-        rp["dim_amount"] = $("#dim-amount").val();
+        rp["dim_amount"] = $scope.module["dim_amount"];
 
         if (!rp["name"]) {
             $scope.error = "Module name is required";

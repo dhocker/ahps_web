@@ -40,8 +40,8 @@ app.controller('modulesController', function($scope, $http) {
             });
     };
 
-    $scope.isModuleTypeMatch = function(module, mt) {
-        return module && (mt.toLowerCase() == module.module_type.toLowerCase());
+    $scope.is_module_type_match = function(module_type, mt) {
+        return mt.toLowerCase() == module_type.toLowerCase();
     };
 
     $scope.is_house_code_match = function(module_hc, hc) {
@@ -65,16 +65,17 @@ app.controller('modulesController', function($scope, $http) {
     $scope.save_module = function(module) {
         var moduleid = module.moduleid;
         var rp = {};
-        rp["module_type"] = $("#module-type-" + String(moduleid)).val().toLowerCase();
-        rp["name"] = $("#module-name-text-" + String(moduleid)).val();
+        rp["module_type"] = module["module_type"].toLowerCase();
+        rp["name"] = module["name"];
         rp["house_code"] = module["house_code"];
         rp["device_code"] = module["device_code"];
-        rp["dim_amount"] = $("#dim-amount-" + String(moduleid)).val();
+        rp["dim_amount"] = module["dim_amount"];
 
         $http.put('/module/' + String(module.moduleid), {"data": rp}).
             success(function(data, status, headers, config) {
                 // Success
                 $scope.error = "";
+                window.onbeforeunload = null;
             }).
             error(function(data, status, headers, config) {
                 if (data && data.message) {
