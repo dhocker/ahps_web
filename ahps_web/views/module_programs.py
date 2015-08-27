@@ -100,7 +100,6 @@ def edit_program_page(programid):
     return render_template("program.html", module=module, program=program, sun_data=sun_data)
 
 
-
 @app.route('/modules/program/<programid>', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
 def save_edit_program(programid):
@@ -172,10 +171,9 @@ def save_edit_program(programid):
     return redirect(returnto)
 
 
-@app.route('/modules/programs/remove_program/<moduleid>', methods=['GET'])
+@app.route('/module/program/<programid>', methods=['DELETE'])
 @login_required                                 # Use of @login_required decorator
-def remove_program(moduleid):
-    programid = request.args["programid"]
+def remove_program(programid):
     delete_program(programid)
     # return "Remove program called for moduleid/programid" + moduleid + "/" + programid;
-    return redirect(url_for("module_programs", moduleid=moduleid))
+    return ""

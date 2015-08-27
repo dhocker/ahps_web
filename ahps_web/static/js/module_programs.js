@@ -71,8 +71,29 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
         window.location.replace("/modules/program/" + String(programid) + "/page");
     };
 
-    $scope.remove_program = function(programdid, program_name) {
-        var moduleid = $("#moduleid").val();
+    $scope.remove_program = function(programid, program_name) {
+        /* Set the dialog text with the room name */
+        $("#dialog-text").text("Remove program: " + program_name + "?");
+        /* Pop the confirmation dialog */
+        $("#dialog")
+            .data("programid", programid)
+            .dialog("open");
+    };
+
+    $scope.angular_remove_program = function(programid) {
+        $http.delete('/module/program/' + String(programid), {}).
+            success(function(data, status, headers, config) {
+                // Refresh the programs list
+                get_programs();
+            }).
+            error(function(data, status, headers, config) {
+                if (data && (data.message)) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Unable to refresh programs";
+                }
+            });
     };
 
     // Continuing with initializatin...
@@ -86,17 +107,20 @@ $(document).ready(function() {
         autoOpen: false,
         modal: true,
         closeOnEscape: false,
+        width: 400,
         buttons: {
             "Remove": function(event) {
                 $("#dialog").dialog( "close" );
                 /* Effectively a redirect to the remove page */
-                moduleid = $(this).data("moduleid");
-                programid = $(this).data("programid");
-                window.location.replace('/modules/programs/remove_program/' + moduleid + '?programid=' + programid);
-                },
+                var programid = $(this).data("programid");
+                // Need access to scope
+                var el = $("html");
+                var scope = angular.element(el).scope();
+                scope.angular_remove_program(programid);
+            },
             "Cancel": function(event) {
                 $("#dialog").dialog( "close" );
-                }
+            }
         }
     });
 
