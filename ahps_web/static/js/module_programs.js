@@ -28,6 +28,7 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
     // TODO Implement
     $scope.programs = [];
 
+    // Gets the list of programs for the current module
     function get_programs() {
         var moduleid = $("#moduleid").val();
         $http.get('/module/' + String(moduleid) + '/programs', {}).
@@ -49,8 +50,9 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
             });
     };
 
-    $scope.add_program = function() {
-        var moduleid = $("#moduleid").val();
+    // Adds an empty program to the module. Refreshes the program
+    // list to show the newly added program.
+    $scope.add_program = function(moduleid) {
         $http.post('/module/' + String(moduleid) + '/program', {}).
             success(function(data, status, headers, config) {
                 // Refresh the programs list
@@ -66,11 +68,12 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
             });
     };
 
+    // Calls the edit page to edit the selected program
     $scope.edit_program = function(programid) {
-        var moduleid = $("#moduleid").val();
         window.location.replace("/modules/program/" + String(programid) + "/page");
     };
 
+    // Launches the dialog box to confirm remove
     $scope.remove_program = function(programid, program_name) {
         /* Set the dialog text with the room name */
         $("#dialog-text").text("Remove program: " + program_name + "?");
@@ -80,6 +83,7 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
             .dialog("open");
     };
 
+    // Confirmation callback that does the actual remove
     $scope.angular_remove_program = function(programid) {
         $http.delete('/module/program/' + String(programid), {}).
             success(function(data, status, headers, config) {
@@ -96,10 +100,15 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
             });
     };
 
-    // Continuing with initializatin...
+    // Continuing with initialization...
     get_programs();
 });
 
+/*
+This code is outside of the controller because it would not
+work inside the controller. Apparently there is some negative
+interaction between jQuery and AngularJS.
+*/
 /* Initialize the confirmation dialog */
 $(document).ready(function() {
     $("#dialog").dialog(
@@ -111,9 +120,8 @@ $(document).ready(function() {
         buttons: {
             "Remove": function(event) {
                 $("#dialog").dialog( "close" );
-                /* Effectively a redirect to the remove page */
                 var programid = $(this).data("programid");
-                // Need access to scope
+                // Need access to scope to call into controller
                 var el = $("html");
                 var scope = angular.element(el).scope();
                 scope.angular_remove_program(programid);
@@ -125,15 +133,3 @@ $(document).ready(function() {
     });
 
 });
-
-/* Show confirmation dialog for removing a program */
-function confirmRemove(moduleid, programid, name){
-    /* Set the dialog text with the room name */
-    $("#dialog-text").text("Remove program " + name + "?");
-    /* Pop the confirmation dialog */
-    $("#dialog")
-        .data("moduleid", moduleid)
-        .data("programid", programid)
-        .data("name", name)
-        .dialog("open");
-};

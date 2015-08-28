@@ -54,7 +54,7 @@
     <div class="clear"></div>
 
     {# Button for adding a program #}
-    <button class="edit-button" value="{{ module.moduleid }}" ng-click="add_program()">Add Program</button>
+    <button class="edit-button" value="{{ module.moduleid }}" ng-click="add_program({{ module.moduleid }})">Add Program</button>
 
 {% endblock %}
 
