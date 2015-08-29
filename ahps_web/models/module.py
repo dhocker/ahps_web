@@ -58,7 +58,7 @@ def get_module(moduleid):
     db = get_db()
     cur = db.execute('select * from modules where moduleid=?', [moduleid])
     module = cur.fetchone()
-    return module
+    return row_to_dict(module)
 
 
 def update_module_hdc(moduleid, house_code, device_code):

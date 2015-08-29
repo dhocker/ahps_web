@@ -97,10 +97,21 @@ def edit_program_page(programid):
     sun_data = get_sun_data(datetime.now())
 
     #return render_template("program.html", module=module, program=program, sun_data=sun_data, returnto=returnto)
-    return render_template("program.html", module=module, program=program, sun_data=sun_data)
+    return render_template("program.html", programid=programid, sun_data=sun_data, ngapp="ahps_web", ngcontroller="programController")
 
 
-@app.route('/modules/program/<programid>', methods=['POST'])
+@app.route('/module/program/<programid>', methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def get_program_data(programid):
+
+    program = get_program(programid)
+    moduleid = program["moduleid"]
+    module = get_module(moduleid)
+
+    return jsonify({"programdata": {"program": program, "module": module}})
+
+
+@app.route('/module/program/<programid>', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
 def save_edit_program(programid):
     # This is not particularly elegant but it is functional.
@@ -113,14 +124,12 @@ def save_edit_program(programid):
     #     returnto = None
 
     program = get_program(programid)
-    moduleid = program["moduleid"]
-
-    # if not returnto:
-    #     returnto = url_for("module_programs", moduleid=moduleid)
+    # moduleid = program["moduleid"]
+    args = json.loads(request.data.decode())["data"]
 
     # Save all program data
 
-    program["name"] = request.form["program-name"]
+    program["name"] = args["name"]
 
     # Build program days string from from inputs
     wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
