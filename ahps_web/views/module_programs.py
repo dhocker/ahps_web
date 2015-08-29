@@ -114,70 +114,43 @@ def get_program_data(programid):
 @app.route('/module/program/<programid>', methods=['POST'])
 @login_required                                 # Use of @login_required decorator
 def save_edit_program(programid):
-    # This is not particularly elegant but it is functional.
-    # If there is a returnto arg we will set up to go back to that page.
-    # If there is no returnto arg we will default to going back to the
-    # module programs page.
-    # if request.args.has_key("returnto"):
-    #     returnto = request.args["returnto"]
-    # else:
-    #     returnto = None
-
     program = get_program(programid)
     # moduleid = program["moduleid"]
+    # data is the program object
     args = json.loads(request.data.decode())["data"]
 
     # Save all program data
 
     program["name"] = args["name"]
 
-    # Build program days string from from inputs
-    wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-    days = ""
-    for d in range(0, 7):
-        key = "dow" + str(d)
-        if request.form.has_key(key):
-            days += wd[d]
-        else:
-            days += '.'
-    program["days"] = days
+    program["days"] = args["days"]
 
-    program["start_action"] = request.form["start-action"]
-    program["stop_action"] = request.form["stop-action"]
+    program["start_action"] = args["start_action"]
+    program["stop_action"] = args["stop_action"]
 
-    program["start_trigger_method"] = request.form["start-trigger-method"]
-    program["stop_trigger_method"] = request.form["stop-trigger-method"]
+    program["start_trigger_method"] = args["start_trigger_method"]
+    program["stop_trigger_method"] = args["stop_trigger_method"]
 
-    program["start_time"] = request.form["start-time"]
-    program["stop_time"] = request.form["stop-time"]
+    program["start_time"] = args["start_time"]
+    program["stop_time"] = args["stop_time"]
 
-    if request.form.has_key("start-randomize"):
-        v = request.form["start-randomize"]
-        program["start_randomize"] = 1
-    else:
-        program["start_randomize"] = 0
+    program["start_randomize"] = args["start_randomize"]
 
-    if request.form.has_key("stop-randomize"):
-        v = request.form["stop-randomize"]
-        program["stop_randomize"] = 1
-    else:
-        program["stop_randomize"] = 0
+    program["stop_randomize"] = args["stop_randomize"]
 
-    program["start_offset"] = int(request.form["start-offset"])
+    program["start_offset"] = int(args["start_offset"])
 
-    program["stop_offset"] = int(request.form["stop-offset"])
+    program["stop_offset"] = int(args["stop_offset"])
 
-    if request.form.has_key("start-randomize-amount"):
-        program["start_randomize_amount"] = int(request.form["start-randomize-amount"])
-    if request.form.has_key("stop-randomize-amount"):
-        program["stop_randomize_amount"] = int(request.form["stop-randomize-amount"])
+    program["start_randomize_amount"] = int(args["start_randomize_amount"])
+    program["stop_randomize_amount"] = int(args["stop_randomize_amount"])
 
     # Finally! Update the program record with all of the changes
     update_program(program)
 
     flash(program["name"] + " saved")
 
-    return redirect(returnto)
+    return "Saved"
 
 
 @app.route('/module/program/<programid>', methods=['DELETE'])

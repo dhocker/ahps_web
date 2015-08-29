@@ -68,8 +68,13 @@
         </div>
 
         {# AngularJS error messsage. This can probably be styled better, but it is serviceable as-is. #}
-        <div class="" ng-if="error != ''">
+        <div class="" ng-show="error != ''">
             <p class="error"><strong>Error:</strong> {= error =}</p>
+        </div>
+
+        {# AngularJS success messsage. This can probably be styled better, but it is serviceable as-is. #}
+        <div class="" ng-show="message != ''">
+            <p class="success"><strong>Success:</strong> {= message =}</p>
         </div>
 
         {# TODO Eventually this Flash based error display can be removed #}

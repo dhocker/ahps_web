@@ -56,179 +56,180 @@
 {% endmacro %}
 
 {% block body %}
+    {# The id of the program being edited #}
     <input type="hidden" id="programid" value="{{ programid }}">
-    {#<form id="program-form" action="" method="post" onsubmit="return validate_inputs()">#}
-        <h2>Module: {= module.name =} - Program:
-            <input type="text" class="input-program-name" id="program-name" name="program-name" value="{= program.name =}"
-                    onchange="track_change()" >
-        </h2>
 
+    <h2>Module: {= module.name =} - Program:
+        <input type="text" class="input-program-name" id="program-name" name="program-name" value="{= program.name =}"
+                onchange="track_change()" >
+    </h2>
+
+    {#
+    Hidden fields for sunrise/sunset
+    #}
+    <input type="hidden" id="sunset" value="{{ sun_data['sunset'] }}">
+    <input type="hidden" id="sunrise" value="{{ sun_data['sunrise'] }}">
+
+    {#
+    Days of week group box
+    #}
+
+    <fieldset id="days-of-week" class="days-of-week">
+        <legend>Days</legend>
+        {# The initial state of the checkboxes is set by Javascript above #}
+        <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" onchange="track_change()"
+               ng-checked="program.day[0]" ng-model="program.day[0]" ng-true-value="1" ng-false-value="0">Monday<br/>
+        <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" onchange="track_change()"
+               ng-checked="program.day[1]" ng-model="program.day[1]" ng-true-value="1" ng-false-value="0">Tuesday<br/>
+        <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" onchange="track_change()"
+               ng-checked="program.day[2]" ng-model="program.day[2]" ng-true-value="1" ng-false-value="0">Wednesday<br/>
+        <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" onchange="track_change()"
+               ng-checked="program.day[3]" ng-model="program.day[3]" ng-true-value="1" ng-false-value="0">Thursday<br/>
+        <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" onchange="track_change()"
+               ng-checked="program.day[4]" ng-model="program.day[4]" ng-true-value="1" ng-false-value="0">Friday<br/>
+        <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" onchange="track_change()"
+               ng-checked="program.day[5]" ng-model="program.day[5]" ng-true-value="1" ng-false-value="0">Saturday<br/>
+        <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" onchange="track_change()"
+               ng-checked="program.day[6]" ng-model="program.day[6]" ng-true-value="1" ng-false-value="0">Sunday<br/>
+
+        <button type="button" class="edit-button" ng-click="set_weekdays()">Week Days</button>
+        <button type="button" class="edit-button" ng-click="set_weekenddays()">Week End</button>
+    </fieldset>
+
+    {#
+    Start trigger group box
+    #}
+
+    <fieldset class="start-trigger-group">
+        <legend>Start/On Trigger</legend>
+        {# ******************* #}
+        {# Start trigger macro #}
         {#
-        Hidden fields for sunrise/sunset
+        {{ trigger_methods("start-trigger-method", "start-trigger-method", "start-trigger-method",
+            program.start_trigger_method, "startTriggerChanged()") }}
         #}
-        <input type="hidden" id="sunset" value="{{ sun_data['sunset'] }}">
-        <input type="hidden" id="sunrise" value="{{ sun_data['sunrise'] }}">
+        <select id="start-trigger-method" class="start-trigger-method" name="start-trigger-method"
+                onchange="startTriggerChanged()" ng-model="program.start_trigger_method">
+            <option value="none" ng-selected="program.start_trigger_method == 'none'">None</option>
+            <option value="clock-time" ng-selected="program.start_trigger_method == 'clock-time'">Clock-time</option>
+            <option value="sunset" ng-selected="program.start_trigger_method == 'sunset'">Sunset</option>
+            <option value="sunrise" ng-selected="program.start_trigger_method == 'sunrise'">Sunrise</option>
+        </select>
 
-        {#
-        Days of week group box
-        #}
-
-        <fieldset id="days-of-week" class="days-of-week">
-            <legend>Days</legend>
-            {# The initial state of the checkboxes is set by Javascript above #}
-            <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" onchange="track_change()"
-                   ng-checked="program.day[0]" ng-model="program.day[0]" ng-true-value="1" ng-false-value="0">Monday<br/>
-            <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" onchange="track_change()"
-                   ng-checked="program.day[1]" ng-model="program.day[1]" ng-true-value="1" ng-false-value="0">Tuesday<br/>
-            <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" onchange="track_change()"
-                   ng-checked="program.day[2]" ng-model="program.day[2]" ng-true-value="1" ng-false-value="0">Wednesday<br/>
-            <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" onchange="track_change()"
-                   ng-checked="program.day[3]" ng-model="program.day[3]" ng-true-value="1" ng-false-value="0">Thursday<br/>
-            <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" onchange="track_change()"
-                   ng-checked="program.day[4]" ng-model="program.day[4]" ng-true-value="1" ng-false-value="0">Friday<br/>
-            <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" onchange="track_change()"
-                   ng-checked="program.day[5]" ng-model="program.day[5]" ng-true-value="1" ng-false-value="0">Saturday<br/>
-            <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" onchange="track_change()"
-                   ng-checked="program.day[6]" ng-model="program.day[6]" ng-true-value="1" ng-false-value="0">Sunday<br/>
-
-            <button type="button" class="edit-button" ng-click="set_weekdays()">Week Days</button>
-            <button type="button" class="edit-button" ng-click="set_weekenddays()">Week End</button>
+        <fieldset id="start-time-group" class="program-trigger-group" ng-show="program.start_trigger_method == 'clock-time'">
+            <legend>Start time</legend>
+            <input id="start-time" type="text" class="input-time" name="start-time" value="{= program.start_time =}"
+                   onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+                   onchange="track_change()">
         </fieldset>
 
+        <fieldset id="start-offset-group" class="program-trigger-group">
+            <legend>Start Offset</legend>
+            <input type="text" id="start-offset" class="input-number" name="start-offset"
+                   value="{= program.start_offset =}"
+                   onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+                   onchange="track_change()">
+            <span> = </span>
+            <span id="start-offset-time" class="offset-time">TIME</span>
+        </fieldset>
+
+        <fieldset id="start-randomize-group" class="program-trigger-group">
+            <legend>Randomize</legend>
+            <input type="checkbox" class="start-randomize" id="start-randomize"
+                   onchange="track_change()" ng-model="program.start_randomize"
+                   ng-true-value="1" ng-false-value="0">Randomize +/-
+            <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount"
+                   onchange="track_change()" ng-model="program.start_randomize_amount">
+            <br/>
+        </fieldset>
+    </fieldset>
+
+    {#
+    Stop trigger group box
+    #}
+
+    <fieldset class="stop-trigger-group">
+        <legend>Stop/Off Trigger</legend>
+
+        {# ******************* #}
+        {# Stop trigger macro #}
         {#
-        Start trigger group box
+        {{ trigger_methods("stop-trigger-method", "stop-trigger-method", "stop-trigger-method",
+            program.stop_trigger_method, "stopTriggerChanged()") }}
         #}
+        <select id="stop-trigger-method" class="sop" name="stop-trigger-method"
+                onchange="stopTriggerChanged()" ng-model="program.stop_trigger_method">
+            <option value="none" ng-selected="program.stop_trigger_method == 'none'">None</option>
+            <option value="clock-time" ng-selected="program.stop_trigger_method == 'clock-time'">Clock-time</option>
+            <option value="sunset" ng-selected="program.stop_trigger_method == 'sunset'">Sunset</option>
+            <option value="sunrise" ng-selected="program.stop_trigger_method == 'sunrise'">Sunrise</option>
+        </select>
 
-        <fieldset class="start-trigger-group">
-            <legend>Start/On Trigger</legend>
-            {# ******************* #}
-            {# Start trigger macro #}
-            {#
-            {{ trigger_methods("start-trigger-method", "start-trigger-method", "start-trigger-method",
-                program.start_trigger_method, "startTriggerChanged()") }}
-            #}
-            <select id="start-trigger-method" class="start-trigger-method" name="start-trigger-method"
-                    onchange="startTriggerChanged()" ng-model="program.start_trigger_method">
-                <option value="none" ng-selected="program.start_trigger_method == 'none'">None</option>
-                <option value="clock-time" ng-selected="program.start_trigger_method == 'clock-time'">Clock-time</option>
-                <option value="sunset" ng-selected="program.start_trigger_method == 'sunset'">Sunset</option>
-                <option value="sunrise" ng-selected="program.start_trigger_method == 'sunrise'">Sunrise</option>
-            </select>
-
-            <fieldset id="start-time-group" class="program-trigger-group">
-                <legend>Start time</legend>
-                <input id="start-time" type="text" class="input-time" name="start-time" value="{= program.start_time =}"
-                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
-                       onchange="track_change()">
-            </fieldset>
-
-            <fieldset id="start-offset-group" class="program-trigger-group">
-                <legend>Start Offset</legend>
-                <input type="text" id="start-offset" class="input-number" name="start-offset"
-                       value="{= program.start_offset =}"
-                       onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
-                       onchange="track_change()">
-                <span> = </span>
-                <span id="start-offset-time" class="offset-time">TIME</span>
-            </fieldset>
-
-            <fieldset id="start-randomize-group" class="program-trigger-group">
-                <legend>Randomize</legend>
-                <input type="checkbox" class="start-randomize" id="start-randomize" name="start-randomize" value="1"
-                       onchange="track_change()">Randomize +/-
-                <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount"
-                       value="{= program.start_randomize_amount =}"
-                       onchange="track_change()">
-                <br/>
-            </fieldset>
+        <fieldset id="stop-time-group" class="program-trigger-group" ng-show="program.stop_trigger_method == 'clock-time'">
+            <legend>Stop time</legend>
+            <input id="stop-time" type="text" class="input-time" name="stop-time" value="{= program.stop_time =}"
+                   onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
+                   onchange="track_change()">
         </fieldset>
 
+        <fieldset id="stop-offset-group" class="program-trigger-group">
+            <legend>Stop Offset</legend>
+            <input type="text" id="stop-offset" class="input-number" name="stop-offset"
+                   value="{= program.stop_offset =}"
+                   onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
+                   onchange="track_change()">
+            <span> = </span>
+            <span id="stop-offset-time" class="offset-time">TIME</span>
+        </fieldset>
+
+        <fieldset id="stop-randomize-group" class="program-trigger-group">
+            <legend>Randomize</legend>
+            <input type="checkbox" class="stop-randomize" id="stop-randomize"
+                   onchange="track_change()" ng-model="program.stop_randomize"
+                   ng-true-value="1" ng-false-value="0">Randomize +/-
+            <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount"
+                   onchange="track_change()" ng-model="program.stop_randomize_amount">
+            <br/>
+        </fieldset>
+    </fieldset>
+
+    <div class="clear"></div>
+
+    {#
+    Start and Stop action group boxes
+    #}
+
+    <fieldset class="start-action-group">
+        <legend>Start Action</legend>
+        {# ******************* #}
         {#
-        Stop trigger group box
+        {{ program_actions("start-action", "start-action", "start-action", program.start_action) }}
         #}
+        <select id="start-action" class="start-action" name="start-action" onchange="track_change()"
+                ng-model="program.start_action">
+            <option value="none" ng-selected="program.start_action == 'none'">None</option>
+            <option value="on" ng-selected="program.start_action == 'on'">On</option>
+            <option value="off" ng-selected="program.start_action == 'off'">Off</option>
+        </select>
+    </fieldset>
 
-        <fieldset class="stop-trigger-group">
-            <legend>Stop/Off Trigger</legend>
-
-            {# ******************* #}
-            {# Stop trigger macro #}
-            {#
-            {{ trigger_methods("stop-trigger-method", "stop-trigger-method", "stop-trigger-method",
-                program.stop_trigger_method, "stopTriggerChanged()") }}
-            #}
-            <select id="stop-trigger-method" class="sop" name="stop-trigger-method"
-                    onchange="stopTriggerChanged()" ng-model="progra.stop_trigger_method">
-                <option value="none" ng-selected="program.stop_trigger_method == 'none'">None</option>
-                <option value="clock-time" ng-selected="program.stop_trigger_method == 'clock-time'">Clock-time</option>
-                <option value="sunset" ng-selected="program.stop_trigger_method == 'sunset'">Sunset</option>
-                <option value="sunrise" ng-selected="program.stop_trigger_method == 'sunrise'">Sunrise</option>
-            </select>
-
-            <fieldset id="stop-time-group" class="program-trigger-group">
-                <legend>Stop time</legend>
-                <input id="stop-time" type="text" class="input-time" name="stop-time" value="{= program.stop_time =}"
-                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
-                       onchange="track_change()">
-            </fieldset>
-
-            <fieldset id="stop-offset-group" class="program-trigger-group">
-                <legend>Stop Offset</legend>
-                <input type="text" id="stop-offset" class="input-number" name="stop-offset"
-                       value="{= program.stop_offset =}"
-                       onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
-                       onchange="track_change()">
-                <span> = </span>
-                <span id="stop-offset-time" class="offset-time">TIME</span>
-            </fieldset>
-
-            <fieldset id="stop-randomize-group" class="program-trigger-group">
-                <legend>Randomize</legend>
-                <input type="checkbox" class="stop-randomize" id="stop-randomize" name="stop-randomize" value="1"
-                       onchange="track_change()" >Randomize +/-
-                <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount"
-                       value="{= program.stop_randomize_amount =}" onchange="track_change()">
-                <br/>
-            </fieldset>
-        </fieldset>
-
-        <div class="clear"></div>
-
+    <fieldset class="stop-action-group">
+        <legend>Stop Action</legend>
+        {# ******************* #}
         {#
-        Start and Stop action group boxes
+        {{ program_actions("stop-action", "stop-action", "stop-action", program.stop_action) }}
         #}
+        <select id="stop-action" class="stop-action" name="stop-action" onchange="track_change()"
+                ng-model="program.stop_action">
+            <option value="none" ng-selected="program.stop_action == 'none'">None</option>
+            <option value="on" ng-selected="program.stop_action == 'on'">On</option>
+            <option value="off" ng-selected="program.stop_action == 'off'">Off</option>
+        </select>
+    </fieldset>
 
-        <fieldset class="start-action-group">
-            <legend>Start Action</legend>
-            {# ******************* #}
-            {#
-            {{ program_actions("start-action", "start-action", "start-action", program.start_action) }}
-            #}
-            <select id="start-action" class="start-action" name="start-action" onchange="track_change()"
-                    ng-model="program.start_action">
-                <option value="none" ng-selected="program.start_action == 'none'">None</option>
-                <option value="on" ng-selected="program.start_action == 'on'">On</option>
-                <option value="off" ng-selected="program.start_action == 'off'">Off</option>
-            </select>
-        </fieldset>
-
-        <fieldset class="stop-action-group">
-            <legend>Stop Action</legend>
-            {# ******************* #}
-            {#
-            {{ program_actions("stop-action", "stop-action", "stop-action", program.stop_action) }}
-            #}
-            <select id="stop-action" class="stop-action" name="stop-action" onchange="track_change()"
-                    ng-model="program.stop_action">
-                <option value="none" ng-selected="program.stop_action == 'none'">None</option>
-                <option value="on" ng-selected="program.stop_action == 'on'">On</option>
-                <option value="off" ng-selected="program.stop_action == 'off'">Off</option>
-            </select>
-        </fieldset>
-
-        <div class="clear"></div>
-        <button id="save" class="edit-button" type="button" ng-click="save_program()">Save</button>
-        <button id="cancel" class="edit-button" type="button" ng-click="cancel()">Cancel</button>
-    {#</form>#}
+    <div class="clear"></div>
+    <button id="save" class="edit-button" type="button" ng-click="save_program()">Save</button>
+    <button id="cancel" class="edit-button" type="button" ng-click="cancel()">Cancel</button>
 
     <div class="clear"></div>
 

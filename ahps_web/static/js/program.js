@@ -25,6 +25,7 @@ app.controller('programController', function($scope, $http, $sce) {
 
     $scope.title = "AHPS Web";
     $scope.error = "";
+    $scope.message = "";
 
     /* More initialization*/
     get_program_data(update_program);
@@ -67,25 +68,26 @@ app.controller('programController', function($scope, $http, $sce) {
             }
         }
 
-        /*  Initialize randomize checkboxes */
-        if ($scope.program.start_randomize != 0)
-        {
-            $("#start-randomize").attr("checked","checked");
-        }
-        if ($scope.program.stop_randomize != 0)
-        {
-            $("#stop-randomize").attr("checked","checked");
-        }
-
         /* Initialize start and stop triggers. */
         startTriggerChanged();
         stopTriggerChanged();
     };
 
     $scope.save_program = function() {
+        // Translate day array to days string
+        var dstr = "";
+        weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+        for (i = 0; i < 7; i++) {
+            dstr += $scope.program.day[i] ? weekdays[i] : ".";
+        }
+        $scope.program.days = dstr;
+
+        // Save the program
         $http.post('/module/program/' + String($scope.program.programid), {"data": $scope.program}).
             success(function(data, status, headers, config) {
                 // Success
+                $scope.error = "";
+                $scope.message = data;
             }).
             error(function(data, status, headers, config) {
                 if (data && (data.message)) {
