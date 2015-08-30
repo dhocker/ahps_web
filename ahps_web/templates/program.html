@@ -18,50 +18,15 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<script type="text/javascript" src="{{ url_for('static', filename='watermark/watermark.js') }}"></script>
-
-    <script type="text/javascript">
-
-    </script>
 {% endblock %}
-
-{# Macros for the program actions that can be assigned to a start or stop event #}
-
-{% macro select_option(value, selected_value) -%}
-    <p>{{ selected_value }}</p>
-    {% if value == selected_value %}
-        <option value="{{ value }}" selected="true">{{ value | capitalize() }}</option>
-    {% else %}
-        <option value="{{ value }}">{{ value | capitalize() }}</option>
-    {% endif %}
-{%- endmacro %}
-
-{% macro program_actions(id, class, name, selected_value) %}
-    <select id="{{ id }}" class="{{ class }}" name="{{ name }}" onchange="track_change()">
-        {{ select_option("none", selected_value) }}
-        {{ select_option("on", selected_value) }}
-        {{ select_option("off", selected_value) }}
-    </select>
-{% endmacro %}
-
-{# Macros for generating the start/stop trigger method #}
-
-{% macro trigger_methods(id, class, name, selected_value, onchange) %}
-    <select id="{{ id }}" class="{{ class }}" name="{{ name }}" onchange="javascript:{{ onchange }}">
-        {{ select_option("none", selected_value) }}
-        {{ select_option("clock-time", selected_value) }}
-        {{ select_option("sunset", selected_value) }}
-        {{ select_option("sunrise", selected_value) }}
-    </select>
-{% endmacro %}
 
 {% block body %}
     {# The id of the program being edited #}
     <input type="hidden" id="programid" value="{{ programid }}">
 
     <h2>Module: {= module.name =} - Program:
-        <input type="text" class="input-program-name" id="program-name" name="program-name" value="{= program.name =}"
-                onchange="track_change()" >
+        <input type="text" class="input-program-name" id="program-name" name="program-name" ng-model="program.name"
+                ng-change="track_change()" >
     </h2>
 
     {#
@@ -109,7 +74,7 @@
             program.start_trigger_method, "startTriggerChanged()") }}
         #}
         <select id="start-trigger-method" class="start-trigger-method" name="start-trigger-method"
-                onchange="startTriggerChanged()" ng-model="program.start_trigger_method">
+                ng-change="startTriggerChanged()" ng-model="program.start_trigger_method">
             <option value="none" ng-selected="program.start_trigger_method == 'none'">None</option>
             <option value="clock-time" ng-selected="program.start_trigger_method == 'clock-time'">Clock-time</option>
             <option value="sunset" ng-selected="program.start_trigger_method == 'sunset'">Sunset</option>
@@ -118,19 +83,19 @@
 
         <fieldset id="start-time-group" class="program-trigger-group" ng-show="program.start_trigger_method == 'clock-time'">
             <legend>Start time</legend>
-            <input id="start-time" type="text" class="input-time" name="start-time" value="{= program.start_time =}"
-                   onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+            <input id="start-time" type="text" class="input-time" name="start-time" ng-model="program.start_time"
+                   ng-blur="update_effective_start_time()"
                    onchange="track_change()">
         </fieldset>
 
         <fieldset id="start-offset-group" class="program-trigger-group">
             <legend>Start Offset</legend>
             <input type="text" id="start-offset" class="input-number" name="start-offset"
-                   value="{= program.start_offset =}"
-                   onblur='show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time")'
+                   ng-model="program.start_offset"
+                   ng-blur="update_effective_start_time()"
                    onchange="track_change()">
             <span> = </span>
-            <span id="start-offset-time" class="offset-time">TIME</span>
+            <span id="start-offset-time" class="offset-time">{= calc_start_time =}</span>
         </fieldset>
 
         <fieldset id="start-randomize-group" class="program-trigger-group">
@@ -158,7 +123,7 @@
             program.stop_trigger_method, "stopTriggerChanged()") }}
         #}
         <select id="stop-trigger-method" class="sop" name="stop-trigger-method"
-                onchange="stopTriggerChanged()" ng-model="program.stop_trigger_method">
+                ng-change="stopTriggerChanged()" ng-model="program.stop_trigger_method">
             <option value="none" ng-selected="program.stop_trigger_method == 'none'">None</option>
             <option value="clock-time" ng-selected="program.stop_trigger_method == 'clock-time'">Clock-time</option>
             <option value="sunset" ng-selected="program.stop_trigger_method == 'sunset'">Sunset</option>
@@ -167,28 +132,28 @@
 
         <fieldset id="stop-time-group" class="program-trigger-group" ng-show="program.stop_trigger_method == 'clock-time'">
             <legend>Stop time</legend>
-            <input id="stop-time" type="text" class="input-time" name="stop-time" value="{= program.stop_time =}"
-                   onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
-                   onchange="track_change()">
+            <input id="stop-time" type="text" class="input-time" name="stop-time" ng-model="program.stop_time"
+                   ng-blur="update_effective_stop_time()"
+                   ng-change="track_change()">
         </fieldset>
 
         <fieldset id="stop-offset-group" class="program-trigger-group">
             <legend>Stop Offset</legend>
             <input type="text" id="stop-offset" class="input-number" name="stop-offset"
-                   value="{= program.stop_offset =}"
-                   onblur='show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time")'
-                   onchange="track_change()">
+                   ng-model="program.stop_offset"
+                   ng-blur="update_effective_stop_time()"
+                   ng-change="track_change()">
             <span> = </span>
-            <span id="stop-offset-time" class="offset-time">TIME</span>
+            <span id="stop-offset-time" class="offset-time">{= calc_stop_time =}</span>
         </fieldset>
 
         <fieldset id="stop-randomize-group" class="program-trigger-group">
             <legend>Randomize</legend>
             <input type="checkbox" class="stop-randomize" id="stop-randomize"
-                   onchange="track_change()" ng-model="program.stop_randomize"
+                   ng-change="track_change()" ng-model="program.stop_randomize"
                    ng-true-value="1" ng-false-value="0">Randomize +/-
             <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount"
-                   onchange="track_change()" ng-model="program.stop_randomize_amount">
+                   ng-change="track_change()" ng-model="program.stop_randomize_amount">
             <br/>
         </fieldset>
     </fieldset>
@@ -205,7 +170,7 @@
         {#
         {{ program_actions("start-action", "start-action", "start-action", program.start_action) }}
         #}
-        <select id="start-action" class="start-action" name="start-action" onchange="track_change()"
+        <select id="start-action" class="start-action" name="start-action" ng-change="track_change()"
                 ng-model="program.start_action">
             <option value="none" ng-selected="program.start_action == 'none'">None</option>
             <option value="on" ng-selected="program.start_action == 'on'">On</option>
@@ -219,7 +184,7 @@
         {#
         {{ program_actions("stop-action", "stop-action", "stop-action", program.stop_action) }}
         #}
-        <select id="stop-action" class="stop-action" name="stop-action" onchange="track_change()"
+        <select id="stop-action" class="stop-action" name="stop-action" ng-change="track_change()"
                 ng-model="program.stop_action">
             <option value="none" ng-selected="program.stop_action == 'none'">None</option>
             <option value="on" ng-selected="program.stop_action == 'on'">On</option>

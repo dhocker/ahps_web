@@ -69,8 +69,15 @@ app.controller('programController', function($scope, $http, $sce) {
         }
 
         /* Initialize start and stop triggers. */
-        startTriggerChanged();
-        stopTriggerChanged();
+        $scope.startTriggerChanged();
+        $scope.stopTriggerChanged();
+        window.onbeforeunload = null;
+
+        /* Initialize sunset/sunrise times */
+        //show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time");
+        //show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time");
+        $scope.update_effective_start_time();
+        $scope.update_effective_stop_time();
     };
 
     $scope.save_program = function() {
@@ -88,6 +95,7 @@ app.controller('programController', function($scope, $http, $sce) {
                 // Success
                 $scope.error = "";
                 $scope.message = data;
+                window.onbeforeunload = null;
             }).
             error(function(data, status, headers, config) {
                 if (data && (data.message)) {
@@ -100,6 +108,8 @@ app.controller('programController', function($scope, $http, $sce) {
     };
 
     $scope.cancel = function() {
+        window.onbeforeunload = null;
+        window.location.replace("/module/" + String($scope.program.moduleid) + "/programs/page");
     };
 
     $scope.set_weekdays = function() {
@@ -113,6 +123,158 @@ app.controller('programController', function($scope, $http, $sce) {
             $scope.program.day[i] = $scope.program.day[i] ? 0 : 1;
         }
     }
+
+    $scope.update_effective_start_time = function() {
+        $scope.calc_start_time = calculate_effective_time($scope.program.start_trigger_method, $scope.program.start_offset, $scope.program.start_time);
+    };
+
+    $scope.update_effective_stop_time = function() {
+        $scope.calc_stop_time = calculate_effective_time($scope.program.stop_trigger_method, $scope.program.stop_offset, $scope.program.stop_time);
+    };
+
+    $scope.startTriggerChanged = function() {
+        track_change();
+        // Cases for each trigger method. Show/hide group boxes.
+        triggerMethod = $("#start-trigger-method").val();
+        switch (triggerMethod.toLowerCase())
+        {
+            case "none":
+                $("#start-time-group").hide();
+                $("#start-offset-group").hide();
+                $("#start-randomize-group").hide();
+                break;
+            case "clock-time":
+                $("#start-time-group").show();
+                $("#start-offset-group").show();
+                $("#start-randomize-group").show();
+                break;
+            case "sunset":
+                $("#start-time-group").hide();
+                $("#start-offset-group").show();
+                $("#start-randomize-group").show();
+                break;
+            case "sunrise":
+                $("#start-time-group").hide();
+                $("#start-offset-group").show();
+                $("#start-randomize-group").show();
+                break;
+        }
+
+        $scope.update_effective_start_time();
+    }
+
+    $scope.stopTriggerChanged = function() {
+        track_change();
+        // Cases for each trigger method. Show/hide group boxes.
+        triggerMethod = $("#stop-trigger-method").val();
+        switch (triggerMethod.toLowerCase())
+        {
+            case "none":
+                $("#stop-time-group").hide();
+                $("#stop-offset-group").hide();
+                $("#stop-randomize-group").hide();
+                break;
+            case "clock-time":
+                $("#stop-time-group").show();
+                $("#stop-offset-group").show();
+                $("#stop-randomize-group").show();
+                break;
+            case "sunset":
+                $("#stop-time-group").hide();
+                $("#stop-offset-group").show();
+                $("#stop-randomize-group").show();
+                break;
+            case "sunrise":
+                $("#stop-time-group").hide();
+                $("#stop-offset-group").show();
+                $("#stop-randomize-group").show();
+                break;
+        }
+
+        $scope.update_effective_stop_time();
+    };
+    /*
+    For sunset and sunrise base triggers, show the effective time.
+    the sunset/sunrise times are in hidden elements. The start/stop
+    offset is added to the sunrise/sunset time to obtain the
+    effective time. Does not apply to clock-time trigger.
+    */
+    function calculate_effective_time(method, offset, clock_time){
+        if (method.toLowerCase() == "sunset"){
+            var sunset = get_sunset();
+            var sunset_offset = new Date(sunset.getTime() + offset * 60 * 1000);
+            return sunset_offset.toLocaleTimeString();
+            //$time.text(format_datetime(sunset));
+        }
+        else if (method.toLowerCase() == "sunrise"){
+            var sunrise = get_sunrise();
+            var sunrise_offset = new Date(sunrise.getTime() + offset * 60 *1000);
+            return sunrise_offset.toLocaleTimeString();
+            //$time.text(format_datetime(sunrise));
+        }
+        else {
+            /*
+            TODO Solve this problem...
+            Unfortunately, the clock-time string is not in a Javascript friendly format.
+            As a result, we have to manipulate the string to get it from a format of
+            HH:mm AM to yyyy-mm-ddThh:mm (ISO format). The HH:mm AM format uses 12:00 AM
+            to represent midnight, another complicating factor.
+            */
+
+            // Clock time as a Date
+            var ctd = convert_time(clock_time);
+            ctd.setMinutes(ctd.getMinutes() + offset);
+
+            return ctd.toLocaleTimeString();
+        }
+    };
+
+    // Convert a time string hh:mm am/pm to a Date instance
+    function convert_time(timetext) {
+        var pat = /(\d{1,2}):(\d{1,2}) *(am|pm)/i;
+        var m = pat.exec(timetext);
+        var hr = parseInt(m[1]);
+        var min = parseInt(m[2]);
+        var ampm = m[3].toLowerCase();
+        if (hr == 12 && ampm == "am") {
+            hr = 0;
+        }
+        if (ampm == "pm" && hr < 12) {
+            hr += 12;
+        }
+        dt = new Date();
+        dt.setHours(hr);
+        dt.setMinutes(min);
+        dt.setSeconds(0);
+        return dt;
+    };
+
+    /* Retrieve the sunset time as a Date object */
+    function get_sunset(){
+        var s = $("#sunset").val();
+        // Format: 2015-08-30T19:47:41-05:00
+        return new Date(Date.parse(s));
+    };
+
+    /* Retrieve the sunrise time as a Date object */
+    function get_sunrise(){
+        var s = $("#sunrise").val();
+        // Format: 2015-08-30T06:58:46-05:00
+        return new Date(Date.parse(s));
+    };
+
+    function unsaved_changes_warning(e){
+        e.returnValue = "You have unsaved changes on this page.";
+        /*
+        Some browsers (e.g. Chrome, Safari will display the returned text.
+        Firefox does not display the returned text.
+        */
+        return e.returnValue;
+    };
+
+    function track_change(){
+        window.onbeforeunload = unsaved_changes_warning;
+    };
 });
 
 /*
@@ -132,89 +294,11 @@ $(document).ready(function() {
         });
     $("#start-time").timeEntry();
     $("#stop-time").timeEntry();
-
-    /* Initialize sunset/sunrise times */
-    show_offset_time("start-trigger-method", "start-offset", "start-offset-time", "start-time");
-    show_offset_time("stop-trigger-method", "stop-offset", "stop-offset-time", "stop-time");
-
-    /* Set up watermarks in program name field */
-    $('#program-name').watermark({text:'Enter a program name...',color: '#c0c0c0'});
-
-    /* Reset change tracking so initialization changes don't trigger it */
-    window.onbeforeunload = null;
 });
-
-function setWeekdays(){
-    $('.weekday').each(function(){ this.checked = !this.checked; });
-    track_change();
-}
-
-function setWeekenddays(){
-    $('.weekendday').each(function(){ this.checked = !this.checked; });
-    track_change();
-}
 
 function showHideFieldset(name){
     fs_name = "#" + name;
     $(fs_name).is(":visible") ? $(fs_name).hide() : $(fs_name).show();
-}
-
-function startTriggerChanged(){
-    track_change();
-    // Cases for each trigger method. Show/hide group boxes.
-    triggerMethod = $("#start-trigger-method").val();
-    switch (triggerMethod.toLowerCase())
-    {
-        case "none":
-            $("#start-time-group").hide();
-            $("#start-offset-group").hide();
-            $("#start-randomize-group").hide();
-            break;
-        case "clock-time":
-            $("#start-time-group").show();
-            $("#start-offset-group").show();
-            $("#start-randomize-group").show();
-            break;
-        case "sunset":
-            $("#start-time-group").hide();
-            $("#start-offset-group").show();
-            $("#start-randomize-group").show();
-            break;
-        case "sunrise":
-            $("#start-time-group").hide();
-            $("#start-offset-group").show();
-            $("#start-randomize-group").show();
-            break;
-    }
-}
-
-function stopTriggerChanged(){
-    track_change();
-    // Cases for each trigger method. Show/hide group boxes.
-    triggerMethod = $("#stop-trigger-method").val();
-    switch (triggerMethod.toLowerCase())
-    {
-        case "none":
-            $("#stop-time-group").hide();
-            $("#stop-offset-group").hide();
-            $("#stop-randomize-group").hide();
-            break;
-        case "clock-time":
-            $("#stop-time-group").show();
-            $("#stop-offset-group").show();
-            $("#stop-randomize-group").show();
-            break;
-        case "sunset":
-            $("#stop-time-group").hide();
-            $("#stop-offset-group").show();
-            $("#stop-randomize-group").show();
-            break;
-        case "sunrise":
-            $("#stop-time-group").hide();
-            $("#stop-offset-group").show();
-            $("#stop-randomize-group").show();
-            break;
-    }
 }
 
 /* Valid all inputs on submit */
@@ -245,24 +329,6 @@ function validate_numeric_control(control_id, name){
         return false;
     }
     return true;
-}
-
-function submit_form(){
-    if (validate_inputs()){
-        $("#program-form").submit();
-    }
-}
-
-/* Retrieve the sunset time as a Date object */
-function get_sunset(){
-    var s = $("#sunset").val();
-    return new Date(Date.parse(s));
-}
-
-/* Retrieve the sunrise time as a Date object */
-function get_sunrise(){
-    var s = $("#sunrise").val();
-    return new Date(Date.parse(s));
 }
 
 /* Format date/time */
@@ -297,13 +363,14 @@ function show_offset_time(method_id, offset_id, time_id, clock_time_id){
 
     var offset = parseInt($offset.val());
 
-    if ($method.val() == "sunset"){
+    var method = $method.val().toLowerCase();
+    if (method == "sunset"){
         var sunset = get_sunset();
         sunset.setMinutes(sunset.getMinutes() + offset);
         $time.text(sunset.toLocaleTimeString());
         //$time.text(format_datetime(sunset));
     }
-    else if ($method.val() == "sunrise"){
+    else if (method == "sunrise"){
         var sunrise = get_sunrise();
         sunrise.setMinutes(sunrise.getMinutes() + offset);
         $time.text(sunrise.toLocaleTimeString());
@@ -335,3 +402,4 @@ function show_offset_time(method_id, offset_id, time_id, clock_time_id){
     }
 
 }
+
