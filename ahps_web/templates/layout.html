@@ -33,25 +33,8 @@
         <script type="text/javascript" src="{{ url_for('static', filename='timeentry/jquery.plugin.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='timeentry/jquery.timeentry.min.js') }}"></script>
 
-        {# Common Javascript functions #}
-        <script type="text/javascript">
-
-            function unsaved_changes_warning(e){
-                e.returnValue = "You have unsaved changes on this page.";
-                {#
-                Some browsers (e.g. Chrome, Safari will display the returned text.
-                Firefox does not display the returned text.
-                #}
-                return e.returnValue;
-            }
-
-            function track_change(){
-                window.onbeforeunload = unsaved_changes_warning;
-            }
-
-        </script>
-
-        {% block head %}{% endblock %}
+        {% block head %}
+        {% endblock %}
     </head>
 
     <body class="page">
@@ -93,6 +76,6 @@
     </body>
 
     {# Include page specific angularjs scripts here #}
-    {% block angularjs%}
+    {% block angularjs %}
     {% endblock %}
 </html>

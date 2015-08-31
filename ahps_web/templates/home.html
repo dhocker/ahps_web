@@ -58,12 +58,12 @@
 
         <div id="room-name-{= room.roomid =}"  class="name">
             <input type="text" id="room-name-text-{= room.roomid =}" class="room-name" name="room-name" value="{= room.name =}"
-                    onchange="track_change()" ng-model="room.name"/>
+                    ng-change="track_change()" ng-model="room.name"/>
         </div>
 
         <div class="description">
             <input type="text" id="room-desc-{= room.roomid =}" class="room-description" name="room-description" value="{= room.description =}"
-                    onchange="track_change()" ng-model="room.description"/>
+                    ng-change="track_change()" ng-model="room.description"/>
         </div>
 
         <button ng-click="save_room(room)" class="edit-button" name="save-button"

@@ -26,7 +26,6 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
     $scope.title = "AHPS Web";
     $scope.error = "";
     $scope.message = "";
-    // TODO Implement
     $scope.programs = [];
 
     // Gets the list of programs for the current module

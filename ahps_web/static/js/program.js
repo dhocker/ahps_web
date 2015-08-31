@@ -20,12 +20,14 @@
 /*
     Program page controller
 */
-app.controller('programController', function($scope, $http, $sce) {
+app.controller('programController', function($scope, $http, $sce, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
     $scope.error = "";
     $scope.message = "";
+
+    $scope.track_change = Tracker.track_change;
 
     /* More initialization*/
     get_program_data(update_program);

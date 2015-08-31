@@ -20,12 +20,15 @@
 /*
     Add appliance module controller
 */
-app.controller('addApplianceController', function($scope, $http) {
+app.controller('addApplianceController', function($scope, $http, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
     $scope.error = "";
     $scope.message = "";
+
+    $scope.track_change = Tracker.track_change;
+
     // Scaffold for house and device code includes
     $scope.module = {};
     $scope.module["name"] = "";

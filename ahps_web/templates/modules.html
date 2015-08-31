@@ -37,7 +37,7 @@
                 {% include 'module_types.html' %}
                 <br/>
                 <input type="text" id="module-name-text-{= module.moduleid =}" class="module-name"
-                       value="{= module.name =}" ng-model="module.name" onchange="track_change()"/>
+                       value="{= module.name =}" ng-model="module.name" ng-change="track_change()"/>
             </div>
             <div class="hdc">
                 <div ng-show="module.module_type.toLowerCase() == 'house'">
@@ -55,7 +55,7 @@
                         <span class="hdc-text">Dim:</span>
                         <input type="text" id="dim-amount-{= module.moduleid =}" class="input-number"
                                  value="{= module.dim_amount =}"
-                                 onchange="track_change()" ng-model="module.dim_amount"/>
+                                 ng-change="track_change()" ng-model="module.dim_amount"/>
                     </span>
                     <span ng-show="module.module.type.toLowerCase() == 'appliance'">
                         <input type="hidden" id="dim-amount-{= module.moduleid =}" value="{= module.dim_amount =}"/>

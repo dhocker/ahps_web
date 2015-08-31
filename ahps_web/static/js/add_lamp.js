@@ -20,11 +20,14 @@
 /*
     Add lamp module page controller
 */
-app.controller('addLampController', function($scope, $http) {
+app.controller('addLampController', function($scope, $http, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
     $scope.error = "";
+
+    $scope.track_change = Tracker.track_change;
+
     // Scaffold for house and device code includes
     $scope.module = {};
     $scope.module["name"] = "";

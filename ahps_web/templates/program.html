@@ -42,19 +42,19 @@
     <fieldset id="days-of-week" class="days-of-week">
         <legend>Days</legend>
         {# The initial state of the checkboxes is set by Javascript above #}
-        <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" onchange="track_change()"
+        <input type="checkbox" class="weekday" id="dow0" name="dow0" value="0" ng-change="track_change()"
                ng-checked="program.day[0]" ng-model="program.day[0]" ng-true-value="1" ng-false-value="0">Monday<br/>
-        <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" onchange="track_change()"
+        <input type="checkbox" class="weekday" id="dow1" name="dow1" value="1" ng-change="track_change()"
                ng-checked="program.day[1]" ng-model="program.day[1]" ng-true-value="1" ng-false-value="0">Tuesday<br/>
-        <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" onchange="track_change()"
+        <input type="checkbox" class="weekday" id="dow2" name="dow2" value="2" ng-change="track_change()"
                ng-checked="program.day[2]" ng-model="program.day[2]" ng-true-value="1" ng-false-value="0">Wednesday<br/>
-        <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" onchange="track_change()"
+        <input type="checkbox" class="weekday" id="dow3" name="dow3" value="3" ng-change="track_change()"
                ng-checked="program.day[3]" ng-model="program.day[3]" ng-true-value="1" ng-false-value="0">Thursday<br/>
-        <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" onchange="track_change()"
+        <input type="checkbox" class="weekday" id="dow4" name="dow4" value="4" ng-change="track_change()"
                ng-checked="program.day[4]" ng-model="program.day[4]" ng-true-value="1" ng-false-value="0">Friday<br/>
-        <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" onchange="track_change()"
+        <input type="checkbox" class="weekendday" id="dow5" name="dow5" value="5" ng-change="track_change()"
                ng-checked="program.day[5]" ng-model="program.day[5]" ng-true-value="1" ng-false-value="0">Saturday<br/>
-        <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" onchange="track_change()"
+        <input type="checkbox" class="weekendday" id="dow6" name="dow6" value="6" ng-change="track_change()"
                ng-checked="program.day[6]" ng-model="program.day[6]" ng-true-value="1" ng-false-value="0">Sunday<br/>
 
         <button type="button" class="edit-button" ng-click="set_weekdays()">Week Days</button>
@@ -85,7 +85,7 @@
             <legend>Start time</legend>
             <input id="start-time" type="text" class="input-time" name="start-time" ng-model="program.start_time"
                    ng-blur="update_effective_start_time()"
-                   onchange="track_change()">
+                   ng-change="track_change()">
         </fieldset>
 
         <fieldset id="start-offset-group" class="program-trigger-group">
@@ -93,7 +93,7 @@
             <input type="text" id="start-offset" class="input-number" name="start-offset"
                    ng-model="program.start_offset"
                    ng-blur="update_effective_start_time()"
-                   onchange="track_change()">
+                   ng-change="track_change()">
             <span> = </span>
             <span id="start-offset-time" class="offset-time">{= calc_start_time =}</span>
         </fieldset>
@@ -101,10 +101,10 @@
         <fieldset id="start-randomize-group" class="program-trigger-group">
             <legend>Randomize</legend>
             <input type="checkbox" class="start-randomize" id="start-randomize"
-                   onchange="track_change()" ng-model="program.start_randomize"
+                   ng-change="track_change()" ng-model="program.start_randomize"
                    ng-true-value="1" ng-false-value="0">Randomize +/-
             <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount"
-                   onchange="track_change()" ng-model="program.start_randomize_amount">
+                   ng-change="track_change()" ng-model="program.start_randomize_amount">
             <br/>
         </fieldset>
     </fieldset>

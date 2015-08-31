@@ -20,12 +20,15 @@
 /*
     Home page app controller
 */
-app.controller('homeController', function($scope, $http) {
+app.controller('homeController', function($scope, $http, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
     $scope.error = "";
     $scope.message = "";
+
+    $scope.track_change = Tracker.track_change;
+
     get_rooms();
 
     // Save room data (name and description)
@@ -37,7 +40,7 @@ app.controller('homeController', function($scope, $http) {
                 }).
             success(function(data, status, headers, config) {
                 // Room was saved
-                window.onbeforeunload=null;
+                Tracker.reset_change();
             }).
             error(function(data, status, headers, config) {
                 $scope.error = "Host communication error";
@@ -152,9 +155,6 @@ $(document).ready(function() {
                 },
         }
     });
-
-    // Reset change tracking to avoid false positives #}
-    window.onbeforeunload=null;
 
 });
 

@@ -20,7 +20,7 @@
 /*
     Home page app controller
 */
-app.controller('modulesController', function($scope, $http) {
+app.controller('modulesController', function($scope, $http, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
@@ -28,6 +28,8 @@ app.controller('modulesController', function($scope, $http) {
     $scope.message = "";
     $scope.roomid = $("#roomid").val();
     $scope.room_modules = [];
+
+    $scope.track_change = Tracker.track_change;
 
     /* Get all modules for the current house */
     $scope.get_modules = function() {

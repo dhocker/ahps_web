@@ -20,13 +20,15 @@
 /*
     Add a new room controller
 */
-app.controller('addroomController', function($scope, $http) {
+app.controller('addroomController', function($scope, $http, Tracker) {
     // Initialization
 
     $scope.title = "AHPS Web";
     $scope.name = "";
     $scope.description = "";
     $scope.error = "";
+
+    $scope.track_change = Tracker.track_change;
 
     $scope.add_room = function() {
         if ($scope.name == "") {

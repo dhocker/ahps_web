@@ -18,7 +18,7 @@
 {# Includable file for generating a device code combobox #}
 
 <select name="device-code-{= module.moduleid =}" id="device-code-{= module.moduleid =}" class="input-select"
-        ng-model="module.device_code" onchange="track_change()">
+        ng-model="module.device_code" ng-change="track_change()">
     <option value="{= dc =}" ng-repeat="dc in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']"
             ng-selected="dc == module.device_code"
     >{= dc =}

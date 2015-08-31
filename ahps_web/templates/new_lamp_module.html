@@ -21,7 +21,7 @@
 
     <div class="input-form">
         <label for="name" class="input-label">*Module name:</label>
-        <input id="name" type="text" class="input-text" autofocus="True" onchange="track_change()" ng-model="module.name">
+        <input id="name" type="text" class="input-text" autofocus="True" ng-change="track_change()" ng-model="module.name">
 
         <label for="house_code" class="input-label">House code:</label>
         {% include 'house_codes.html' %}
@@ -31,7 +31,7 @@
 
         <label for="dim-amount" class="input-label">Dim amount:</label>
         <input id="dim-amount" type="text" class="input-text" value="0" autofocus="True"
-               onchange="track_change()" ng-model="module.dim_amount"/>
+               ng-change="track_change()" ng-model="module.dim_amount"/>
 
         <br/>
         <button class="edit-button" value="{{ roomid }}" ng-click="save_module({{ roomid }})">Save</button>
