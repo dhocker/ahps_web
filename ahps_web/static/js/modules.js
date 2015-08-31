@@ -25,6 +25,7 @@ app.controller('modulesController', function($scope, $http) {
 
     $scope.title = "AHPS Web";
     $scope.error = "";
+    $scope.message = "";
     $scope.roomid = $("#roomid").val();
     $scope.room_modules = [];
 
@@ -75,6 +76,7 @@ app.controller('modulesController', function($scope, $http) {
             success(function(data, status, headers, config) {
                 // Success
                 $scope.error = "";
+                $scope.message = "Saved";
                 window.onbeforeunload = null;
             }).
             error(function(data, status, headers, config) {

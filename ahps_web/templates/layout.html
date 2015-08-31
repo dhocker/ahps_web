@@ -54,7 +54,7 @@
         {% block head %}{% endblock %}
     </head>
 
-    <div class="page">
+    <body class="page">
         <h1><img class="logo" src="{{ url_for('static', filename='AtHomeX10.png') }}" />{= title =}</h1>
         <div class="metanav">
             {% if current_user.is_authenticated() %}
@@ -77,15 +77,6 @@
             <p class="success"><strong>Success:</strong> {= message =}</p>
         </div>
 
-        {# TODO Eventually this Flash based error display can be removed #}
-        {% if error %}
-            <p class="error"><strong>Error:</strong> {{ error }}</p>
-        {% endif %}
-
-        {% for category, message in get_flashed_messages(with_categories=true) %}
-            <div class="flash">{{ category | capitalize() }}: {{ message }}</div>
-        {% endfor %}
-
         {% block body %}
         {% endblock %}
 
@@ -99,7 +90,7 @@
                 <a href="{{ url_for('about') }}">AtHomePowerlineServer Web {{ version }} -- Copyright 2014 by Dave Hocker</a>
             </div>
         </div>
-    </div>
+    </body>
 
     {# Include page specific angularjs scripts here #}
     {% block angularjs%}

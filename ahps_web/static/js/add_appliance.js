@@ -25,6 +25,7 @@ app.controller('addApplianceController', function($scope, $http) {
 
     $scope.title = "AHPS Web";
     $scope.error = "";
+    $scope.message = "";
     // Scaffold for house and device code includes
     $scope.module = {};
     $scope.module["name"] = "";
