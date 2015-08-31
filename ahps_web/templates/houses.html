@@ -22,84 +22,49 @@
     <div id="dialog" title="Confirmation">
         <p id="dialog-text">Remove the selected house?</p>
     </div>
-    <script type="text/javascript">
-        /* Initialize the confirmation dialog */
-        $(document).ready(function() {
-            $("#dialog").dialog(
-            {
-                autoOpen: false,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    "Remove": function(event) {
-                        $("#dialog").dialog( "close" );
-                        /* Effectively a redirect to the remove page */
-                        houseid = $(this).data("houseid");
-                        window.location.replace('/houses/remove_house/' + houseid);
-                        },
-                    "Cancel": function(event) {
-                        $("#dialog").dialog( "close" );
-                        }
-                }
-            });
-
-        });
-
-        /* Show confirmation dialog for removing a program */
-        function confirmRemove(houseid, name){
-            /* Set the dialog text with the house name */
-            $("#dialog-text").text("Remove house " + name + "?");
-            /* Pop the confirmation dialog */
-            $("#dialog")
-                .data("houseid", houseid)
-                .data("name", name)
-                .dialog("open");
-        };
-
-    </script>
 {% endblock %}
 
 {% block body %}
     <h2>Houses</h2>
         <table class="common-table">
+            <thead>
             <tr>
                 <th>House Name</th>
                 <th>Current</th>
                 <th>Actions</th>
             </tr>
-            {% for house in houses %}
-                {% if loop.index is not divisibleby 2 %}
-                <tr>
-                {% else %}
-                <tr class="alt">
-                {% endif %}
-                    <td>{{ house.name }}</td>
+            </thead>
+            <tbody>
+                <tr ng-repeat="house in houses" ng-class-even="'alt'">
+                    <td>{= house.name =}</td>
                     <td>
-                        {% if house.current == 1 %}
-                        current
-                        {% endif %}
+                        <span ng-show="house.current == 1">current</span>
                     </td>
                     <td>
-                        <a class="a-button" href="{{ url_for('select_house', houseid=house.houseid) }}">Select</a>
-                        <a class="a-button" href="{{ url_for('edit_house', houseid=house.houseid) }}">Edit</a>
-                        <a class="a-button" href="{{ url_for('copy_house', houseid=house.houseid) }}">Copy</a>
+                        <a class="a-button" ng-click="select_house(house.houseid)">Select</a>
+                        <a class="a-button" ng-click="edit_house(house.houseid)">Edit</a>
+                        <a class="a-button" ng-click="copy_house(house.houseid)">Copy</a>
                         <a class="a-button"
-                           href="javascript:confirmRemove({{ house.houseid }}, '{{ house.name }}')">Remove</a>
+                           ng-click="remove_house(house.houseid, house.name)">Remove</a>
                     </td>
                 </tr>
-            {% endfor %}
+            </tbody>
         </table>
 
     <div class="clear"></div>
 
     {# Button for adding a house #}
-    <form action="" method="post">
-        <button class="edit-button" name=add-house type="submit" value="add">Add House</button>
-    </form>
+    <button class="edit-button" ng-click="add_house()">Add House</button>
 {% endblock %}
 
 {% block footer_links %}
     {#
     <a href="{{ url_for('modules', roomid=module.roomid) }}">Back</a>
     #}
+{% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/houses.js') }}" type="text/javascript"></script>
 {% endblock %}

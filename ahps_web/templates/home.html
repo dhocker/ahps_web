@@ -52,7 +52,7 @@
     <h2>Home</h2>
     <p>This is the home page for the AHPS Web server.</p>
 
-    <h2>Rooms for {{ house.name }}</h2>
+    <h2>Rooms for house: {{ house.name }}</h2>
     <div class="room" ng-repeat="room in rooms">
         <input type="hidden" name="roomid" value="{= room.roomid =}"/>
 
@@ -84,7 +84,7 @@
 {% endblock %}
 
 {% block footer_links %}
-    <a href="{{ url_for('houses') }}">Houses</a>
+    <a href="{{ url_for('houses_page') }}">Houses</a>
     <a href="{{ url_for('all_house_codes') }}">All House/Device Codes</a>
     {% if current_user.username == "admin" %}
         <a href="{{ url_for('administration') }}">User Administration</a>

@@ -1,4 +1,4 @@
-{#
+#
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
 # Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
 #
@@ -13,24 +13,23 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
-#}
+#
 
-{% extends "layout.html" %}
 
-{% block body %}
-    <input type="hidden" id="houseid" value="{{ house.houseid }}">
-    <h2>House name:
-        <input type="text" class="input-program-name" name="house-name" ng-model="house.name" />
-    </h2>
-    <button class="edit-button" name="save" ng-click="save_house(house.houseid)">Save</button>
-{% endblock %}
+class ViewException(Exception):
+    """
+    View detected exception.
+    """
+    status_code = 500
 
-{% block footer_links %}
-    <a href="{{ url_for('houses_page') }}">Back</a>
-{% endblock %}
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
 
-{# AngularJS script files #}
-{% block angularjs %}
-    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
-    <script src="{{ url_for('static', filename='js/edit_house.js') }}" type="text/javascript"></script>
-{% endblock %}
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv

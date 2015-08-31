@@ -60,6 +60,8 @@ from views import home
 from views import modules
 from views import module_programs
 from views import login_views
+from views import houses
+from views import exception_handler
 
 logger = logging.getLogger("app")
 

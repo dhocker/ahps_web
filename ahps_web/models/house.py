@@ -54,7 +54,10 @@ def get_houses():
     db = get_db()
     cur = db.execute('select * from houses order by name asc')
     houses = cur.fetchall()
-    return houses
+    lst = []
+    for house in houses:
+        lst.append(row_to_dict(house))
+    return lst
 
 
 def get_house(houseid):
@@ -65,7 +68,7 @@ def get_house(houseid):
     db = get_db()
     cur = db.execute('select * from houses where houseid=?', [houseid])
     house = cur.fetchone()
-    return house
+    return row_to_dict(house)
 
 
 def update_house(houseid, name):

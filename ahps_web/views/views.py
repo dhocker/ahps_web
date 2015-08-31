@@ -45,60 +45,6 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/houses", methods=["GET", "POST"])
-@login_required                                 # Use of @login_required decorator
-def houses():
-    if request.method == "GET":
-        all_houses = get_houses()
-        return render_template("houses.html", houses=all_houses)
-    elif request.method == "POST":
-        insert_house("New House")
-        return redirect(url_for("houses"))
-
-
-@app.route("/houses/select_house/<houseid>", methods=["GET"])
-@login_required                                 # Use of @login_required decorator
-def select_house(houseid):
-    set_current_house(houseid)
-    return redirect(url_for("home"))
-
-
-@app.route("/houses/edit_house/<houseid>", methods=["GET", "POST"])
-@login_required                                 # Use of @login_required decorator
-def edit_house(houseid):
-    if request.method == "GET":
-        house = get_house(houseid)
-        return render_template("edit_house.html", house=house)
-    elif request.method == "POST":
-        update_house(houseid, request.form["house-name"])
-        return redirect(url_for("houses"))
-
-
-@app.route("/houses/remove_house/<houseid>", methods=["GET"])
-@login_required                                 # Use of @login_required decorator
-def remove_house(houseid):
-    # Can't remove current house
-    current_house = get_house(houseid)
-    if current_house["current"] != 0:
-        houses = get_houses()
-        error = "Can't delete the current house"
-        return render_template("houses.html", error=error, houses=houses)
-
-    delete_house(houseid)
-    return redirect(url_for("houses"))
-
-
-@app.route("/houses/copy_house/<houseid>", methods=["GET"])
-@login_required                                 # Use of @login_required decorator
-def copy_house(houseid):
-    # Run the copying logic
-    bll_copy_house(houseid)
-
-    # Return new list of houses
-    houses = get_houses()
-    return render_template("houses.html", houses=houses)
-
-
 @app.route("/house_summary", methods=['GET'])
 @login_required                                 # Use of @login_required decorator
 def house_summary():
