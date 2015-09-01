@@ -78,26 +78,21 @@ def get_module_programs(moduleid):
 @app.route('/modules/program/<programid>/page', methods=['GET'])
 @login_required                                 # Use of @login_required decorator
 def edit_program_page(programid):
+    program = get_program(programid)
+    moduleid = program["moduleid"]
+    module = get_module(moduleid)
+    sun_data = get_sun_data(datetime.now())
+
     # This is not particularly elegant but it is functional.
     # If there is a returnto arg we will set up to go back to that page.
     # If there is no returnto arg we will default to going back to the
     # module programs page.
-    # if request.args.has_key("returnto"):
-    #     returnto = request.args["returnto"]
-    # else:
-    #     returnto = None
+    if request.args.has_key("returnto"):
+        returnto = request.args["returnto"]
+    else:
+        returnto = url_for("module_programs_page", moduleid=moduleid)
 
-    program = get_program(programid)
-    moduleid = program["moduleid"]
-    module = get_module(moduleid)
-
-    # if not returnto:
-    #     returnto = url_for("module_programs", moduleid=moduleid)
-
-    sun_data = get_sun_data(datetime.now())
-
-    #return render_template("program.html", module=module, program=program, sun_data=sun_data, returnto=returnto)
-    return render_template("program.html", programid=programid, sun_data=sun_data, ngapp="ahps_web", ngcontroller="programController")
+    return render_template("program.html", programid=programid, sun_data=sun_data, returnto=returnto, ngapp="ahps_web", ngcontroller="programController")
 
 
 @app.route('/module/program/<programid>', methods=['GET'])

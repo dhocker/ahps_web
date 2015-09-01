@@ -21,44 +21,40 @@
 {% endblock %}
 
 {% block body %}
-    {% if (programs | length) > 0 %}
-        <h2>Summary for house: {{ programs[0].house_name }}</h2>
-            <table class="common-table">
-                <tr>
-                    <th>Room</th>
-                    <th>Module</th>
-                    <th>H/C</th>
-                    <th>Name</th>
-                    <th>Program</th>
-                    <th>Actions</th>
-                </tr>
-                {% for program in programs %}
-                    {% if loop.index is not divisibleby 2 %}
-                    <tr>
-                    {% else %}
-                    <tr class="alt">
-                    {% endif %}
-                        <td>{{ program.room_name }}</td>
-                        <td>{{ program.module_name }}</td>
-                        <td>{{ program.house_code }}{{ program.device_code }}</td>
-                        <td>{{ program.name }}</td>
-                        <td>
-                            <p class="program-summary">{{ program.days }}</p>
-                            <p class="program-summary">{{ program_summary(program) | safe }}</p>
-                        </td>
-                        <td>
-                            <a class="a-button" href="{{ url_for('edit_program', programid=program.programid) +
-                            '?returnto=' + url_for('house_summary') }}">Edit</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-    {% else %}
-        <h2>No programs are defined</h2>
-    {% endif %}
+    <h2>Summary for house: {= programs[0].house_name =}</h2>
+    <table class="common-table">
+        <tr>
+            <th>Room</th>
+            <th>Module</th>
+            <th>H/C</th>
+            <th>Name</th>
+            <th>Program</th>
+            <th>Actions</th>
+        </tr>
+        <tr ng-repeat="program in programs" ng-class-even="'alt'">
+            <td>{= program.room_name =}</td>
+            <td>{= program.module_name =}</td>
+            <td>{= program.house_code =}{= program.device_code =}</td>
+            <td>{= program.name =}</td>
+            <td>
+                <p class="program-summary">{= program.days =}</p>
+                <p class="program-summary" ng-bind-html="program.program_summary"/>
+            </td>
+            <td>
+                <a class="a-button" ng-href="/modules/program/{=program.programid=}/page?returnto=/house/summary/page">Edit</a>
+            </td>
+        </tr>
+    </table>
 
     <div class="clear"></div>
 {% endblock %}
 
 {% block footer_links %}
 {% endblock %}
+
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/house_summary.js') }}" type="text/javascript"></script>
+{% endblock %}
+

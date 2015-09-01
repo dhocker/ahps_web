@@ -70,7 +70,8 @@ app.controller('moduleProgramsController', function($scope, $http, $sce) {
 
     // Calls the edit page to edit the selected program
     $scope.edit_program = function(programid) {
-        window.location.replace("/modules/program/" + String(programid) + "/page");
+        var moduleid = $("#moduleid").val();
+        window.location.replace("/modules/program/" + String(programid) + "/page?returnto=/module/" + moduleid + "/programs/page");
     };
 
     // Launches the dialog box to confirm remove

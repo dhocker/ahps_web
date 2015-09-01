@@ -111,7 +111,9 @@ app.controller('programController', function($scope, $http, $sce, Tracker) {
 
     $scope.cancel = function() {
         window.onbeforeunload = null;
-        window.location.replace("/module/" + String($scope.program.moduleid) + "/programs/page");
+        // Get return url from #returnto href. Cancel is the same as Back.
+        var returnto = $("#returnto").attr('href');
+        window.location.replace(returnto);
     };
 
     $scope.set_weekdays = function() {

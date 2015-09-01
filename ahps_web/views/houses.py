@@ -18,8 +18,10 @@ from ahps_web import app
 from flask import Flask, request, url_for, render_template, jsonify
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
     insert_house, delete_house
+from ahps_web.models.house_programs import get_house_summary
 from ahps_web.models.module import get_modules_for_house
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
+from view_helpers import build_program_summary
 from view_exception import ViewException
 from flask.ext.user import login_required
 import json
@@ -95,8 +97,16 @@ def copy_house(houseid):
     return ""
 
 
-@app.route("/house_summary", methods=['GET'])
+@app.route("/house/summary/page", methods=['GET'])
 @login_required                                 # Use of @login_required decorator
 def house_summary():
+    return render_template("house_summary.html", ngapp="ahps_web", ngcontroller="houseSummaryController")
+
+
+@app.route("/house/summary", methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def get_house_summary_data():
     programs = get_house_summary(get_current_house()["houseid"])
-    return render_template("house_summary.html", programs=programs)
+    for program in programs:
+        program["program_summary"] = build_program_summary(program);
+    return jsonify({"programs": programs})
