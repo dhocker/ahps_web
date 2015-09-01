@@ -42,4 +42,4 @@ def about():
     This is the only page that does not require login
     :return:
     '''
-    return render_template("about.html")
+    return render_template("about.html", ngapp="ahps_web", ngcontroller="aboutController")
