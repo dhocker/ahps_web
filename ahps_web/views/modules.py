@@ -305,8 +305,8 @@ def lights_on():
     house = get_current_house()
     mods = get_modules_for_house(house["houseid"])
     for module in mods:
-        if module.selected:
-            device_on(module.moduleid)
+        if module["selected"]:
+            device_on(module["moduleid"])
     return ""
 
 
@@ -319,6 +319,6 @@ def lights_off():
     house = get_current_house()
     mods = get_modules_for_house(house["houseid"])
     for module in mods:
-        if module.selected:
-            device_off(module.moduleid)
+        if module["selected"]:
+            device_off(module["moduleid"])
     return ""
