@@ -21,7 +21,8 @@
 {% endblock %}
 
 {% block body %}
-    <h2>Summary for house: {= programs[0].house_name =}</h2>
+    <h2 ng-show="programs.length > 0">Summary for house: {= programs[0].house_name =}</h2>
+    <h2 ng-hide="programs.length > 0">No houses are defined</h2>
     <table class="common-table">
         <tr>
             <th>Room</th>
@@ -38,7 +39,7 @@
             <td>{= program.name =}</td>
             <td>
                 <p class="program-summary">{= program.days =}</p>
-                <p class="program-summary" ng-bind-html="program.program_summary"/>
+                <p class="program-summary" ng-bind-html="program.program_summary"></p>
             </td>
             <td>
                 <a class="a-button" ng-href="/modules/program/{=program.programid=}/page?returnto=/house/summary/page">Edit</a>
