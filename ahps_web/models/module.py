@@ -47,7 +47,10 @@ def get_modules_for_house(houseid):
         "order by modules.house_code, modules.device_code"
     cur = db.execute(sql, [houseid])
     modules = cur.fetchall()
-    return modules
+    lst = []
+    for module in modules:
+        lst.append(row_to_dict(module))
+    return lst
 
 
 def get_module(moduleid):

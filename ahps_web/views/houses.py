@@ -15,10 +15,10 @@
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
 #
 from ahps_web import app
-from flask import Flask, request, redirect, url_for, abort, \
-    render_template, jsonify
+from flask import Flask, request, url_for, render_template, jsonify
 from ahps_web.models.house import get_current_house, get_houses, set_current_house, get_house, update_house, \
     insert_house, delete_house
+from ahps_web.models.module import get_modules_for_house
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from view_exception import ViewException
 from flask.ext.user import login_required
@@ -93,3 +93,10 @@ def copy_house(houseid):
     # Run the copying logic
     bll_copy_house(houseid)
     return ""
+
+
+@app.route("/house_summary", methods=['GET'])
+@login_required                                 # Use of @login_required decorator
+def house_summary():
+    programs = get_house_summary(get_current_house()["houseid"])
+    return render_template("house_summary.html", programs=programs)

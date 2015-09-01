@@ -261,3 +261,64 @@ def move_module():
     move_module_room(moduleid, new_roomid)
 
     return redirect(url_for('modules', roomid=new_roomid))
+
+
+@app.route('/modules/page', methods=["GET"])
+@login_required                                 # Use of @login_required decorator
+def all_house_codes():
+    house = get_current_house()
+    return render_template("all_house_codes.html", house=house, ngapp="ahps_web", ngcontroller="allModulesController")
+
+
+@app.route('/modules', methods=["GET"])
+@login_required                                 # Use of @login_required decorator
+def get_modules_for_current_house():
+    house = get_current_house()
+    mods = get_modules_for_house(house["houseid"])
+    return jsonify({"modules": mods})
+
+
+@app.route('/modules/selected', methods=["PUT"])
+@login_required                                 # Use of @login_required decorator
+def save_selected():
+    """
+    Form actions on list of all house codes. The user
+    can alter the list of selected modules, turn selected
+    modules on or turn them off.
+    :return:
+    """
+    args = json.loads(request.data.decode())["data"]
+    # Handle save, on, off cases
+    for module in args:
+        moduleid = module["moduleid"]
+        update_module_selected(module["moduleid"], module["selected"])
+
+    return ""
+
+
+@app.route('/modules/on', methods=["PUT"])
+@login_required                                 # Use of @login_required decorator
+def lights_on():
+    """
+    Turn on all of the selected modules in the current house
+    """
+    house = get_current_house()
+    mods = get_modules_for_house(house["houseid"])
+    for module in mods:
+        if module.selected:
+            device_on(module.moduleid)
+    return ""
+
+
+@app.route('/modules/off', methods=["PUT"])
+@login_required                                 # Use of @login_required decorator
+def lights_off():
+    """
+    Turn off all of the selected modules in the current house
+    """
+    house = get_current_house()
+    mods = get_modules_for_house(house["houseid"])
+    for module in mods:
+        if module.selected:
+            device_off(module.moduleid)
+    return ""
