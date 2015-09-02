@@ -16,7 +16,17 @@
 #}
 
 <!DOCTYPE html>
-<html ng-app="{{ ngapp }}" ng-controller="{{ ngcontroller }}" lang="en">
+{#
+This is a little bit of a hack. The view code for the login page is part of the
+Flash-login package. We don't want to change it, so this conditional code forces
+the controller to "loginController" if the ngcontroller variable is undefinced.
+We go to this trouble so we can use one layout template for the whole app.
+#}
+{% if ngcontroller %}
+    <html ng-app="ahps_web" ng-controller="{{ ngcontroller }}" lang="en">
+{% else %}
+    <html ng-app="ahps_web" ng-controller="loginController" lang="en">
+{% endif %}
     <title>{= title =}</title>
 
     <head class="page">

@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+    <div ng-controller="loginController">
     <h2>Login</h2>
 
     <form action="" method="POST" class="input-form" role="form">
@@ -13,5 +14,11 @@
         <br/>
         <input type="submit" class="edit-button" name="submit" value="Login">
     </form>
+    </div>
+{% endblock %}
 
+{# AngularJS script files #}
+{% block angularjs %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}" type="text/javascript"></script>
 {% endblock %}
