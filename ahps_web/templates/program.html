@@ -102,7 +102,8 @@
             <legend>Randomize</legend>
             <input type="checkbox" class="start-randomize" id="start-randomize"
                    ng-change="track_change()" ng-model="program.start_randomize"
-                   ng-true-value="1" ng-false-value="0">Randomize +/-
+                   ng-true-value="1" ng-false-value="0">
+            <span ng-click="program.start_randomize = invert_checkbox(program.start_randomize)">Randomize</span> +/-
             <input type="text" id="start-randomize-amount" class="input-number" name="start-randomize-amount"
                    ng-change="track_change()" ng-model="program.start_randomize_amount">
             <br/>
@@ -122,7 +123,7 @@
         {{ trigger_methods("stop-trigger-method", "stop-trigger-method", "stop-trigger-method",
             program.stop_trigger_method, "stopTriggerChanged()") }}
         #}
-        <select id="stop-trigger-method" class="sop" name="stop-trigger-method"
+        <select id="stop-trigger-method" class="stop-trigger-method" name="stop-trigger-method"
                 ng-change="stopTriggerChanged()" ng-model="program.stop_trigger_method">
             <option value="none" ng-selected="program.stop_trigger_method == 'none'">None</option>
             <option value="clock-time" ng-selected="program.stop_trigger_method == 'clock-time'">Clock-time</option>
@@ -151,7 +152,8 @@
             <legend>Randomize</legend>
             <input type="checkbox" class="stop-randomize" id="stop-randomize"
                    ng-change="track_change()" ng-model="program.stop_randomize"
-                   ng-true-value="1" ng-false-value="0">Randomize +/-
+                   ng-true-value="1" ng-false-value="0">
+                   <span ng-click="program.stop_randomize = invert_checkbox(program.stop_randomize)">Randomize</span> +/-
             <input type="text" id="stop-randomize-amount" class="input-number" name="stop-randomize-amount"
                    ng-change="track_change()" ng-model="program.stop_randomize_amount">
             <br/>

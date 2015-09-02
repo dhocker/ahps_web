@@ -136,6 +136,10 @@ app.controller('programController', function($scope, $http, $sce, Tracker) {
         $scope.calc_stop_time = calculate_effective_time($scope.program.stop_trigger_method, $scope.program.stop_offset, $scope.program.stop_time);
     };
 
+    $scope.invert_checkbox = function(current_value) {
+        return current_value ? 0 : 1;
+    };
+
     $scope.startTriggerChanged = function() {
         track_change();
         // Cases for each trigger method. Show/hide group boxes.
