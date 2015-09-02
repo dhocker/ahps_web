@@ -68,7 +68,7 @@ def build_program_summary(program):
     effective_stop_time = "No Time"
     offset = timedelta(minutes=int(program["stop_offset"]))
     if program["stop_trigger_method"] == "sunset":
-        effective_start_time = (sunset + offset).strftime("%I:%M%p")
+        effective_stop_time = (sunset + offset).strftime("%I:%M%p")
     elif program["stop_trigger_method"] == "sunrise":
         effective_stop_time = (sunrise + offset).strftime("%I:%M%p")
     elif program["stop_trigger_method"] == "clock-time":
