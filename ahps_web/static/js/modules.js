@@ -138,6 +138,28 @@ app.controller('modulesController', function($scope, $http, Tracker) {
     };
 
     $scope.show_move_dialog = function(moduleid) {
+        // Show  dialog for moving a module
+        $("#move-module-dialog").data("moduleid", moduleid).dialog("open");
+    };
+
+    // Move a module to another room
+    $scope.angular_move = function(moduleid) {
+        var to_room = $("#new_room").val();
+        $http.post('/rooms/' + String(to_room) + "/module/" + String(moduleid), {}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+                // After move, refresh page
+                $scope.get_modules();
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error moving module"
+                }
+            });
     };
 
     $scope.add_appliance = function(roomid) {
@@ -153,8 +175,8 @@ app.controller('modulesController', function($scope, $http, Tracker) {
 
 });
 
-/* Initialize the confirmation dialog */
 $(document).ready(function() {
+    /* Initialize the confirmation dialog */
     $("#dialog").dialog(
     {
         autoOpen: false,
@@ -180,13 +202,14 @@ $(document).ready(function() {
                         scope.angular_delete();
                     }
                 });
-                },
+            },
             "Cancel": function(event) {
                 $("#dialog").dialog( "close" );
-                }
+            }
         }
     });
 
+    /* Initialize the module-move dialog box */
     $("#move-module-dialog").dialog(
     {
         autoOpen: false,
@@ -195,34 +218,14 @@ $(document).ready(function() {
         buttons: {
             "Move": function(event) {
                 $("#move-module-dialog").dialog( "close" );
-                $("#module-to-move").val($(this).data("moduleid"));
-                $("#move-module-form").submit();
-                },
+                var el = $("html");
+                var scope = angular.element(el).scope();
+                scope.angular_move($(this).data("moduleid"));
+            },
             "Cancel": function(event) {
                 $("#move-module-dialog").dialog( "close" );
-                }
+            }
         }
     });
 
 });
-
-
-// Show dialog for moving a module to another room #}
-function showMoveDialog(moduleid){
-    $("#move-module-dialog")
-        .data("moduleid", moduleid)
-        .dialog("open");
-};
-
-/* Submit the form */
-function submitForm(form_action, moduleid){
-    window.onbeforeunload=null;
-    $("#submit-button-" + moduleid).val(form_action);
-    $("#module-form-" + moduleid).submit();
-};
-
-/* When the module type changes, immediately save the module
-so the type change is obvious */
-function moduleTypeChanged(moduleid){
-    submitForm("save", moduleid);
-}

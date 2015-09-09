@@ -86,15 +86,12 @@
 
     {# The jQuery UI dialog for moving a module to another room #}
     <div id="move-module-dialog" title="Move Module">
-        <form id="move-module-form" action="move_module" method="post">
-            <input id="module-to-move" type="hidden" name="moduleid" value="">
-            <label>New room</label>
-            <select name="new_room" id="new_room" class="input-select">
-            {% for r in rooms -%}
-                <option value="{{ r.roomid }}">{{ r.name }}</option>
-            {%- endfor %}
-            </select>
-        </form>
+        <label>New room</label>
+        <select name="new_room" id="new_room" class="input-select">
+        {% for r in rooms -%}
+            <option value="{{ r.roomid }}">{{ r.name }}</option>
+        {%- endfor %}
+        </select>
     </div>
 
 {% endblock %}

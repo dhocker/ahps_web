@@ -218,51 +218,6 @@ def create_module(roomid):
     return ""
 
 
-# @app.route('/modules/new_appliance_module', methods=['POST'])
-# @login_required                                 # Use of @login_required decorator
-# def new_appliance_module():
-#     # Save or cancel
-#     if request.form.has_key('save'):
-#         # Save (insert) new module record
-#         roomid = request.form['save']
-#         insert_module(roomid, 'appliance', request.form['name'],
-#                       request.form['house_code'], request.form['device_code'])
-#     else:
-#         roomid = request.form['cancel']
-#
-#     # After save or cancel return to modules for room
-#     return redirect(url_for('modules', roomid=roomid))
-
-
-# @app.route('/modules/new_lamp_module', methods=['POST'])
-# @login_required                                 # Use of @login_required decorator
-# def new_lamp_module():
-#     # Save or cancel
-#     if request.form.has_key('save'):
-#         # Save (insert) new module record
-#         roomid = request.form['save']
-#         insert_module(roomid, 'lamp', request.form['name'],
-#                       request.form['house_code'], request.form['device_code'],
-#                       request.form['dim_amount'])
-#     else:
-#         roomid = request.form['cancel']
-#
-#     # After save or cancel return to modules for room
-#     return redirect(url_for('modules', roomid=roomid))
-
-
-@app.route('/modules/move_module', methods=['POST'])
-@login_required                                 # Use of @login_required decorator
-def move_module():
-    moduleid = request.form["moduleid"]
-    new_roomid = request.form["new_room"]
-
-    # Implement move to new room
-    move_module_room(moduleid, new_roomid)
-
-    return redirect(url_for('modules', roomid=new_roomid))
-
-
 @app.route('/modules/page', methods=["GET"])
 @login_required                                 # Use of @login_required decorator
 def all_house_codes():
@@ -321,4 +276,21 @@ def lights_off():
     for module in mods:
         if module["selected"]:
             device_off(module["moduleid"])
+    return ""
+
+
+@app.route('/rooms/<roomid>/module/<moduleid>', methods=['POST'])
+@login_required                                 # Use of @login_required decorator
+def move_module(roomid, moduleid):
+    """
+    Move a module to another room.
+    This URL probably belongs in the home view, but since it is used
+    on the modules page we'll leave it here.
+    :param roomid:
+    :param moduleid:
+    :return:
+    """
+    # Implement move to new room
+    move_module_room(moduleid, roomid)
+
     return ""
