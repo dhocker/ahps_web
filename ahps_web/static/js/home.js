@@ -87,13 +87,16 @@ app.controller('homeController', function($scope, $http, Tracker) {
     };
 
     function get_rooms() {
+        $("#ajax-pending").show();
         $http.get('/home/rooms', {}).
             success(function(data, status, headers, config) {
                 $scope.rooms = data.rooms;
+                $("#ajax-pending").hide();
             }).
             error(function(data, status, headers, config) {
                 $scope.status = "";
                 $scope.error = data.message;
+                $("#ajax-pending").hide();
             });
     };
 

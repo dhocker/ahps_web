@@ -23,6 +23,10 @@
 {% block body %}
     <h2 ng-show="programs.length > 0">Summary for house: {= programs[0].house_name =}</h2>
     <h2 ng-hide="programs.length > 0">No houses are defined</h2>
+    <div id="ajax-pending">
+        <img id="ajax-spinner" class="img-spinner" src="{{ url_for('static', filename='ajax-loader.gif') }}"
+             alt="Loading" style="display:block; margin-left:auto; margin-right:auto;"/>
+    </div>
     <table class="common-table">
         <tr>
             <th>Room</th>

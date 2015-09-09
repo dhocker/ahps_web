@@ -29,6 +29,10 @@
 
 {% block body %}
     <h2>Modules for room: {{ room.name }}</h2>
+    <div id="ajax-pending">
+        <img id="ajax-spinner" class="img-spinner" src="{{ url_for('static', filename='ajax-loader.gif') }}"
+             alt="Loading" style="display:block; margin-left:auto; margin-right:auto;"/>
+    </div>
     <input type="hidden" id="roomid" value="{{ room.roomid }}">
     <div id="module-form-{= module.moduleid =}" ng-repeat="module in room_modules">
         <div class="{= module.module_type.toLowerCase() =}-module">

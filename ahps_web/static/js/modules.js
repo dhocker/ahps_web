@@ -33,13 +33,16 @@ app.controller('modulesController', function($scope, $http, Tracker) {
 
     /* Get all modules for the current house */
     $scope.get_modules = function() {
+        $("#ajax-pending").show();
         $http.get('/modules/' + String($scope.roomid), {}).
             success(function(data, status, headers, config) {
                 $scope.room_modules = data.modules;
+                $("#ajax-pending").hide();
             }).
             error(function(data, status, headers, config) {
                 $scope.status = "";
                 $scope.error = data.message;
+                $("#ajax-pending").hide();
             });
     };
 

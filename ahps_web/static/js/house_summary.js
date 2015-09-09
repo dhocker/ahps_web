@@ -30,6 +30,7 @@ app.controller('houseSummaryController', function($scope, $http, $sce) {
     get_house_summary();
 
     function get_house_summary() {
+        $("#ajax-pending").show();
         $http.get('/house/summary', {}).
             success(function(data, status, headers, config) {
                 $scope.programs = data.programs;
@@ -38,6 +39,7 @@ app.controller('houseSummaryController', function($scope, $http, $sce) {
                     var program = $scope.programs[i];
                     program.program_summary = $sce.trustAsHtml(program.program_summary);
                 }
+                $("#ajax-pending").hide();
             }).
             error(function(data, status, headers, config) {
                 if (data && (data.message)) {
@@ -46,6 +48,7 @@ app.controller('houseSummaryController', function($scope, $http, $sce) {
                 else {
                     $scope.error = "Unable to get house summary";
                 }
+                $("#ajax-pending").hide();
             });
     };
 

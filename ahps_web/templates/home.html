@@ -50,9 +50,11 @@
 
 {% block body %}
     <h2>Home</h2>
-    <p>This is the home page for the AHPS Web server.</p>
-
     <h2>Rooms for house: {{ house.name }}</h2>
+    <div id="ajax-pending">
+        <img id="ajax-spinner" class="img-spinner" src="{{ url_for('static', filename='ajax-loader.gif') }}"
+             alt="Loading" style="display:block; margin-left:auto; margin-right:auto;"/>
+    </div>
     <div class="room" ng-repeat="room in rooms">
         <input type="hidden" name="roomid" value="{= room.roomid =}"/>
 
