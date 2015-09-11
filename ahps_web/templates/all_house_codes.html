@@ -25,10 +25,11 @@
     <h2>All modules/house+device codes in use for house: {{ house.name }}</h2>
     <table class="common-table">
         <tr>
-            <th>House/Device Code</th>
-            <th>Room</th>
+            <th ng-click="sort_by_hdc()" style="cursor: pointer">House/Device Code</th>
+            <th ng-click="sort_by_room()" style="cursor: pointer">Room</th>
             <th>Module</th>
             <th>Selected</th>
+            <th>Actions</th>
         </tr>
         <tr ng-repeat="module in modules" ng-class-even="'alt'">
             <td>{= module.house_code =}{= module.device_code =}</td>
@@ -36,6 +37,10 @@
             <td>{= module.name =}</td>
             <td>
                 <input type="checkbox" class="selected" ng-model="module.selected" ng-true-value="1" ng-false-value="0"/>
+            </td>
+            <td>
+                <button ng-click="module_on(module.moduleid)" class="edit-button" type="button">On</button>
+                <button ng-click="module_off(module.moduleid)" class="edit-button" type="button">Off</button>
             </td>
         </tr>
     </table>

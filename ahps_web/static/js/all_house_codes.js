@@ -34,6 +34,8 @@ app.controller('allModulesController', function($scope, $http) {
         $http.get('/modules', {}).
             success(function(data, status, headers, config) {
                 $scope.modules = data.modules;
+                // Default sorting
+                $scope.sort_by_hdc();
                 $scope.message = "";
             }).
             error(function(data, status, headers, config) {
@@ -42,6 +44,38 @@ app.controller('allModulesController', function($scope, $http) {
                 }
                 else {
                     $scope.error = "Unable to get modules for current house";
+                }
+            });
+    };
+
+    $scope.module_on = function(moduleid) {
+        $http.put('/modules/' + String(moduleid) + '/state' , {"data": {"state": "on"}}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error turning on module"
+                }
+            });
+    };
+
+    $scope.module_off = function(moduleid) {
+        $http.put('/modules/' + String(moduleid) + '/state' , {"data": {"state": "off"}}).
+            success(function(data, status, headers, config) {
+                // Success
+                $scope.error = "";
+            }).
+            error(function(data, status, headers, config) {
+                if (data && data.message) {
+                    $scope.error = data.message;
+                }
+                else {
+                    $scope.error = "Error turning off module"
                 }
             });
     };
@@ -89,5 +123,23 @@ app.controller('allModulesController', function($scope, $http) {
                     $scope.error = "Unable to turn off modules for current house";
                 }
             });
+    };
+
+    $scope.sort_by_hdc = function() {
+        $scope.modules.sort(function(a, b){
+            a_hdc = a.house_code + sortable_device_code(a.device_code);
+            b_hdc = b.house_code + sortable_device_code(b.device_code);
+            return a_hdc > b_hdc;
+        });
+    };
+
+    function sortable_device_code(dc) {
+        return ("0" + dc).slice(-2);
+    };
+
+    $scope.sort_by_room = function() {
+        $scope.modules.sort(function(a, b){
+            return a.room_name.toLowerCase() > b.room_name.toLowerCase();
+        });
     };
 });
