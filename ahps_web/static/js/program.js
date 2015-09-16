@@ -92,8 +92,8 @@ app.controller('programController', function($scope, $http, $sce, Tracker) {
         $scope.program.days = dstr;
 
         // Force start/stop methods to lowercase
-        program.start_trigger_method = program.start_trigger_method.toLowerCase();
-        program.stop_trigger_method = program.stop_trigger_method.toLowerCase();
+        $scope.program.start_trigger_method = $scope.program.start_trigger_method.toLowerCase();
+        $scope.program.stop_trigger_method = $scope.program.stop_trigger_method.toLowerCase();
 
         // Save the program
         $http.post('/module/program/' + String($scope.program.programid), {"data": $scope.program}).
