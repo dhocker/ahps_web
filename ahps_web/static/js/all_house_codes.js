@@ -27,6 +27,8 @@ app.controller('allModulesController', function($scope, $http) {
     $scope.error = "";
     $scope.message = "";
 
+    var hdc_sort_dir = -1;
+    var room_sort_dir = -1;
     var houseid = $("#houseid").val();
     get_house_modules(houseid);
 
@@ -126,10 +128,11 @@ app.controller('allModulesController', function($scope, $http) {
     };
 
     $scope.sort_by_hdc = function() {
+        hdc_sort_dir *= -1;
         $scope.modules.sort(function(a, b){
             a_hdc = a.house_code + sortable_device_code(a.device_code);
             b_hdc = b.house_code + sortable_device_code(b.device_code);
-            return a_hdc.localeCompare(b_hdc);
+            return a_hdc.localeCompare(b_hdc) * hdc_sort_dir;
         });
     };
 
@@ -138,10 +141,11 @@ app.controller('allModulesController', function($scope, $http) {
     };
 
     $scope.sort_by_room = function() {
+        room_sort_dir *= -1;
         $scope.modules.sort(function(a, b){
             a_lc = a.room_name.toLowerCase();
             b_lc = b.room_name.toLowerCase();
-            return a_lc.localeCompare(b_lc);
+            return a_lc.localeCompare(b_lc) * room_sort_dir;
         });
     };
 });
