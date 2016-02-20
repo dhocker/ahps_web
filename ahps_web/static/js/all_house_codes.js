@@ -129,13 +129,7 @@ app.controller('allModulesController', function($scope, $http) {
         $scope.modules.sort(function(a, b){
             a_hdc = a.house_code + sortable_device_code(a.device_code);
             b_hdc = b.house_code + sortable_device_code(b.device_code);
-            if (a_hdc > b_hdc) {
-                return 1;
-            }
-            if (a_hdc < b_hdc) {
-                return -1;
-            }
-            return 0;
+            return a_hdc.localeCompare(b_hdc);
         });
     };
 
@@ -147,13 +141,7 @@ app.controller('allModulesController', function($scope, $http) {
         $scope.modules.sort(function(a, b){
             a_lc = a.room_name.toLowerCase();
             b_lc = b.room_name.toLowerCase();
-            if (a_lc > b_lc) {
-                return 1;
-            }
-            if (a_lc < b_lc) {
-                return -1;
-            }
-            return 0;
+            return a_lc.localeCompare(b_lc);
         });
     };
 });
