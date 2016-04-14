@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
 # Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)

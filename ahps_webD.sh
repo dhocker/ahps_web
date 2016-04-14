@@ -10,6 +10,10 @@
 # Description:       Adapted from the article: http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
 ### END INIT INFO
 
+# Setup the path to lead with the virtualenv. When it's python is executed it
+# will activate the virtualenv. Change the virtualenv path to match your system.
+PATH=/home/pi/Virtualenvs/ahps_web/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Change the next 3 lines to suit where you install your script and what you want to call it
 DIR=/home/pi/rpi/ahps_web
 DAEMON=$DIR/runserver.py

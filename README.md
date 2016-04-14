@@ -27,8 +27,11 @@ The full source is maintained on [GitHub](https://www.github.com/dhocker/ahps\_w
 ## Build Environment
 
 ahps\_web is written in Python 2.7. It uses the popular Flask framework.
+Start by installing the python-dev package (e.g. sudo apt-get install python-dev). 
+This package is required by some of the dependencies called out in the requirements.txt file.
 A suitable development environment would use virtualenv and virtualenvwrapper to create a working virtual environment.
 The requirements.txt file can be used with pip to create the required virtual environment with all dependencies.
+See readme.txt for additional details.
 
 ahps\_web was developed using PyCharm CE. PyCharm CE is highly recommended. However, a good text editor
 of your choice is all that is really required.
