@@ -75,12 +75,16 @@ We go to this trouble so we can use one layout template for the whole app.
 
         <div class="clear"></div>
         <div class="footer">
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('house_summary') }}">Summary</a>
-            {% block footer_links %}
-            {% endblock %}
+            <div class="footer-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('house_summary') }}">Summary</a>
+                {% block footer_links %}
+                {% endblock %}
+            </div>
             <div class="copyright">
-                <a href="{{ url_for('about') }}">AtHomePowerlineServer Web {{ version }} -- Copyright 2014, 2015 by Dave Hocker</a>
+                <a href="{{ url_for('about') }}">AtHomePowerlineServer Web {{ version }} on {{ hostname }}</a>
+                </br>
+                <span>Copyright &copy; 2014, 2016 by Dave Hocker</span>
             </div>
         </div>
     </body>

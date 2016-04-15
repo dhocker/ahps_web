@@ -66,6 +66,8 @@ from views import exception_handler
 logger = logging.getLogger("app")
 
 from Version import GetVersion
+from hostname import GetHostName
+
 logger.info("################################################################################")
 logger.info("Starting AHPS_Web version %s", GetVersion())
 logger.info("Using configuration file %s", configuration.Configuration.get_configuration_file_path())
