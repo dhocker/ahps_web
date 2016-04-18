@@ -50,7 +50,7 @@ We go to this trouble so we can use one layout template for the whole app.
     <body class="page">
         <h1><img class="logo" src="{{ url_for('static', filename='AtHomeX10.png') }}" />{= title =}</h1>
         <div class="metanav">
-            {% if current_user.is_authenticated() %}
+            {% if current_user.is_authenticated %}
                 <span>Logged in as {{ current_user.username }} </span>&nbsp
                 <a href="{{ url_for('user.logout') }}">Logout</a>
                 <a href="{{ url_for('user.change_password') }}">Change Password</a>
