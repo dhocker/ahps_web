@@ -37,7 +37,7 @@ app.controller('allModulesController', function($scope, $http) {
             success(function(data, status, headers, config) {
                 $scope.modules = data.modules;
                 // Default sorting
-                $scope.sort_by_hdc();
+                $scope.sort_by_room();
                 $scope.message = "";
             }).
             error(function(data, status, headers, config) {
