@@ -18,9 +18,9 @@
 
 from ahps_web import app
 from flask import Flask, render_template_string, request, redirect, url_for, render_template, flash
-from flask.ext.babel import Babel
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_babel import Babel
+from flask_sqlalchemy import SQLAlchemy
+from flask_user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Initialize Flask extensions
 babel = Babel(app)                              # Initialize Flask-Babel

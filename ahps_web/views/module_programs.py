@@ -31,7 +31,7 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
     insert_house, delete_house
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
-from flask.ext.user import login_required
+from flask_login import login_required
 from view_helpers import build_program_summary
 import json
 

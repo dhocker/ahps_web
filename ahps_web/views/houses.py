@@ -23,7 +23,7 @@ from ahps_web.models.module import get_modules_for_house
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from view_helpers import build_program_summary
 from view_exception import ViewException
-from flask.ext.user import login_required
+from flask_login import login_required
 import json
 
 
