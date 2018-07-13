@@ -1,6 +1,7 @@
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +21,8 @@ from ahps_web import app
 from flask import Flask, render_template_string, request, redirect, url_for, render_template, flash
 from flask_babel import Babel
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_login import current_user, login_required, UserMixin
+from flask_user import UserManager, SQLAlchemyAdapter
 
 # Initialize Flask extensions
 babel = Babel(app)                              # Initialize Flask-Babel
@@ -63,12 +65,12 @@ user_manager = UserManager(db_adapter, app,
 # Seed the admin account
 admin = User.query.filter_by(username='admin').first()
 if not admin:
-    print "admin account does not exist. Creating..."
+    print("admin account does not exist. Creating...")
     user1 = User(username='admin', active=True,
             password=user_manager.hash_password('Password1'))
     db.session.add(user1)
     db.session.commit()
-    print "admin account created. Be sure to change the password."
+    print("admin account created. Be sure to change the password.")
 
 
 # The Profile page requires a logged-in user

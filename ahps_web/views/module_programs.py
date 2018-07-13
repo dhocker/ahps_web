@@ -1,6 +1,7 @@
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +33,7 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from flask_login import login_required
-from view_helpers import build_program_summary
+from ahps_web.views.view_helpers import build_program_summary
 import json
 
 
@@ -87,7 +88,7 @@ def edit_program_page(programid):
     # If there is a returnto arg we will set up to go back to that page.
     # If there is no returnto arg we will default to going back to the
     # module programs page.
-    if request.args.has_key("returnto"):
+    if "returnto" in request.args:
         returnto = request.args["returnto"]
     else:
         returnto = url_for("module_programs_page", moduleid=moduleid)

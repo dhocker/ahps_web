@@ -1,4 +1,4 @@
-# coding=utf-8
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
 # Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
@@ -63,8 +63,8 @@ class AHPSRequest:
             sock.connect((self.host, self.port))
             return sock
         except Exception as ex:
-            print "Unable to connect to server:", self.host, self.port
-            print str(ex)
+            print("Unable to connect to server:", self.host, self.port)
+            print(str(ex))
 
         return None
 
@@ -77,7 +77,7 @@ class AHPSRequest:
         json_data = ""
 
         while (True):
-            c = sock.recv(1)
+            c = sock.recv(1).decode()
             json_data += c
 
             if (c == "{"):
@@ -94,13 +94,13 @@ class AHPSRequest:
     def display_response(response):
         jr = json.loads(response)["X10Response"]
 
-        print "Response for request:", jr["request"]
+        print("Response for request:", jr["request"])
 
         # Loop through all of the entries in the response dict
-        for k, v in jr.iteritems():
+        for k, v in jr.items():
             if k != "request":
-                print " ", k, ":", v
-        print
+                print(" ", k, ":", v)
+        print()
 
 
     #######################################################################
@@ -118,8 +118,8 @@ class AHPSRequest:
 
         # send status request to server
         try:
-            print "Sending request:", json_data
-            sock.sendall(json_data)
+            print("Sending request:", json_data)
+            sock.sendall(json_data.encode())
 
             # Receive data from the server and shut down
             json_data = AHPSRequest.read_json(sock)
@@ -128,7 +128,7 @@ class AHPSRequest:
             #print "Received: {}".format(json_data)
             #DisplayResponse(json_data)
         except Exception as ex:
-            print str(ex)
+            print(str(ex))
             json_data = None
         finally:
             sock.close()

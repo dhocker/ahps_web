@@ -1,6 +1,7 @@
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +20,7 @@ import os
 import Logging
 import logging
 from flask import Flask
+from flask_login import LoginManager
 import configuration
 
 # Enable logging for start up. Will be changed later.
@@ -50,23 +52,27 @@ cfg = configuration.Configuration.load_configuration(app.root_path)
 key_file = configuration.Configuration.SecretKey()
 app.config['SECRET_KEY'] = open(key_file, 'r').read()
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///{0}".format(configuration.Configuration.get_database_file_path('ahps_web.sqlite3'))
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Start logging
 Logging.EnableServerLogging()
 
+# Flask login
+login = LoginManager(app)
+
 # All views must be imported after the app is defined
-from views import views
-from views import home
-from views import modules
-from views import module_programs
-from views import login_views
-from views import houses
-from views import exception_handler
+from .views import views
+from .views import home
+from .views import modules
+from .views import module_programs
+from .views import login_views
+from .views import houses
+from .views import exception_handler
 
 logger = logging.getLogger("app")
 
 from Version import GetVersion
-from hostname import GetHostName
+from .hostname import GetHostName
 
 logger.info("################################################################################")
 logger.info("Starting AHPS_Web version %s", GetVersion())

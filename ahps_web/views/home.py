@@ -1,6 +1,7 @@
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +33,7 @@ from ahps_web.models.house import get_current_house, get_houses, set_current_hou
 from ahps_web.bll.x10_control import device_on, device_off, all_lights_off, all_lights_on
 from ahps_web.bll.copy_house import copy_house as bll_copy_house
 from flask_login import login_required
-import view_helpers # register context processors
+import ahps_web.views.view_helpers # register context processors
 import json
 
 

@@ -1,7 +1,7 @@
 # coding=utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2014, 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 from ahps_web.database.connection import get_db
 from ahps_web.models.program import get_programs_for_module, delete_module_programs
-from model_helpers import row_to_dict
+from ahps_web.models.model_helpers import row_to_dict
 
 
 def get_modules_for_room(roomid):

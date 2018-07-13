@@ -1,6 +1,7 @@
+# coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright (C) 2015  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2015, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
 #
 from ahps_web import app
-from view_exception import ViewException
+from ahps_web.views.view_exception import ViewException
 from flask import jsonify
 
 
