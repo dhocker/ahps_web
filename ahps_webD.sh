@@ -12,7 +12,7 @@
 
 # Setup the path to lead with the virtualenv. When it's python is executed it
 # will activate the virtualenv.
-VENV=/home/pi/Virtualenvs/ahps_web
+VENV=/home/pi/Virtualenvs/ahps_web3
 PATH=$VENV/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Change the next lines to suit where you install your script and what you want to call it
@@ -33,7 +33,7 @@ PIDFILE=/var/run/$DAEMON_NAME.pid
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon"
     start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER \
-        --chuid $DAEMON_USER --startas $PYTHON_INT -- $DAEMON_SCRIPT
+        --chuid $DAEMON_USER --chdir $DIR --startas $PYTHON_INT -- $DAEMON_SCRIPT
     log_end_msg $?
 }
 do_stop () {
