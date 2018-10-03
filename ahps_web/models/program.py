@@ -140,7 +140,7 @@ def update_program(program):
 
     colnames = ""
     values = []
-    for k, v in program.iteritems():
+    for k, v in program.items():
         if k != "programid":
             if len(colnames) > 0:
                 colnames += ","

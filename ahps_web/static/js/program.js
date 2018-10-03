@@ -108,7 +108,7 @@ app.controller('programController', function($scope, $http, $sce, Tracker) {
                     $scope.error = data.message;
                 }
                 else {
-                    $scope.error = "Unable to get program data";
+                    $scope.error = "Unable to save program data";
                 }
             });
     };
