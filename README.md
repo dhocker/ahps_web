@@ -1,5 +1,7 @@
-# ahps\_web (AtHomePowerlineServer Web Server)
+# ahps\_web 
 Copyright © 2015 by Dave Hocker
+
+# DEPRECATED and replaced by [AtHomeFRB](https://github.com/dhocker/athomefrb)
 
 ## Overview
 
